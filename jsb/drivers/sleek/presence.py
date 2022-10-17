@@ -48,4 +48,4 @@ class Presence(GozerEvent):
             self.time = time.time()
             if self.type == 'groupchat': self.groupchat = True
             else: self.groupchat = False
-        except Excpetion, ex: handle_exception()
+        except Excpetion as ex: handle_exception()

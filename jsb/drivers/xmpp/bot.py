@@ -30,23 +30,23 @@ from jsb.utils.generic import waitforqueue, jabberstrip, getrandomnick, toenc, f
 ## xmpp imports
 
 from jsb.contrib.xmlstream import XMLescape, XMLunescape
-from presence import Presence
-from message import Message
-from iq import Iq
-from core import XMLStream
-from jid import JID, InvalidJID
-from errors import xmpperrors
+from .presence import Presence
+from .message import Message
+from .iq import Iq
+from .core import XMLStream
+from .jid import JID, InvalidJID
+from .errors import xmpperrors
 
 ## basic imports
 
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import copy
 import time
-import Queue
+import queue
 import os
 import threading
-import thread
+import _thread
 import types
 import xml
 import re
@@ -64,9 +64,9 @@ cpy = copy.deepcopy
 
 ## locks
 
-outlock = thread.allocate_lock()
-inlock = thread.allocate_lock()
-connectlock = thread.allocate_lock()
+outlock = _thread.allocate_lock()
+inlock = _thread.allocate_lock()
+connectlock = _thread.allocate_lock()
 outlocked = lockdec(outlock)
 inlocked = lockdec(inlock)
 connectlocked = lockdec(connectlock)
@@ -130,9 +130,9 @@ class SXMPPBot(XMLStream, BotBase):
     def sendpresence(self):
         """ send presence based on status and status text set by user. """
         if self.state:
-            if self.state.has_key('status') and self.state['status']: status = self.state['status']
+            if 'status' in self.state and self.state['status']: status = self.state['status']
             else: status = ""
-            if self.state.has_key('show') and self.state['show']: show = self.state['show']
+            if 'show' in self.state and self.state['show']: show = self.state['show']
             else: show = ""
         else:
             status = ""
@@ -180,7 +180,7 @@ class SXMPPBot(XMLStream, BotBase):
     def logon(self, user, password, iq):
         """ logon on the xmpp server. """
         try: self.auth(user, password, iq)
-        except CannotAuth, ex:
+        except CannotAuth as ex:
             logging.error("cannot auth to server: %s" % str(ex))
             if self.cfg.doregister:
                 logging.warn("%s - sleeping 10 seconds before register" % self.cfg.name)
@@ -189,7 +189,7 @@ class SXMPPBot(XMLStream, BotBase):
                 self.stopped = False
                 try:
                     if not self.register(user, password): self.exit() ; return
-                except Exception, ex: self.exit() ; raise
+                except Exception as ex: self.exit() ; raise
                 time.sleep(5)
                 iq = self.auth_sasl(user, password, iq, False)
             else: logging.error("stopping .. you can try to use --register to register the bot with the server") ; raise CantLogon(user)
@@ -240,7 +240,7 @@ class SXMPPBot(XMLStream, BotBase):
             repl.html = txt
         logging.debug("%s - reply is %s" % (self.cfg.name, repl.dump()))
         if not repl.type: repl.type = 'normal'
-        logging.debug("%s - sxmpp - out - %s - %s" % (self.cfg.name, printto, unicode(txt)))
+        logging.debug("%s - sxmpp - out - %s - %s" % (self.cfg.name, printto, str(txt)))
         self.send(repl)
 
     def broadcast(self, txt):
@@ -287,7 +287,7 @@ class SXMPPBot(XMLStream, BotBase):
             if m.type == 'error':
                 if m.code: self.errorHandler(m)
             else: m.nodispatch = False
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
         self.put(m)
 
@@ -317,7 +317,7 @@ class SXMPPBot(XMLStream, BotBase):
                 continue
         if nickk and jid and self.cfg.fulljids:
             channel = p.channel
-            if not self.jids.has_key(channel):
+            if channel not in self.jids:
                 self.jids[channel] = {}
             self.jids[channel][nickk] = jid
             self.userhosts[nickk] = stripped(jid)
@@ -448,7 +448,7 @@ class SXMPPBot(XMLStream, BotBase):
             if not nick: nick = channel.split('/')[1]
         except IndexError: nick = self.cfg.nick or "jsonbot"
         channel = channel.split('/')[0]
-        q = Queue.Queue()
+        q = queue.Queue()
         presence = Presence({'to': channel + '/' + nick, "xmlns": 'http://jabber.org/protocol/muc' })
         if password:
              presence.x.password = password             
@@ -458,7 +458,7 @@ class SXMPPBot(XMLStream, BotBase):
         chan.data['nick'] = nick
         if password:
             chan.data['key'] = password
-        if not chan.data.has_key('cc'):
+        if 'cc' not in chan.data:
             chan.data['cc'] = self.cfg['defaultcc'] or '!'
         if channel not in self.state['joinedchannels']:
             self.state['joinedchannels'].append(channel)

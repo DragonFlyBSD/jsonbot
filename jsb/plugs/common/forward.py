@@ -55,11 +55,11 @@ cpy = copy.deepcopy
 def forwardoutpre(bot, event):
     """ preconditon to check if forward callbacks is to be fired. """
     if event.how == "background": return False
-    chan = unicode(event.channel).lower()
+    chan = str(event.channel).lower()
     if not chan: return
     logging.debug("forward - pre - %s" % event.channel)
     if chan in forward.data.channels and not event.isremote() and not event.forwarded:
-        if event.how != u"background": return True
+        if event.how != "background": return True
     return False
 
 ## forward-callback
@@ -79,7 +79,7 @@ def forwardoutcb(bot, event):
         logging.info("forward - sending to %s" % jid)
         if jid == "twitter":
             try: postmsg(forward.data.outs[jid], e.txt)
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
             continue
         outbot = fleet.getfirstjabber(bot.isgae)
         if not outbot and bot.isgae: outbot = fleet.makebot('xmpp', 'forwardbot')
@@ -148,7 +148,7 @@ def handle_forwardallow(bot, event):
     if not event.rest:
         event.missing("<bot JID>")
         return
-    if forward.data.whitelist.has_key(event.rest):
+    if event.rest in forward.data.whitelist:
         forward.data.whitelist[event.rest] = bot.type
         forward.save()
     event.done()
@@ -201,7 +201,7 @@ def handle_forwardstop(bot, event):
             except ValueError: pass
         forward.save()
         event.done()
-    except KeyError, ex: event.reply("we are not forwarding %s" %  str(ex))
+    except KeyError as ex: event.reply("we are not forwarding %s" %  str(ex))
 
 cmnds.add("forward-stop", handle_forwardstop, ['OPER', 'FORWARD'])
 examples.add("forward-stop" , "stop forwarding a channel to provided JIDS", "forward-stop jsonbot@jsonbot.org")

@@ -10,7 +10,7 @@
 
 ## jsb imports
 
-from threads import getname, start_new_thread
+from .threads import getname, start_new_thread
 from jsb.utils.locking import lockdec
 from jsb.utils.exception import handle_exception
 from jsb.utils.trace import calledfrom, whichplugin, callstack
@@ -20,13 +20,13 @@ from jsb.utils.dol import Dol
 
 import sys
 import copy
-import thread
+import _thread
 import logging
 import time
 
 ## locks
 
-lock = thread.allocate_lock()
+lock = _thread.allocate_lock()
 locked = lockdec(lock)
 
 ## Callback class
@@ -78,7 +78,7 @@ class Callbacks(object):
     def unload(self, modname):
         """ unload all callbacks registered in a plugin. """
         unload = []
-        for name, cblist in self.cbs.iteritems():
+        for name, cblist in self.cbs.items():
             index = 0
             for item in cblist:
                 if item.modname == modname: unload.append((name, index))
@@ -90,7 +90,7 @@ class Callbacks(object):
     def disable(self, plugname):
         """ disable all callbacks registered in a plugin. """
         unload = []
-        for name, cblist in self.cbs.iteritems():
+        for name, cblist in self.cbs.items():
             index = 0
             for item in cblist:
                 if item.plugname == plugname: item.activate = False
@@ -98,7 +98,7 @@ class Callbacks(object):
     def activate(self, plugname):
         """ activate all callbacks registered in a plugin. """
         unload = []
-        for name, cblist in self.cbs.iteritems():
+        for name, cblist in self.cbs.items():
             index = 0
             for item in cblist:
                 if item.plugname == plugname: item.activate = True
@@ -107,7 +107,7 @@ class Callbacks(object):
         """ show where ircevent.CMND callbacks are registered """
         result = []
         cmnd = cmnd.upper()
-        for c, callback in self.cbs.iteritems():
+        for c, callback in self.cbs.items():
             if c == cmnd:
                 for item in callback:
                     if not item.plugname in result: result.append(item.plugname)
@@ -116,7 +116,7 @@ class Callbacks(object):
     def list(self):
         """ show all callbacks. """
         result = []
-        for cmnd, callbacks in self.cbs.iteritems():
+        for cmnd, callbacks in self.cbs.items():
             for cb in callbacks:
                 result.append(getname(cb.func))
 
@@ -127,9 +127,9 @@ class Callbacks(object):
         """ check for callbacks to be fired. """
         self.reloadcheck(bot, event)
         type = event.cbtype or event.cmnd
-        if self.cbs.has_key('ALL'):
+        if 'ALL' in self.cbs:
             for cb in self.cbs['ALL']: self.callback(cb, bot, event)
-        if self.cbs.has_key(type):
+        if type in self.cbs:
             target = self.cbs[type]
             for cb in target: self.callback(cb, bot, event)
 
@@ -158,33 +158,33 @@ class Callbacks(object):
             if cb.threaded and not bot.isgae: start_new_thread(cb.func, (bot, event))
             else:
                 if event.cbtype == "API":
-                    from runner import apirunner
+                    from .runner import apirunner
                     apirunner.put(event.speed or cb.speed, cb.modname, cb.func, bot, event)
                 elif bot.isgae or event.direct: cb.func(bot, event) 
                 elif not event.dolong:
-                    from runner import callbackrunner
+                    from .runner import callbackrunner
                     callbackrunner.put(event.speed or cb.speed, cb.modname, cb.func, bot, event)
                 else:
-                    from runner import longrunner
+                    from .runner import longrunner
                     longrunner.put(event.speed or cb.speed, cb.modname, cb.func, bot, event)
             return True
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
 
     def reloadcheck(self, bot, event, target=None):
         """ check if plugin need to be reloaded for callback, """
-        from boot import plugblacklist
+        from .boot import plugblacklist
         plugloaded = []
         done = []
         target = target or event.cbtype or event.cmnd
         if not event.nolog: logging.debug("%s - checking for %s events" % (bot.cfg.name, target))
         try:
-            from boot import getcallbacktable   
+            from .boot import getcallbacktable   
             p = getcallbacktable()[target]
         except KeyError:
             if not event.nolog: logging.debug("can't find plugin to reload for %s" % event.cmnd)
             return
-        if not event.nolog: logging.debug("found %s" % unicode(p))
+        if not event.nolog: logging.debug("found %s" % str(p))
         for name in p:
             if name in bot.plugs: done.append(name) ; continue
             if plugblacklist and name in plugblacklist.data:
@@ -197,7 +197,7 @@ class Callbacks(object):
             try:
                 mod = bot.plugs.reload(name, force=True, showerror=False)
                 if mod: plugloaded.append(mod) ; continue
-            except Exception, ex: handle_exception(event)
+            except Exception as ex: handle_exception(event)
         if done and not event.nolog: logging.debug("%s - %s is already loaded" % (bot.cfg.name, str(done)))
         return plugloaded
 

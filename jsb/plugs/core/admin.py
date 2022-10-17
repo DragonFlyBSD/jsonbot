@@ -106,7 +106,7 @@ examples.add('admin-callbacks', 'show runtime callback table', 'admin-callbacks'
 
 def handle_userhostscache(bot, ievent):
     """ no arguments - show userhostscache of the bot the command is given on. """
-    ievent.reply("userhostcache of %s: " % ievent.channel, bot.userhosts.keys() + bot.userhosts.values())
+    ievent.reply("userhostcache of %s: " % ievent.channel, list(bot.userhosts.keys()) + list(bot.userhosts.values()))
 
 cmnds.add('admin-userhostscache', handle_userhostscache, 'OPER')
 examples.add('admin-userhostscache', 'show userhostscache ', 'admin-userhostscache')
@@ -176,7 +176,7 @@ def handle_adminupgrade(bot, event):
             d.get_or_insert(ddd, **kwds)
             bot.say(event.channel, "UPGRADED %s" % ddd)
             teller += 1
-        except Exception, ex: bot.say(event.channel, str(ex))
+        except Exception as ex: bot.say(event.channel, str(ex))
     bot.say(event.channel, "DONE - upgraded %s items" % teller)
 
 cmnds.add("admin-upgrade", handle_adminupgrade, "OPER", threaded=True)
@@ -203,7 +203,7 @@ def handle_adminreloadconfig(bot, event):
     try:
         bot.cfg.reload()
         getmainconfig().reload()
-    except Exception, ex: handle_exception()
+    except Exception as ex: handle_exception()
     event.done()
 
 cmnds.add("admin-reloadconfig", handle_adminreloadconfig, ["OPER"])
@@ -252,14 +252,14 @@ def handle_adminmc(bot, event):
             test = mc.get_stats()
             if not test: event.reply("no memcached found")
             else: event.reply("memcached stats: ", test[0][1])
-        except Exception, ex:
+        except Exception as ex:
             event.reply("memcached error: %s" % str(ex))
     elif event.rest == "flushall":
         try:
             from jsb.memcached import mc
             if mc: test = mc.flush_all() ; event.done()
             else: event.reply("no memcached running")
-        except Exception, ex:
+        except Exception as ex:
             event.reply("memcached error: %s" % str(ex))
     else: event.reply("choose one of stats, flushall")
 

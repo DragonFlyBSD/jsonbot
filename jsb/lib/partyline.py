@@ -18,7 +18,7 @@ json = getjson()
 
 ## basic imports
 
-import thread
+import _thread
 import pickle
 import socket
 import logging
@@ -32,7 +32,7 @@ class PartyLine(object):
     def __init__(self):
         self.socks = [] # partyline sockets list
         self.jids = []
-        self.lock = thread.allocate_lock()
+        self.lock = _thread.allocate_lock()
 
     def size(self):
         return len(self.socks)

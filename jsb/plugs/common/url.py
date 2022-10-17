@@ -20,7 +20,7 @@ import logging
 
 ## defines
     
-re_url_match  = re.compile(u'((?:http|https)://\S+)')
+re_url_match  = re.compile('((?:http|https)://\S+)')
 state = None
 initdone = False
 
@@ -40,8 +40,8 @@ def size():
     """ show number of urls. """
     s = 0
     if not initdone: return s
-    for i in state['urls'].values():
-        for j in i.values(): s += len(j)
+    for i in list(state['urls'].values()):
+        for j in list(i.values()): s += len(j)
     return s
 
 ## search function
@@ -52,8 +52,8 @@ def search(what, queue):
     result = []
     if not initdone: return result
     try:
-        for i in state['urls'].values():
-            for urls in i.values():
+        for i in list(state['urls'].values()):
+            for urls in list(i.values()):
                 for url in urls:
                     if what in url: result.append(url)
     except KeyError: pass
@@ -75,15 +75,15 @@ def urlcb(bot, ievent):
     try:
         test_urls = re_url_match.findall(ievent.txt)
         for i in test_urls:
-            if not state['urls'].has_key(bot.cfg.name):
+            if bot.cfg.name not in state['urls']:
                 state['urls'][bot.cfg.name] = {}
-            if not state['urls'][bot.cfg.name].has_key(ievent.channel):
+            if ievent.channel not in state['urls'][bot.cfg.name]:
                 state['urls'][bot.cfg.name][ievent.channel] = []
             if not i in state['urls'][bot.cfg.name][ievent.channel]:
                 state['urls'][bot.cfg.name][ievent.channel].append(i)  
         state.save()
         logging.warn("added url from %s" % ievent.auth)
-    except Exception, ex: handle_exception()
+    except Exception as ex: handle_exception()
 
 callbacks.add('CONSOLE', urlcb, urlpre, threaded=True)
 callbacks.add('PRIVMSG', urlcb, urlpre, threaded=True)
@@ -101,7 +101,7 @@ def handle_urlsearch(bot, ievent):
         for i in state['urls'][bot.cfg.name][ievent.channel]:
             if ievent.rest in i: result.append(i)
     except KeyError: ievent.reply('no urls known for channel %s' % ievent.channel) ; return
-    except Exception, ex: ievent.reply(str(ex)) ; return
+    except Exception as ex: ievent.reply(str(ex)) ; return
     if result: ievent.reply('results matching %s: ' % ievent.rest, result)
     else: ievent.reply('no result found') ; return
 
@@ -116,11 +116,11 @@ def handle_urlsearchall(bot, ievent):
     if not ievent.rest: ievent.missing('<searchtxt>') ; return
     result = []
     try:
-        for i in state['urls'].values():
-            for urls in i.values():
+        for i in list(state['urls'].values()):
+            for urls in list(i.values()):
                 for url in urls:
                     if ievent.rest in url: result.append(url)
-    except Exception, ex: ievent.reply(str(ex)) ; return
+    except Exception as ex: ievent.reply(str(ex)) ; return
     if result: ievent.reply('results matching %s: ' % ievent.rest, result)
     else: ievent.reply('no result found') ; return
 

@@ -54,8 +54,8 @@ cfg.define("enable", False)
 
 ## SocketServer imports
 
-import SocketServer
-from SocketServer import ThreadingMixIn, StreamRequestHandler
+import socketserver
+from socketserver import ThreadingMixIn, StreamRequestHandler
 
 ## defines
 
@@ -69,7 +69,7 @@ class IrcCatListener(ThreadingMixIn, StreamRequestHandler):
     def handle(self):
         try:
             fleet = getfleet()
-            msg = unicode(self.rfile.readline().strip())
+            msg = str(self.rfile.readline().strip())
             logging.warn("received %s" % msg)
             dest, msg = self.splitMsg(msg)
             for chan in dest:
@@ -79,7 +79,7 @@ class IrcCatListener(ThreadingMixIn, StreamRequestHandler):
                     bot = fleet.byname(botname)
                     if bot: bot.say(chan, msg)
                     else: logging.error("can't find %s bot in fleet" % botname)
-        except Exception, ex: handle_exception()
+        except Exception as ex: handle_exception()
 
     def splitMsg(self, message):
         if message[0] not in ('#', '@'): return [], message
@@ -92,7 +92,7 @@ class IrcCatListener(ThreadingMixIn, StreamRequestHandler):
             if not d: continue
             d = d.strip().strip("@")
             finalDest.append(d)
-            if d in cfg["aliases"].keys():
+            if d in list(cfg["aliases"].keys()):
                 for alias in cfg["aliases"][d]:
                     finalDest.append(alias)
         return finalDest, message
@@ -114,8 +114,8 @@ def init_threaded():
     if not cfg.aliases: cfg.aliases = {}
     cfg.save()
     try:
-        server = SocketServer.TCPServer((cfg["host"], int(cfg["port"])), IrcCatListener)
-    except Exception, ex: logging.error(str(ex)) ; return
+        server = socketserver.TCPServer((cfg["host"], int(cfg["port"])), IrcCatListener)
+    except Exception as ex: logging.error(str(ex)) ; return
     logging.warn("starting irccat2 server on %s:%s" % (cfg["host"], cfg["port"]))
     thr = start_new_thread(server.serve_forever, ())
     thr.join(3)
@@ -148,7 +148,7 @@ examples.add("irccat2_add_alias", "add an alias to the current channel from the 
 
 def handle_irccat2_list_aliases(bot, ievent):
     """ List all aliases defined for the current channel """
-    aliases = [dest for dest, chanlist in cfg["aliases"].iteritems() if ievent.channel in chanlist]
+    aliases = [dest for dest, chanlist in cfg["aliases"].items() if ievent.channel in chanlist]
 
     ievent.reply("%s is receiving irccat2 messages directed at: %s" % (ievent.channel, ", ".join(aliases)))
 cmnds.add("irccat2_list_aliases", handle_irccat2_list_aliases, ['OPER'])

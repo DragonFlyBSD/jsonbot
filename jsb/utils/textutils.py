@@ -6,7 +6,7 @@
 
 import cgi
 import re
-import htmlentitydefs
+import html.entities
 
 ## unescape_charref function
 
@@ -17,7 +17,7 @@ def unescape_charref(ref):
     if name.startswith("x"): 
         name = name[1:] 
         base = 16 
-    return unichr(int(name, base)) 
+    return chr(int(name, base)) 
 
 ## replace_entities function
 
@@ -25,8 +25,8 @@ def replace_entities(match):
     """ ask maze. """ 
     ent = match.group() 
     if ent[1] == "#":  return unescape_charref(ent) 
-    repl = htmlentitydefs.najsbcodepoint.get(ent[1:-1]) 
-    if repl is not None: repl = unichr(repl) 
+    repl = html.entities.najsbcodepoint.get(ent[1:-1]) 
+    if repl is not None: repl = chr(repl) 
     else: repl = ent 
     return repl 
 

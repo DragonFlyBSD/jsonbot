@@ -16,7 +16,7 @@ from jsb.lib.aliases import setalias
 
 ## basic imports
 
-import thread
+import _thread
 import pickle
 import time
 import os
@@ -25,7 +25,7 @@ import logging
 ## defines
 
 ratelimited = []
-limiterlock = thread.allocate_lock()
+limiterlock = _thread.allocate_lock()
 limlock = lockdec(limiterlock)
 
 db = None
@@ -267,8 +267,8 @@ def ratelimit(bot, ievent):
     limit = 2
     try:
         name = ievent.userhost
-        if not bot.state.has_key(name): bot.state[name] = {}
-        if not bot.state[name].has_key('karma'):
+        if name not in bot.state: bot.state[name] = {}
+        if 'karma' not in bot.state[name]:
             bot.state[name]['karma'] = {'count': 0, 'time': time.time() } 
         if time.time() > (bot.state[name]['karma']['time'] + waittime):
             bot.state[name]['karma']['count'] = 0 
@@ -282,7 +282,7 @@ def ratelimit(bot, ievent):
         try: ratelimited.remove(name)
         except ValueError: pass
         return 1
-    except Exception, ex: handle_exception(ievent)
+    except Exception as ex: handle_exception(ievent)
 
 ## karma2-get command
 

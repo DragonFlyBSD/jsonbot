@@ -31,9 +31,9 @@ import os
 import logging
 import uuid
 import time
-import StringIO
+import io
 import gzip
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 ## defines
 
@@ -92,10 +92,10 @@ class OverFlowAPI(object):
         self.api_key = api_key
 
     def api(self, mount, size=30, options={}):
-        url = 'http://api.stackoverflow.com/1.0%s/%s?body=true&pagesize=%s' % (mount, urllib.urlencode(options), size)
+        url = 'http://api.stackoverflow.com/1.0%s/%s?body=true&pagesize=%s' % (mount, urllib.parse.urlencode(options), size)
         if self.api_key is not None:
             url += '&key=%s' % self.api_key
-        content = StringIO.StringIO(geturl2(url, timeout=15))
+        content = io.StringIO(geturl2(url, timeout=15))
         return gzip.GzipFile(fileobj=content).read()
   
     def timeline(self, target, size=30):
@@ -177,7 +177,7 @@ def scan(skip=False):
                         try: body = a['body']
                         except KeyError: continue
                         (urls, c) = geturls(body)
-                        if c: bot.say(chan, u"> " + c)
+                        if c: bot.say(chan, "> " + c)
                         else: bot.say(chan, "can't find answers")
                         if urls: bot.say(chan, "urls: %s" % " -=- ".join(urls))
             else: logging.warn("no %s bot in fleet" % botname)
@@ -191,7 +191,7 @@ def handle_overflowstart(bot, event):
         except: name = gid = bla
         state.data.names[gid] = name
         target = [bot.cfg.name, event.channel]
-        if not state.data.ids.has_key(gid): state.data.ids[gid] = []
+        if gid not in state.data.ids: state.data.ids[gid] = []
         if not gid in state.data.watch or not target in state.data.ids[gid]: state.data.ids[gid].append(target) ; state.data.watch.append(gid)
         else: event.reply("we are already monitoring %s in %s" % (gid, str(target)))
     state.save()

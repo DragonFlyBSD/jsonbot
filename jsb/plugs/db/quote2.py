@@ -20,7 +20,7 @@ from jsb.lib.aliases import setalias
 import random
 import re
 import time
-import thread
+import _thread
 import os
 import logging
 
@@ -49,7 +49,7 @@ def init():
 
 ## locks
 
-quoteslock = thread.allocate_lock()
+quoteslock = _thread.allocate_lock()
 locked = lockdec(quoteslock)
 
 ## QuoteItem class

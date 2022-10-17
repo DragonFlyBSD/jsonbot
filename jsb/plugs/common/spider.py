@@ -44,12 +44,12 @@ import re
 import sys
 import time
 import math
-import urllib2
-import urlparse
+import urllib.request, urllib.error, urllib.parse
+import urllib.parse
 import optparse
 from cgi import escape
 from traceback import format_exc
-from Queue import Queue, Empty as QueueEmpty
+from queue import Queue, Empty as QueueEmpty
 
 ## defines
 
@@ -88,12 +88,12 @@ class Spider(ThreadLoop):
                 try:
                     urldata = UrlData(url, striphtml(content))
                     if urldata.data.txt: urldata.save()
-                except Exception, ex: handle_exception()
+                except Exception as ex: handle_exception()
                 for p in page.geturls():
                     if not p in self.errors:
                         self.put(6, event, p, depth-1, speed-1)
             if not self.queue.qsize(): self.stop()
-        except Exception, e:
+        except Exception as e:
             logging.warn("ERROR: Can't process url '%s' (%s)" % (url, e))
             self.errors.append(url)
             handle_exception()

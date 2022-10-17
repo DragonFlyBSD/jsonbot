@@ -44,7 +44,7 @@ def relayprecondition(bot, event):
     if txt:
         txt = txt.lower()
         if event.nick and bot.cfg.nick and (txt.startswith("[%s]" % event.nick.lower()) or txt.find("[%s]" % bot.cfg.nick.lower()) != -1): return False 
-    origin = unicode((bot.cfg.name, event.printto or event.channel))
+    origin = str((bot.cfg.name, event.printto or event.channel))
     logging.debug("precondition - origin is %s" % origin)
     if event.txt:
         if origin and origin in relay.data: return True
@@ -62,7 +62,7 @@ def relaycallback(bot, event):
     # determine where the event came from
     #event.isrelayed = True
     e = cpy(event)
-    origin = unicode((bot.cfg.name, e.channel))
+    origin = str((bot.cfg.name, e.channel))
     e.isrelayed = True
     e.headlines = True
     try:
@@ -74,7 +74,7 @@ def relaycallback(bot, event):
                 # tests to prevent looping
                 if origin == (botname, target): continue
                 # check whether relay is blocked
-                if block.data.has_key(origin):
+                if origin in block.data:
                     if [botname, type, target] in block.data[origin]: continue
                 # retrieve the bot from fleet (based on type)
                 fleet = getfleet()
@@ -91,7 +91,7 @@ def relaycallback(bot, event):
                     txt = stripcolor(txt)
                     outbot.outnocb(target, txt, "normal", event=e)
                 else: logging.info("can't find bot for (%s,%s,%s)" % (botname, type, target))
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
     except KeyError: pass
 
 # MORE CORE BUSINESS
@@ -125,9 +125,9 @@ def handle_relay(bot, event):
         except ValueError:
             try: botname = bot.cfg.name ; type = bot.cfg.bottype ; target = event.args[0]
             except IndexError: event.missing('[<botname>] [<bottype>] <target>') ; return 
-    origin = unicode((bot.cfg.name, event.channel))
+    origin = str((bot.cfg.name, event.channel))
     if not getfleet().byname(botname): event.reply("no %s bot in fleet." % botname) ; return
-    if not relay.data.has_key(origin): relay.data[origin] = []
+    if origin not in relay.data: relay.data[origin] = []
     try:
         if not [type, target] in relay.data[origin]:
             relay.data[origin].append([botname, type, target])
@@ -146,7 +146,7 @@ def handle_relaystop(bot, event):
     except ValueError:
         try: botname = bot.cfg.name ; (type, target) = event.args
         except (IndexError, ValueError): botname = bot.cfg.name ; type = bot.type ; target = event.channel 
-    origin = unicode((bot.cfg.name, event.origin or event.channel))
+    origin = str((bot.cfg.name, event.origin or event.channel))
     try:
         logging.debug('trying to remove relay (%s,%s)' % (type, target))
         relay.data[origin].remove([botname, type, target])
@@ -167,7 +167,7 @@ examples.add('relay-stop', 'close a relay to another user', 'relay-stop bthate@g
 
 def handle_relayclear(bot, event):
     """ no arguments - clear all relays from a channel. all relaying to target will be ignored. """
-    origin = unicode((bot.cfg.name, event.origin or event.channel))
+    origin = str((bot.cfg.name, event.origin or event.channel))
     try:
         logging.debug('clearing relay for %s' % origin)
         relay.data[origin] = []
@@ -188,7 +188,7 @@ examples.add('relay-clear', 'clear all relays from a channel', 'relay-clear')
 
 def handle_askrelaylist(bot, event):
     """ no arguments - show all relay's of a user. """
-    origin = unicode((bot.cfg.name, event.origin or event.channel))
+    origin = str((bot.cfg.name, event.origin or event.channel))
     try: event.reply('relays for %s: ' % origin, relay.data[origin])
     except KeyError: event.reply('no relays for %s' % origin)
 
@@ -201,8 +201,8 @@ def handle_relayblock(bot, event):
     """ arguments: <bottype> <target> .. block a user/channel/wave from relaying to us. """
     try: (type, target) = event.args
     except ValueError: event.missing('<bottype> <target>') ; return 
-    origin = unicode((bot.cfg.name, event.origin or event.channel))
-    if not block.data.has_key(origin): block.data[origin] = []
+    origin = str((bot.cfg.name, event.origin or event.channel))
+    if origin not in block.data: block.data[origin] = []
     if not [type, origin] in block.data[target]: block.data[target].append([type, origin]) ; block.save()
     event.done()
 
@@ -215,7 +215,7 @@ def handle_relayunblock(bot, event):
     """ arguments: <target> .. remove a relay block of an user. """
     try: target = event.args[0]
     except IndexError: event.missing('<target>') ; return 
-    origin = unicode((bot.cfg.name, event.origin or event.channel))
+    origin = str((bot.cfg.name, event.origin or event.channel))
     try: block.data[origin].remove([bot.cfg.name, target]) ; block.save()
     except (KeyError, ValueError): pass
     event.done()
@@ -227,7 +227,7 @@ examples.add('relay-unblock', 'remove a block of another user', 'relay-unblock b
 
 def handle_relayblocklist(bot, event):
     """ no arguments - show all blocks of a user/channel.wave. """
-    origin = unicode((bot.cfg.name, event.origin or event.channel))
+    origin = str((bot.cfg.name, event.origin or event.channel))
     try: event.reply('blocks for %s: ' % origin, block.data[origin])
     except KeyError: event.reply('no blocks for %s' % origin)
 

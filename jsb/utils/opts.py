@@ -109,7 +109,7 @@ def makeconsoleopts():
     parser.add_option('-x', '--exec', type='string', default="", dest='command', help="give a command to execute")
     parser.add_option('', '--nocolors', action='store_true', default=False, dest='nocolors',  help="enable the use of colors")
     try: opts, args = parser.parse_args()
-    except Exception, ex: logging.warn("opts - can't parse %s" % txt) ; return
+    except Exception as ex: logging.warn("opts - can't parse %s" % txt) ; return
     opts.args = args
     return opts
 
@@ -127,7 +127,7 @@ def makefleetopts():
     parser.add_option('', '-r', type='string', default=False, dest='doresume',  metavar='PATH', 
                   help="resume the bot from the folder specified")
     try: opts, args = parser.parse_args()
-    except Exception, ex: logging.warn("opts - can't parse %s" % txt) ; return
+    except Exception as ex: logging.warn("opts - can't parse %s" % txt) ; return
     opts.args = args
     return opts
 
@@ -141,7 +141,7 @@ def makeeventopts(txt):
     parser.add_option('-a', '--all', action='store_true', default=False, dest='all',  help="use all results of the command")
     parser.add_option('-s', '--silent', action='store_true', default=False, dest='silent',  help="give bot response in /pm")
     try: opts, args = parser.parse_args(txt.split())
-    except Exception, ex: logging.warn("opts - can't parse %s" % txt) ; return
+    except Exception as ex: logging.warn("opts - can't parse %s" % txt) ; return
     opts.args = args
     return opts
 
@@ -238,10 +238,10 @@ def makesxmppconfig(opts=None, botname=None, type="sxmpp"):
     if not cfg.user: raise NoUserProvided("user is not provided .. try giving the -u option to the bot (and maybe -p as well) or run jsb-init and edit %s" % cfg.cfile)
     if opts.user:
         try: cfg.host = opts.user.split('@')[1]
-        except (IndexError, ValueError): print "user is not in the nick@server format"
+        except (IndexError, ValueError): print("user is not in the nick@server format")
     if not cfg.host:
         try: cfg.host = cfg.user.split('@')[1]
-        except (IndexError, ValueError): print "user is not in the nick@server format"
+        except (IndexError, ValueError): print("user is not in the nick@server format")
     if opts.password: cfg.password = opts.password
     if opts.server: cfg.server = opts.server
     else: cfg.server = cfg.server or ""

@@ -17,7 +17,7 @@ from jsb.imports import getjson, getrequests
 
 import logging
 import time
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 ## defines
 
@@ -34,8 +34,8 @@ class ConvoreBot(BotBase):
         BotBase.__init__(self, cfg, usersin, plugs, botname, nick, *args, **kwargs)
         self.type = "convore"
         self.cursor = None
-        if not self.state.has_key("namecache"): self.state["namecache"] = {}
-        if not self.state.has_key("idcache"): self.state["idcache"] = {}
+        if "namecache" not in self.state: self.state["namecache"] = {}
+        if "idcache" not in self.state: self.state["idcache"] = {}
         self.cfg.nick = cfg.username or "jsonbot"
 
     def post(self, endpoint, data=None):
@@ -120,7 +120,7 @@ class ConvoreBot(BotBase):
                 else: result = self.get("live.json")
                 if self.stopped or self.stopreadloop: break
                 if not result: time.sleep(20) ; continue
-                if result.has_key("_id"): self.cursor = result["_id"]
+                if "_id" in result: self.cursor = result["_id"]
                 if not result: continue
                 if not result.messages: continue
                 logging.info("%s - incoming - %s" % (self.cfg.name, str(result)))
@@ -134,8 +134,8 @@ class ConvoreBot(BotBase):
                         method(event)
                     except (TypeError, AttributeError): logging.error("%s - no handler for %s kind" % (self.cfg.name, message['kind'])) 
                     except: handle_exception()
-            except urllib2.URLError, ex: logging.error("%s - url error - %s" % (self.cfg.name, str(ex)))
-            except Exception, ex: handle_exception()
+            except urllib.error.URLError as ex: logging.error("%s - url error - %s" % (self.cfg.name, str(ex)))
+            except Exception as ex: handle_exception()
         logging.debug("%s - stopping readloop" % self.cfg.name)
 
     def handle_error(self, event):

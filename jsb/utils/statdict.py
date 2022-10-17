@@ -20,14 +20,14 @@ class StatDict(LazyDict):
 
     def upitem(self, item, value=1):
         """ increase item """
-        if not self.has_key(item):
+        if item not in self:
             self[item] = value
             return
         self[item] += value
 
     def downitem(self, item, value=1):
         """ decrease item """
-        if not self.has_key(item):
+        if item not in self:
             self[item] = value
             return
         self[item] -= value
@@ -35,7 +35,7 @@ class StatDict(LazyDict):
     def top(self, start=1, limit=None):
         """ return highest items """
         result = []
-        for item, value in self.iteritems():
+        for item, value in self.items():
             if value >= start: result.append((item, value))
         result.sort(lambda b, a: cmp(a[1], b[1]))
         if limit: result =  result[:limit]
@@ -44,7 +44,7 @@ class StatDict(LazyDict):
     def down(self, end=100, limit=None):
         """ return lowest items """
         result = []
-        for item, value in self.iteritems():
+        for item, value in self.items():
             if value <= end: result.append((item, value))
         result.sort(lambda a, b: cmp(a[1], b[1]))
         if limit: return result[:limit]

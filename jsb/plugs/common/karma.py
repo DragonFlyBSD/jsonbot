@@ -170,7 +170,7 @@ def handle_karmagood(bot, event):
     collection = PlugPersistCollection()
     stats = StatDict()
     objs = collection.objects(event.channel.lower())
-    for name, obj in objs.iteritems():
+    for name, obj in objs.items():
        if not obj.data: logging.warn("%s is empty" % name) ; continue
        item = stripname(name).split("-")[-1]
        stats.upitem(item, obj.data.count)

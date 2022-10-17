@@ -4,9 +4,9 @@
 
 ## jsb imports
 
-from persist import Persist
+from .persist import Persist
 from jsb.utils.name import stripname
-from datadir import getdatadir
+from .datadir import getdatadir
 from jsb.utils.timeutils import hourmin
 
 ## basic imports
@@ -36,7 +36,7 @@ def add(target, txtlist):
         t.append("[%s] %s" % (hourmin(time.time()), item))
     cache = Persist(getdatadir() + os.sep + 'run' + os.sep + 'outputcache' + os.sep + stripname(target))
     d = cache.data
-    if not d.has_key('msg'): d['msg'] = []
+    if 'msg' not in d: d['msg'] = []
     d['msg'].extend(t)
     while len(d['msg']) > 10: d['msg'].pop(0)
     cache.save()
@@ -46,7 +46,7 @@ def add(target, txtlist):
 def set(target, txtlist):
     """ set target entry to list. """
     cache = Persist(getdatadir() + os.sep + 'run' + os.sep + 'outputcache' + os.sep + stripname(target))
-    if not cache.data.has_key('msg'): cache.data['msg'] = []
+    if 'msg' not in cache.data: cache.data['msg'] = []
     cache.data['msg'] = txtlist
     cache.save()
 

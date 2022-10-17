@@ -14,7 +14,7 @@ from jsb.lib.wait import waiter
 
 ## basic imports
 
-import Queue
+import queue
 import time
 import logging
 
@@ -54,12 +54,12 @@ def get_bans(bot, channel):
     if not bot.cfg.name in bans:
         bans[bot.cfg.name] = {}
     bans[bot.cfg.name][channel] = []
-    queue368 = Queue.Queue()
+    queue368 = queue.Queue()
     waiter.register('368', channel, queue368)
     bot._raw('MODE %s +b' % (channel, ))
     # wait for End of Channel Ban List
     try: res = queue368.get(1, 2)
-    except Queue.Empty: pass
+    except queue.Empty: pass
     try: return bans[bot.cfg.name][channel]
     except KeyError: return []
 

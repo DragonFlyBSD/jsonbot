@@ -6,10 +6,10 @@
 
 ## jsb imports
 
-from channelbase import ChannelBase
+from .channelbase import ChannelBase
 from jsb.utils.lazydict import LazyDict
 from jsb.utils.generic import splittxt, stripped, waitforqueue
-from errors import NoSuchUser, NoSuchCommand, RequireError
+from .errors import NoSuchUser, NoSuchCommand, RequireError
 from jsb.utils.opts import makeeventopts
 from jsb.utils.trace import whichmodule
 from jsb.utils.exception import handle_exception
@@ -25,19 +25,19 @@ from collections import deque
 from xml.sax.saxutils import unescape
 import copy
 import logging
-import Queue
+import queue
 import types
 import socket
 import threading
 import time
-import thread
-import urllib
+import _thread
+import urllib.request, urllib.parse, urllib.error
 import uuid
 
 ## defines
 
 cpy = copy.deepcopy
-lock = thread.allocate_lock()
+lock = _thread.allocate_lock()
 locked = lockdec(lock)
 
 ## classes
@@ -132,10 +132,10 @@ class EventBase(LazyDict):
         if not self.pipelined and ' ! ' in self.txt: res = self.dopipe(direct, *args, **kwargs)
         else:
             try: res = cmnds.dispatch(self.bot, self, direct=direct, *args, **kwargs)
-            except RequireError, ex: logging.error(str(ex))
-            except NoSuchCommand, ex: logging.error("we don't have a %s command" % str(ex))
-            except NoSuchUser, ex: logging.error("we don't have user for %s" % str(ex))
-            except Exception , ex: handle_exception()
+            except RequireError as ex: logging.error(str(ex))
+            except NoSuchCommand as ex: logging.error("we don't have a %s command" % str(ex))
+            except NoSuchUser as ex: logging.error("we don't have user for %s" % str(ex))
+            except Exception as ex: handle_exception()
         return res
 
     def dopipe(self, direct=False, *args, **kwargs):
@@ -228,7 +228,7 @@ class EventBase(LazyDict):
             self.iscommand = True
         else: logging.debug("can't detect a command on %s (%s)" % (self.txt, self.cbtype))
      
-    def reply(self, txt, result=[], event=None, origin="", dot=u", ", nr=375, extend=0, showall=False, *args, **kwargs):
+    def reply(self, txt, result=[], event=None, origin="", dot=", ", nr=375, extend=0, showall=False, *args, **kwargs):
         """ reply to this event """
         try: target = self.channel or self.arguments[1]
         except (IndexError, TypeError): target = self.channel or "nochannel"
@@ -263,7 +263,7 @@ class EventBase(LazyDict):
         except: handle_exception() ; return 
         if not self.options: return
         if self.options.channel: self.target = self.options.channel
-        logging.debug("options - %s" % unicode(self.options))
+        logging.debug("options - %s" % str(self.options))
         self.txt = ' '.join(self.options.args)
         self.makeargs()
 
@@ -282,7 +282,7 @@ class EventBase(LazyDict):
                 self.args = []
                 self.rest = ""
 
-    def makeresponse(self, txt, result, dot=u", ", *args, **kwargs):
+    def makeresponse(self, txt, result, dot=", ", *args, **kwargs):
         """ create a response from a string and result list. """
         return self.bot.makeresponse(txt, result, dot, *args, **kwargs)
 
@@ -299,9 +299,9 @@ class EventBase(LazyDict):
         if not self.txt: return ""
         if not self.bot: return ""
         if self.txt[0] in self.getcc(): return self.txt[1:]
-        matchnick = unicode(self.bot.cfg.nick + u":")
+        matchnick = str(self.bot.cfg.nick + ":")
         if self.txt.startswith(matchnick): return self.txt[len(matchnick):]
-        matchnick = unicode(self.bot.cfg.nick + u",")
+        matchnick = str(self.bot.cfg.nick + ",")
         if self.txt.startswith(matchnick): return self.txt[len(matchnick):]
         if self.iscommand and self.execstr: return self.execstr
         return ""

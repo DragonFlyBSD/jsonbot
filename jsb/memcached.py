@@ -35,8 +35,8 @@ def mcboot():
         global mc
         mc = memcache.Client(["unix:%s" % sock], debug=0)
         return isactive(sock)
-    except ImportError, ex: logging.warn("using builtin cache - %s" % str(ex))
-    except Exception, ex: logging.warn("error starting memcached client: %s" % str(ex))
+    except ImportError as ex: logging.warn("using builtin cache - %s" % str(ex))
+    except Exception as ex: logging.warn("error starting memcached client: %s" % str(ex))
 
 def getmc():
     if not getmainconfig().memcached: return
@@ -64,7 +64,7 @@ def startmcdaemon():
         args[3] = "-d"
         logging.debug("running %s" % " ".join(args))
         proces = gozerpopen(args)
-    except Exception, ex:
+    except Exception as ex:
         if "No such file" in str(ex): logging.warn("no memcached installed") 
         else: logging.error('error running popen: %s' % str(ex))
         return
@@ -80,15 +80,15 @@ def killmcdaemon():
     sock = os.path.abspath(rundir + os.sep + "memcached.socket")
     pidfile = sock[:-7] + ".pid"
     try: pid = int(open(pidfile, "r").read().strip())
-    except Exception,ex : logging.warn("can't determine pid of memcached from %s - %s" % (pidfile,str(ex))) ; return False
+    except Exception as ex : logging.warn("can't determine pid of memcached from %s - %s" % (pidfile,str(ex))) ; return False
     logging.warn("pid is %s" % pid)
     data = isactive(sock)
     if not data: logging.warn("memcached is not runniing") ; return False
     try: curr_connections = int(data[0][1]["curr_connections"])
-    except Exception, ex: logging.warn("can't determine current connections of memcached .. not killing - %s" % str(ex)) ; return False
+    except Exception as ex: logging.warn("can't determine current connections of memcached .. not killing - %s" % str(ex)) ; return False
     if curr_connections and curr_connections != 1: logging.warn("current connections of memcached is %s .. not killing" % curr_connections) ; return False
     try: os.kill(pid, 15) ; logging.warn("killed memcached with pid %s" % pid)
-    except Exception, ex: logging.warn("failed to kill memcached (%s) - %s" % (pid, str(ex)))
+    except Exception as ex: logging.warn("failed to kill memcached (%s) - %s" % (pid, str(ex)))
     try: os.remove(pidfile)
     except: pass
     

@@ -6,7 +6,7 @@
 
 ## lib imports
 
-from lib.jsbimport import _import
+from .lib.jsbimport import _import
 
 ## basic imports
 

@@ -65,13 +65,13 @@ def dotest(bot, event, filter="", direct=False):
             try:
                 if direct: e.execute()
                 else: bot.put(e)
-            except NoSuchCommand, ex: logging.error("failed to find %s command" % str(ex)) ; continue
+            except NoSuchCommand as ex: logging.error("failed to find %s command" % str(ex)) ; continue
             teller += 1
             time.sleep(0.01)
         event.reply("%s commands executed" % teller)
     if errors:
         event.reply("there are %s errors .. " % len(errors))
-        for cmnd, error in errors.iteritems(): event.reply("%s - %s" % (cmnd, error))
+        for cmnd, error in errors.items(): event.reply("%s - %s" % (cmnd, error))
     for (event, msg) in exceptionevents: event.reply("EXCEPTION: %s - %s" % (event.txt,msg))
     for msg in exceptionlist: event.reply("EXCEPTION: %s" % msg)
 
@@ -98,7 +98,7 @@ def handle_testplugs(bot, event):
     event.reply('%s tests run' % teller)
     if errors:
         event.reply("there are %s errors .. " % len(errors))
-        for cmnd, error in errors.iteritems(): event.reply("%s - %s" % (cmnd, error))
+        for cmnd, error in errors.items(): event.reply("%s - %s" % (cmnd, error))
     else: event.reply("no errors")
     event.outqueue.append(None)
 
@@ -148,7 +148,7 @@ cmnds.add('test-wrongxml', handle_testwrongxml, 'TEST')
 
 def handle_testunicode(bot, ievent):
     """ no arguments - send unicode test down the output paths. """
-    outtxt = u"Đíť ìš éèñ ëņċøďıńğŧęŝţ· .. にほんごがはなせません .. ₀0⁰₁1¹₂2²₃3³₄4⁴₅5⁵₆6⁶₇7⁷₈8⁸₉9⁹ .. ▁▂▃▄▅▆▇▉▇▆▅▄▃▂▁ .. .. uǝʌoqǝʇsɹǝpuo pɐdı ǝɾ ʇpnoɥ ǝɾ"
+    outtxt = "Đíť ìš éèñ ëņċøďıńğŧęŝţ· .. にほんごがはなせません .. ₀0⁰₁1¹₂2²₃3³₄4⁴₅5⁵₆6⁶₇7⁷₈8⁸₉9⁹ .. ▁▂▃▄▅▆▇▉▇▆▅▄▃▂▁ .. .. uǝʌoqǝʇsɹǝpuo pɐdı ǝɾ ʇpnoɥ ǝɾ"
     ievent.reply(outtxt)
     bot.say(ievent.channel, outtxt, event=ievent)
 
@@ -182,7 +182,7 @@ examples.add('test-say', 'use bot.say()', 'test-say')
 
 def handle_testoptions(bot, ievent):
     """ no arguments - show options in current event. """
-    ievent.reply('"%s" - %s' % (ievent.txt, unicode(ievent.options)))
+    ievent.reply('"%s" - %s' % (ievent.txt, str(ievent.options)))
 
 cmnds.add('test-options', handle_testoptions, 'TEST')
 examples.add('test-options', "test event options", "test-options")

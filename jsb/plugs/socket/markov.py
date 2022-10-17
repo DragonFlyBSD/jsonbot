@@ -142,7 +142,7 @@ def cb_markovjoin(bot, ievent):
     # check if (bot.name, ievent.channel) is in onjoin list if so respond
     try: onjoin = cfg.get('onjoin')
     except KeyError: onjoin = None
-    if type(onjoin) != types.ListType: return
+    if type(onjoin) != list: return
     if jsonstring([bot.name, ievent.channel]) in onjoin:
         txt = getreply(bot, ievent, ievent.nick + ':')
         if txt: ievent.reply('%s: %s' % (ievent.nick, txt))
@@ -180,7 +180,7 @@ def markovlearnspider(target):
     if target.startswith("spider://"): target = target[9:]
     objs = coll.search('url', target)
     for obj in objs:
-        if not obj.data and obj.data.url: print "skip - no url" ; continue
+        if not obj.data and obj.data.url: print("skip - no url") ; continue
         time.sleep(0.001)
         if target not in obj.data.url: continue
         logging.warn("url is %s" % obj.data.url)
@@ -223,7 +223,7 @@ def markovlearnurl(url):
             if not line: continue
             markovtalk_learn(line)
             lines += 1
-    except Exception, e: logging.error(str(e))
+    except Exception as e: logging.error(str(e))
     logging.warn('learning %s done' % url)
     return lines
 
@@ -286,7 +286,7 @@ def getreply(bot, ievent, text_line):
             for k in keywords:
                 line = getline('%s %s' % (pp, k))
                 if line and line not in results: results.append(line) ; p = line
-        print p
+        print(p)
     if not results: return ""
     #res = []
     #for result in results[:3]:
@@ -312,7 +312,7 @@ def getline(text_line):
             logging.debug(str(order))
             successorList = i2o(markovchains[o2i(order)])
             logging.debug(str(successorList))
-        except KeyError, ex: continue
+        except KeyError as ex: continue
         word = successorList[0]
         if not word: break
         for word in successorList:
@@ -327,7 +327,7 @@ def getline(text_line):
     
 def handle_markovsize(bot, ievent):
     """ markov-size .. returns size of markovchains """
-    ievent.reply("I know %s phrases" % str(len(markovchains.keys())))
+    ievent.reply("I know %s phrases" % str(len(list(markovchains.keys()))))
 
 cmnds.add('markov-size', handle_markovsize, 'OPER')
 examples.add('markov-size', 'size of markovchains', 'markov-size')

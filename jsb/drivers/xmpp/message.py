@@ -24,13 +24,13 @@ from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 import types
 import time
-import thread
+import _thread
 import logging
 import re
 
 ## locks
 
-replylock = thread.allocate_lock()
+replylock = _thread.allocate_lock()
 replylocked = lockdec(replylock)
 
 ## classes
@@ -95,14 +95,14 @@ class Message(GozerEvent):
         """ dispatch errors to their handlers. """
         try:
             code = self.get('error').code
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
         try:
             method = getattr(self, "handle_%s" % code)
             if method:
                 logging.error('sxmpp.core - dispatching error to handler %s' % str(method))
                 method(self)
-        except AttributeError, ex: logging.error('sxmpp.core - unhandled error %s' % code)
+        except AttributeError as ex: logging.error('sxmpp.core - unhandled error %s' % code)
         except: handle_exception()
 
     def normalize(self, what):

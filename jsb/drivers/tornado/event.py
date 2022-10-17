@@ -67,7 +67,7 @@ class TornadoEvent(EventBase):
         self.auth = fromenc(self.userhost)
         self.stripped = stripped(self.auth)
         self.channel = stripped(self.userhost)
-        logging.debug(u'tornado - parsed - %s - %s' % (self.txt, self.userhost)) 
+        logging.debug('tornado - parsed - %s - %s' % (self.txt, self.userhost)) 
         self.prepare()
         return self
 
@@ -94,7 +94,7 @@ class TornadoEvent(EventBase):
         self.auth = fromenc(self.userhost)
         self.stripped = stripped(self.auth)
         self.channel = stripped(self.userhost)
-        logging.debug(u'tornado - parsed - %s - %s' % (self.txt, self.userhost)) 
+        logging.debug('tornado - parsed - %s - %s' % (self.txt, self.userhost)) 
         self.prepare()
         return self
 
@@ -102,7 +102,7 @@ class TornadoEvent(EventBase):
         """ parse request/response into a WebEvent. """
         self.handler = handler
         try: data = LazyDict(json.loads(message))
-        except Exception, ex: logging.error("failed to parse data: %s - %s" % (message, str(ex))) ; return self
+        except Exception as ex: logging.error("failed to parse data: %s - %s" % (message, str(ex))) ; return self
         logging.info("incoming: %s" % message)
         self.div = data.target
         self.userhost = tornado.escape.xhtml_escape(handler.current_user)
@@ -116,6 +116,6 @@ class TornadoEvent(EventBase):
         self.auth = fromenc(self.userhost)
         self.stripped = stripped(self.auth)
         self.channel = stripped(self.userhost)
-        logging.debug(u'tornado - parsed - %s - %s' % (self.txt, self.userhost)) 
+        logging.debug('tornado - parsed - %s - %s' % (self.txt, self.userhost)) 
         self.prepare()
         return self

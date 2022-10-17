@@ -42,17 +42,17 @@ class GozerEvent(EventBase):
 
     def __getattr__(self, name):
         """ override getattribute so nodes in payload can be accessed. """
-        if not self.has_key(name) and self.has_key('subelements'):
+        if name not in self and 'subelements' in self:
             for i in self['subelements']:
                 if name in i: return i[name]
         return EventBase.__getattr__(self, name, default="")
 
     def get(self, name):
         """ get a attribute by name. """
-        if self.has_key('subelements'): 
+        if 'subelements' in self: 
             for i in self['subelements']:
                 if name in i: return i[name]
-        if self.has_key(name): return self[name] 
+        if name in self: return self[name] 
         return EventBase()
 
     def tojabber(self):
@@ -64,18 +64,18 @@ class GozerEvent(EventBase):
         main = "<%s" % self['element']
         for attribute in attributes[elem]:
             if attribute in res:
-                if res[attribute]: main += u" %s='%s'" % (attribute, XMLescape(res[attribute]))
+                if res[attribute]: main += " %s='%s'" % (attribute, XMLescape(res[attribute]))
                 continue
         main += ">"
-        if res.has_key("xmlns"): main += "<x xmlns='%s'/>" % res["xmlns"] ; gotsub = True
+        if "xmlns" in res: main += "<x xmlns='%s'/>" % res["xmlns"] ; gotsub = True
         else: gotsub = False
-        if res.has_key('html'):
+        if 'html' in res:
             if res['html']:
-                main += u'<html xmlns="http://jabber.org/protocol/xhtml-im"><body xmlns="http://www.w3.org/1999/xhtml">%s</body></html>' % res['html']
+                main += '<html xmlns="http://jabber.org/protocol/xhtml-im"><body xmlns="http://www.w3.org/1999/xhtml">%s</body></html>' % res['html']
                 gotsub = True
-        if res.has_key('txt'):
+        if 'txt' in res:
             if res['txt']:
-                main += u"<body>%s</body>" % XMLescape(res['txt'])
+                main += "<body>%s</body>" % XMLescape(res['txt'])
                 gotsub = True
         for subelement in subelements[elem]:
             if subelement == "body": continue
@@ -86,7 +86,7 @@ class GozerEvent(EventBase):
                     try:
                         main += "<%s>%s</%s>" % (subelement, XMLescape(data), subelement)
                         gotsub = True
-                    except AttributeError, ex: logging.warn("skipping %s" % subelement)
+                    except AttributeError as ex: logging.warn("skipping %s" % subelement)
             except KeyError: pass
         if gotsub: main += "</%s>" % elem
         else:
@@ -100,6 +100,6 @@ class GozerEvent(EventBase):
         """ convert to string. """
         result = ""
         elem = self['element']
-        for item, value in dict(self).iteritems():
+        for item, value in dict(self).items():
             if item in attributes[elem] or item in subelements[elem] or item == 'txt': result += "%s='%s' " % (item, value)
         return result

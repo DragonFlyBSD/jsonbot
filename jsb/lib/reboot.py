@@ -43,7 +43,7 @@ def reboot_stateful(bot, ievent, fleet, partyline):
         if i.type == "tornado":
             i.exit()
             time.sleep(0.1)
-            for socketlist in i.websockets.values():
+            for socketlist in list(i.websockets.values()):
                 for sock in socketlist: sock.stream.close()
     session['partyline'] = partyline._resumedata()
     sfile, sessionfile = tempfile.mkstemp('-session', 'jsb-', text=True)

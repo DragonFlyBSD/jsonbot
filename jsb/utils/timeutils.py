@@ -6,7 +6,7 @@
 
 ## jsb imports
 
-from exception import handle_exception
+from .exception import handle_exception
 
 ## basic imports
 
@@ -166,7 +166,7 @@ def strtotime(what):
         return heute + hms
     except OverflowError: return None
     except ValueError:return None
-    except Exception, ex: pass
+    except Exception as ex: pass
 
 def strtotime2(what):
     """ convert string to time. """
@@ -220,7 +220,7 @@ def strtotime2(what):
         return heute + hms
     except OverflowError: return None
     except ValueError:return None
-    except Exception, ex: pass
+    except Exception as ex: pass
 
 ## uurminsec function
 

@@ -30,7 +30,7 @@ parser.add_option('', '--colors', action="store_true", default=False, dest='colo
 opts, args = parser.parse_args()
 opts.args = args
 
-print getversion('BACKUP')
+print(getversion('BACKUP'))
 
 from jsb.utils.log import setloglevel
 setloglevel(opts.loglevel or "warn", opts.colors)
@@ -42,22 +42,22 @@ from jsb.lib.datadir import getdatadir
 if opts.datadir: ddir = opts.datadir
 elif opts.args: ddir = opts.args[0] 
 else: ddir = getdatadir()
-print "source is %s" % ddir
+print("source is %s" % ddir)
 
-if not os.path.isdir(ddir): print "can't find %s directory" % ddir ; os._exit(1)
+if not os.path.isdir(ddir): print("can't find %s directory" % ddir) ; os._exit(1)
 home = os.path.expanduser("~")
-print "home is %s" % home
+print("home is %s" % home)
 
 if opts.target: target = opts.target
 else: target = home + os.sep + "jsb-backups"
 if not os.path.isdir(target): os.mkdir(target)
-print "target is %s" % target
+print("target is %s" % target)
 
 targetfile = target + os.sep + "jsb.backup.tar.gz"
 
 if os.path.isfile(targetfile):
     highest = gethighest(target, "jsb.backup.tar.gz")
-    print "renaming backup tar to %s" % highest
+    print("renaming backup tar to %s" % highest)
     os.rename(targetfile, target + os.sep + highest)
 
 if 'linux' in  str(os.uname()).lower():
@@ -65,8 +65,8 @@ if 'linux' in  str(os.uname()).lower():
 else:
     execstring = "tar zvcfp %s %s" % (targetfile, ddir)
 
-print "starting backup - %s" % execstring
+print("starting backup - %s" % execstring)
 time.sleep(3)
 proc = Popen(execstring.split())
 proc.wait()
-print "done!"
+print("done!")

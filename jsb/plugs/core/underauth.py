@@ -24,7 +24,7 @@ def pre_underauth_cb(bot, ievent):
     """
     args = ievent.arguments
     try: return (args[0] == 'AUTH' and args[-3] == '/QUOTE' and args[-2] == 'PASS')
-    except Exception, ex: return False
+    except Exception as ex: return False
 
 ## underauth_cb callback
 

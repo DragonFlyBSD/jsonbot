@@ -19,7 +19,7 @@ from jsb.lib.persiststate import UserState
 ## basic imports
 
 from xml.dom import minidom
-from urllib import urlencode
+from urllib.parse import urlencode
 import logging
 import time
 

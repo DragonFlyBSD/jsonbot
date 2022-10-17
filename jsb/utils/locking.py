@@ -6,16 +6,16 @@
 
 ## jsb imports
 
-from exception import handle_exception
-from trace import whichmodule
-from lockmanager import lockmanager, rlockmanager
+from .exception import handle_exception
+from .trace import whichmodule
+from .lockmanager import lockmanager, rlockmanager
 from jsb.lib.threads import getname
 
 ## generic imports
 
 import logging
 import sys
-import thread
+import _thread
 
 ## Locked-class
 
@@ -78,5 +78,5 @@ def locked(func):
         return res
     return lockedfunc
 
-globallock = thread.allocate_lock()
+globallock = _thread.allocate_lock()
 globallocked = lockdec(globallock)

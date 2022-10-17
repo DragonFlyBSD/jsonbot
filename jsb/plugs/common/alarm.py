@@ -28,7 +28,7 @@ from jsb.lib.nextid import nextid
 import time
 import os
 import shutil
-import thread
+import _thread
 import logging
 import types
 import copy
@@ -40,7 +40,7 @@ alarms = None
 
 ## locks
 
-alarmlock = thread.allocate_lock()
+alarmlock = _thread.allocate_lock()
 alarmlocked = lockdec(alarmlock)
 
 ## Alarmitem class
@@ -71,7 +71,7 @@ class Alarms(Persist):
 
     def __init__(self, fname):
         Persist.__init__(self, fname)
-        if type(self.data) == types.ListType:
+        if type(self.data) == list:
             tmp = {}
             for i in range(self.data):
                 tmp[i] = self.data[i]
@@ -121,7 +121,7 @@ class Alarms(Persist):
     def delete(self, idnr):
         """ delete alarmnr """
         try: del self.data[idnr]
-        except Exception, ex: return 0
+        except Exception as ex: return 0
         periodical.killjob(idnr)
         self.save()
         return 1
@@ -161,7 +161,7 @@ def handle_alarmadd(bot, ievent):
             else: nrid = alarms.add(bot.cfg.name, ievent.nick, ttime, ' '.join(ievent.args[1:]), ievent.channel)
             ievent.reply("alarm %s set at %s" % (nrid, time.ctime(ttime)))
             return
-        except Exception, ex: handle_exception(ievent) ; return
+        except Exception as ex: handle_exception(ievent) ; return
     alarmtime = strtotime(alarmtxt)
     if not alarmtime: ievent.reply("can't detect time") ; return
     txt = striptime(alarmtxt).strip()

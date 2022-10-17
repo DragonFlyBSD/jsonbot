@@ -32,10 +32,10 @@ def handle_chantoken(bot, event):
     except google.appengine.runtime.DeadlineExceededError:
         handle_exception()
         #event.response.set_status(500)
-    except google.appengine.api.channel.channel.InvalidChannelClientIdError, ex:
+    except google.appengine.api.channel.channel.InvalidChannelClientIdError as ex:
         handle_exception()
         #event.response.set_status(500)
-    except Exception, ex:
+    except Exception as ex:
         #event.response.set_status(500)
         #event.response.out.write("An exception occured: %s" % str(ex))
         handle_exception()

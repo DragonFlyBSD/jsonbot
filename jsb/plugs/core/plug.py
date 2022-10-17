@@ -72,9 +72,9 @@ def handle_plugreload(bot, ievent):
             for plug in loaded:
                 reloaded.append(plug)
                 logging.warn("%s reloaded" % plug) 
-        except RequireError, ex: errors.append(str(ex)) ; continue
+        except RequireError as ex: errors.append(str(ex)) ; continue
         except NoSuchPlugin: errors.append("can't find %s plugin" % plug) ; continue
-        except Exception, ex:
+        except Exception as ex:
             if 'No module named' in str(ex) and plug in str(ex):
                 logging.debug('%s - %s' % (modname, str(ex)))
                 continue

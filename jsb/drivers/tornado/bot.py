@@ -23,7 +23,7 @@ json = getjson()
 import logging
 import re
 import cgi
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import time
 import copy
 import functools
@@ -50,13 +50,13 @@ class TornadoBot(BotBase):
         self.isgae = False
         self.websockets = {}
 
-    def _raw(self, txt, target=None, how="normal", handler=None, end=u""):
+    def _raw(self, txt, target=None, how="normal", handler=None, end=""):
         """  put txt to the client. """
         logging.warn("> %s (%s)" % (txt, self.cfg.name))
         if not txt: return 
         txt = txt + end
         if handler: handler.write(txt)
-        else: print txt
+        else: print(txt)
 
     def outnocb(self, channel, txt, how=None, event=None, origin=None, response=None, dotime=False, *args, **kwargs):
         txt = self.normalize(txt)
@@ -65,7 +65,7 @@ class TornadoBot(BotBase):
         if "http://" in txt or "https://" in txt:
              for item in re_url_match.findall(txt):
                  logging.debug("web - raw - found url - %s" % item)
-                 url = u'<a href="%s" onclick="window.open(\'%s\'); return false;">%s</a>' % (item, item, item)
+                 url = '<a href="%s" onclick="window.open(\'%s\'); return false;">%s</a>' % (item, item, item)
                  try: txt = txt.replace(item, url)
                  except ValueError:  logging.error("web - invalid url - %s" % url)
         if response or (event and event.doweb): self._raw(txt, event.target, event.how, event.handler)
@@ -115,10 +115,10 @@ def update_web(bot, event, end="<br>"):
         out = Container(event.userhost, event.tojson(), how="tornado").tojson()
         logging.warn("> %s - %s" % (event.userhost, event.txt))
         logging.debug("> %s" % out)
-        if not bot.websockets.has_key(event.channel): logging.info("no %s in websockets dict" % event.channel) ; return
+        if event.channel not in bot.websockets: logging.info("no %s in websockets dict" % event.channel) ; return
         for c in bot.websockets[event.channel]:
             time.sleep(0.001)
             try:
                 callback = functools.partial(c.write_message, out)
                 bot.server.io_loop.add_callback(callback)
-            except IOError, ex: logging.error("IOError occured: %s" % str(ex)) ; raise
+            except IOError as ex: logging.error("IOError occured: %s" % str(ex)) ; raise

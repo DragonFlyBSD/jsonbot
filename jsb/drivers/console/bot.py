@@ -15,12 +15,12 @@ from jsb.utils.generic import strippedtxt, waitevents
 from jsb.utils.url import striphtml
 from jsb.utils.exception import handle_exception
 from jsb.lib.eventhandler import mainhandler
-from event import ConsoleEvent
+from .event import ConsoleEvent
 
 ## basic imports
 
 import time
-import Queue
+import queue
 import logging
 import sys
 import code
@@ -88,11 +88,11 @@ class ConsoleBot(BotBase):
                 e = self.put(event)
                 res = e.wait()
                 if res:
-                    for r in res: print self.normalize(r)
+                    for r in res: print(self.normalize(r))
                 mainhandler.handle_one()
             except NoInput: continue
             except (KeyboardInterrupt, EOFError): break
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
         console.save_history()
         
     def outnocb(self, printto, txt, *args, **kwargs):
@@ -101,7 +101,7 @@ class ConsoleBot(BotBase):
 
     def _raw(self, txt):
         """ do raw output to the console. """
-        logging.info(u"%s - out - %s" % (self.cfg.name, txt))             
+        logging.info("%s - out - %s" % (self.cfg.name, txt))             
         sys.stdout.write(txt)
         sys.stdout.write('\n')
 

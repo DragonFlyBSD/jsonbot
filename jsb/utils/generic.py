@@ -6,9 +6,9 @@
 
 ## lib imports 
 
-from exception import handle_exception
-from trace import calledfrom, whichmodule
-from lazydict import LazyDict
+from .exception import handle_exception
+from .trace import calledfrom, whichmodule
+from .lazydict import LazyDict
 from jsb.imports import getjson
 json = getjson()
 
@@ -23,9 +23,9 @@ import types
 import os
 import os.path
 import random
-import Queue 
+import queue 
 import logging
-import StringIO
+import io
 
 ## istr class
 
@@ -84,7 +84,7 @@ def checkpermissions(ddir, umode):
 
 def jsonstring(s):
     """ convert s to a jsonstring. """
-    if type(s) == types.TupleType: s = list(s)
+    if type(s) == tuple: s = list(s)
     return json.dumps(s)
 
 ## getwho function
@@ -142,15 +142,15 @@ def decodeperchar(txt, encoding='utf-8', what=""):
     if nogo:
         if what: logging.debug("%s: can't decode %s characters to %s" % (what, nogo, encoding))
         else: logging.debug("%s - can't decode %s characters to %s" % (whichmodule(), nogo, encoding))
-    return u"".join(res)
+    return "".join(res)
 
 ## toenc function
 
 def toenc(what, encoding='utf-8'):
     """ convert to encoding. """
-    if not what: what=  u""
+    if not what: what=  ""
     try:
-        w = unicode(what)
+        w = str(what)
         return w.encode(encoding)
     except UnicodeDecodeError:
         logging.debug("%s - can't encode %s to %s" % (whichmodule(2), what, encoding))
@@ -160,8 +160,8 @@ def toenc(what, encoding='utf-8'):
 
 def fromenc(txt, encoding='utf-8', what=""):
     """ convert from encoding. """
-    if not txt: txt = u""
-    if type(txt) == types.UnicodeType: return txt
+    if not txt: txt = ""
+    if type(txt) == str: return txt
     try: return txt.decode(encoding)
     except UnicodeDecodeError:
         logging.debug("%s - can't decode %s - decoding per char" % (whichmodule(), encoding))
@@ -297,7 +297,7 @@ def waitforqueue(queue, timeout=10000, maxitems=None, bot=None):
             if counter > timeout: break
             try:
                 q.append(queue.get_nowait())
-            except Queue.Empty: break
+            except queue.Empty: break
             time.sleep(0.001) ;  counter += 10
         logging.warn("waitforqueue - result is %s items (%s) - %s" % (len(q), counter, str(q)))
         return q
@@ -323,7 +323,7 @@ def sedstring(input, sedstring):
 ## sedfile function
 
 def sedfile(filename, sedstring):
-    result = StringIO.StringIO()
+    result = io.StringIO()
     f = open(filename, 'r')
     seds = sedstring.split('/')   
     fr = seds[1].replace('\\', '')

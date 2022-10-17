@@ -8,7 +8,7 @@ __version__ = "0.1"
 
 from jsb.lib.callbacks import api_callbacks
 
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import logging
 
 class APIHooks(object):
@@ -25,10 +25,10 @@ class APIHooks(object):
         del self.cbs[path]
 
     def dispatch(self, urlpath, bot, event):
-        urlpath = urllib.unquote_plus(urlpath.strip())
+        urlpath = urllib.parse.unquote_plus(urlpath.strip())
         urlpath = urlpath.split('#')[0]
         urlpath = urlpath.split('?')[0] 
-        for path, cb in self.cbs.iteritems():
+        for path, cb in self.cbs.items():
             if path == urlpath: cb(bot, event) ; return      
 
 get_hooks = APIHooks()

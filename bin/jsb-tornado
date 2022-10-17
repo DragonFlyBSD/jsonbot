@@ -56,9 +56,9 @@ if opts.ssl:
             "certfile": getdatadir() + os.sep + "jsb.crt",
             "keyfile": getdatadir() + os.sep + "jsb.key",
         }
-    else: print "can't find jsb.crt and jsb.key file - run jsb-makecert <hostname> first." ; os._exit(1)
+    else: print("can't find jsb.crt and jsb.key file - run jsb-makecert <hostname> first.") ; os._exit(1)
 
-print getversion('TORNADO')
+print(getversion('TORNADO'))
 
 if opts.nourl:
     from jsb.utils.url import url_disable
@@ -119,8 +119,8 @@ import time
 import types
 import os
 import logging
-import urlparse
-import urllib
+import urllib.parse
+import urllib.request, urllib.parse, urllib.error
 import socket
 import ssl
 import select
@@ -161,7 +161,7 @@ class WebSocket(tornado.websocket.WebSocketHandler):
     def open(self):
         user = self.current_user
         logging.warn("opening channel for %s" % user)
-        if not bot.websockets.has_key(user): bot.websockets[user] = []
+        if user not in bot.websockets: bot.websockets[user] = []
         if not self in bot.websockets[user]: bot.websockets[user].append(self)
         logging.warn("websocket open - %s" % user)
 
@@ -176,7 +176,7 @@ class WebSocket(tornado.websocket.WebSocketHandler):
             event.showall = True
             event.bind(bot)
             bot.put(event)
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
             if opts.bork: os._exit(1)
             
@@ -255,7 +255,7 @@ class DispatchHandler(BaseHandler):
                 logging.warn("using url %s" % url)
                 t = {'url': url, 'appname': "JSONBOT", 'version': getversion(), 'who': user, 'host': host, 'color': "#C48B44", "logouturl": "/logout", "loginurl": "/login"}
                 self.render(ddir + os.sep + "templates" + os.sep + "console.html", title="JSONBOT", **t)
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
             if opts.bork: os._exit(1)
 
@@ -277,7 +277,7 @@ class DispatchHandler(BaseHandler):
             bot.put(event)
         except NoSuchCommand: 
             self.response.out.write("no such command: %s" % event.usercmnd)
-        except Exception, ex:
+        except Exception as ex:
             self.response.out.write("the command had an eror: %s" % exceptionmsg())
             handle_exception()
 
@@ -298,7 +298,7 @@ class DemoHandler(BaseHandler):
                 logging.warn("using %s" % url)
                 t = {"url": url, 'appname': "JSONBOT DEMO", 'version': getversion(), 'who': user, 'host': host, 'color': "#C48B11", "logouturl": 'logout', "loginurl": "login"}
                 self.render(ddir + os.sep + "templates" + os.sep + "console.html", title="JSONBOT", **t)
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
 
 class APIHandler(BaseHandler):
@@ -316,7 +316,7 @@ class APIHandler(BaseHandler):
             event.doweb = True
             if floodcontrol.checkevent(event): self.send_error(408) ; return
             api_check(bot, event)
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
             self.send_error(500)
 
@@ -339,7 +339,7 @@ class WarpHandler(BaseHandler):
                 logging.warn("using url %s" % url)
                 t = {"url": url, 'appname': "JSONBOT WARP !", 'version': getversion(), 'who': user, 'host': host, 'color': "#C48B11", "logouturl": 'logout', "loginurl": "login" }
                 self.render(ddir + os.sep + "templates" + os.sep + "warp.html", title="JSONBOT", **t)
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
 
     @tornado.web.authenticated
@@ -359,7 +359,7 @@ class WarpHandler(BaseHandler):
             bot.put(event)
         except NoSuchCommand: 
             self.response.out.write("no such command: %s" % event.usercmnd)
-        except Exception, ex:
+        except Exception as ex:
             self.response.out.write("the command had an eror: %s" % exceptionmsg())
             handle_exception()
 
@@ -416,5 +416,5 @@ if __name__ == "__main__":
          bot.server.start()
          bot.server.io_loop.start()
     except KeyboardInterrupt: globalshutdown()
-    except Exception, ex: handle_exception() ; os._exit(1)
+    except Exception as ex: handle_exception() ; os._exit(1)
     else: globalshutdown()

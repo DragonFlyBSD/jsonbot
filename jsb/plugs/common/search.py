@@ -81,9 +81,9 @@ def handle_search(bot, event):
     if files:
         for f in files:
             try: res.append(Persist(f).data.url)
-            except AttributeError, ex: continue
+            except AttributeError as ex: continue
     objs = coll.search('txt', event.rest)
-    if not objs: objs = coll.objects().values()
+    if not objs: objs = list(coll.objects().values())
     stats = makestats(objs, target, res)
     urls = stats_response(stats, target)
     res.extend(urls)

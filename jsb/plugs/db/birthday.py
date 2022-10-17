@@ -37,7 +37,7 @@ def handle_bdset(bot, ievent):
     try: db.execute(""" INSERT INTO birthday (name, birthday) VALUES(%s, %s) """ , (name, what))
     except:
         try: db.execute(""" UPDATE birthday SET birthday = %s WHERE name = %s """,  (what, name))
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
             ievent.reply('ERROR: %s' % str(ex))
             return
@@ -55,7 +55,7 @@ def handle_bddel(bot, ievent):
     name = bot.users.getname(ievent.userhost)
     result = 0
     try: result = db.execute(""" DELETE FROM birthday WHERE name = %s """, name)
-    except Exception, ex: handle_exception() ; return
+    except Exception as ex: handle_exception() ; return
     if result: ievent.reply('birthday removed')
     else: ievent.reply('no birthday known for %s' % ievent.nick)
 

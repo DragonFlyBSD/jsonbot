@@ -21,7 +21,7 @@ import time
 def handle_not(bot, ievent):
     """ no arguments - negative grep, use this command in a pipeline. """
     try: (options, rest) = getopt.getopt(ievent.args, 'r')
-    except getopt.GetoptError, ex:
+    except getopt.GetoptError as ex:
         ievent.reply(str(ex))
         return
     if not ievent.inqueue: time.sleep(0.5)
@@ -31,7 +31,7 @@ def handle_not(bot, ievent):
     res = []
     if doregex:
         try: reg = re.compile(' '.join(rest))
-        except Exception, ex:
+        except Exception as ex:
             ievent.reply("can't compile regex: %s" % str(ex))
             return
         for i in ievent.inqueue:

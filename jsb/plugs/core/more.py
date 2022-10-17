@@ -20,7 +20,7 @@ def handle_more(bot, ievent):
     """ no arguments - pop message from the output cache. """
     if ievent.msg and bot.type == "irc": target = ievent.nick
     else: target = ievent.channel
-    try: txt, size = outcache.more(u"%s-%s" % (bot.cfg.name, target))
+    try: txt, size = outcache.more("%s-%s" % (bot.cfg.name, target))
     except IndexError: txt = None 
     if not txt: ievent.reply('no more data available for %s' % target) ; return
     txt = bot.outputmorphs.do(txt, ievent)

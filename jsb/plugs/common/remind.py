@@ -28,7 +28,7 @@ class Remind(PlugPersist):
 
     def add(self, who, data):
         """ add a remind txt """
-        if not self.data.has_key(who):
+        if who not in self.data:
              self.data[who] = []
         self.data[who].append(data)
         self.save()

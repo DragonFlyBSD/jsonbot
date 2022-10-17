@@ -44,8 +44,8 @@ class Watched(PlugPersist):
     def subscribe(self, botname, type, channel, jid):
         """ subscrive a jid to a channel. """ 
         channel = channel.lower()
-        jid = unicode(jid)
-        if not self.data.channels.has_key(channel): self.data.channels[channel] = []
+        jid = str(jid)
+        if channel not in self.data.channels: self.data.channels[channel] = []
         if not [botname, type, jid] in self.data.channels[channel]:
             self.data.channels[channel].append([botname, type, jid])
             self.save()
@@ -54,7 +54,7 @@ class Watched(PlugPersist):
     def unsubscribe(self, botname, type, channel, jid):
         """ unsubscribe a jid from a channel. """ 
         channel = channel.lower()
-        self.data.channels[channel].remove([botname, type, unicode(jid)])
+        self.data.channels[channel].remove([botname, type, str(jid)])
         self.save()
         return True
 
@@ -74,7 +74,7 @@ class Watched(PlugPersist):
     def check(self, channel):
         """ check if channel has subscribers. """
         channel = channel.lower()
-        return self.data.channels.has_key(channel)
+        return channel in self.data.channels
 
     def enable(self, channel):
         """ add channel to whitelist. """
@@ -100,7 +100,7 @@ class Watched(PlugPersist):
         """ return channels on whitelist. """
         channel = channel.lower()
         res = []
-        for chan, targets in self.data.channels.iteritems():
+        for chan, targets in self.data.channels.items():
             if channel in str(targets): res.append(chan)
         return res
 
@@ -134,7 +134,7 @@ def prewatchcallback(bot, event):
     logging.debug("watcher - checking %s - %s" % (event.channel, event.userhost))
     if not event.channel: return False
     if not event.txt: return
-    return watched.check(unicode(event.channel)) and event.how != "background" and event.forwarded
+    return watched.check(str(event.channel)) and event.how != "background" and event.forwarded
 
 def watchcallback(bot, event):
     """ the watcher callback, see if channels are followed and if so send data. """
@@ -149,12 +149,12 @@ def watchcallback(bot, event):
             if not event.allowatch: pass
             elif channel not in event.allowwatch: logging.warn("watcher - allowwatch denied %s - %s" % (channel, event.allowwatch)) ; continue
             m = formatevent(bot, event, subscribers, True)
-            if event.cbtype in ['OUTPUT', 'JOIN', 'PART', 'QUIT', 'NICK']: txt = u"[!] %s" % m.txt
-            else: txt = u"[%s] %s" % (m.nick or event.nick or event.auth, m.txt)
+            if event.cbtype in ['OUTPUT', 'JOIN', 'PART', 'QUIT', 'NICK']: txt = "[!] %s" % m.txt
+            else: txt = "[%s] %s" % (m.nick or event.nick or event.auth, m.txt)
             if txt.count('] [') > 2: logging.debug("watcher - %s - skipping %s" % (type, txt)) ; continue
             logging.warn("watcher - forwarding to %s" % channel)
             writeout(botname, type, channel, txt, event.tojson())
-        except Exception, ex: handle_exception()
+        except Exception as ex: handle_exception()
 
 first_callbacks.add('BLIP_SUBMITTED', watchcallback, prewatchcallback)
 first_callbacks.add('PRIVMSG', watchcallback, prewatchcallback)
@@ -201,7 +201,7 @@ def handle_watcherstop(bot, event):
     if not event.rest: target = event.origin
     else: target = event.rest.strip()
     try: watched.unsubscribe(bot.cfg.name, bot.type, target, event.channel)
-    except Exception, ex: event.reply("error removing watcher: %s" % str(ex)) ; return
+    except Exception as ex: event.reply("error removing watcher: %s" % str(ex)) ; return
     if target in event.chan.data.watched:
         event.chan.data.watched.remove(target)
         event.chan.save()

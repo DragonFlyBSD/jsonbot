@@ -34,7 +34,7 @@ import os
 import time
 import copy
 import logging
-import thread
+import _thread
 import cgi
 import xml
 import re
@@ -47,16 +47,16 @@ import random
 
 try: bytes()
 except:
-    def bytes(txt): return str(txt)    
+    def bytes(txt): return str(txt)
 
 ## locks
 
-outlock = thread.allocate_lock()   
-inlock = thread.allocate_lock()
-connectlock = thread.allocate_lock()
+outlock = _thread.allocate_lock()
+inlock = _thread.allocate_lock()
+connectlock = _thread.allocate_lock()
 outlocked = lockdec(outlock)
-inlocked = lockdec(inlock)  
-connectlocked = lockdec(connectlock) 
+inlocked = lockdec(inlock)
+connectlocked = lockdec(connectlock)
 
 ## classes
 
@@ -78,7 +78,7 @@ class XMLStream(NodeBuilder):
         self.final = LazyDict()
         self.subelements = []
         self.reslist = []
-        self.cur = u""
+        self.cur = ""
         self.tags = []
         self.features = []
         self.handlers = LazyDict()
@@ -125,11 +125,11 @@ class XMLStream(NodeBuilder):
         """ default stream error handler. """
         logging.error("%s - STREAMERROR - %s" % (self.cfg.name, data.tojson()))
         #raise StreamError(data.tojson())
-         
+
     def handle_streamfeatures(self, data):
         """ default stream features handler. """
         logging.debug("%s - STREAMFEATURES: %s" % (self.cfg.name, LazyDict(data).dump()))
-         
+
     def addHandler(self, namespace, func):
         """ add a namespace handler. """
         self.handlers[namespace] = func
@@ -148,15 +148,15 @@ class XMLStream(NodeBuilder):
         NodeBuilder.__init__(self)
         self._dispatch_depth = 2
         try: return self._parser.Parse(data.strip())
-        except xml.parsers.expat.ExpatError, ex: 
-            if 'not well-formed' in str(ex):  
+        except xml.parsers.expat.ExpatError as ex:
+            if 'not well-formed' in str(ex):
                 logging.error("%s - data is not well formed" % self.cfg.name)
                 logging.info(data)
                 handle_exception()
                 logging.debug("buffer: %s previous: %s" % (self.buffer, self.prevbuffer))
                 return {}
             logging.debug("%s - ALERT: %s - %s" % (self.cfg.name, str(ex), data))
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
             return {}
 
@@ -186,7 +186,7 @@ class XMLStream(NodeBuilder):
             try:
                 data = jabberstrip(fromenc(self.connection.read()))
                 if self.stopped or self.stopreadloop: break
-                logging.info(u"< %s (%s)" % (data, len(data)))
+                logging.info("< %s (%s)" % (data, len(data)))
                 if data.endswith("</stream:stream>"):
                     logging.error("%s - end of stream detected" % self.cfg.name)
                     self.error = "streamend"
@@ -198,8 +198,8 @@ class XMLStream(NodeBuilder):
                     self.disconnectHandler(Exception('remote %s disconnected' %  self.cfg.host))
                     break
                 if True:
-                    self.buffer = u"%s%s" % (self.buffer, data)
-                    handlers = self.handlers.keys()
+                    self.buffer = "%s%s" % (self.buffer, data)
+                    handlers = list(self.handlers.keys())
                     handlers.append("/")
                     for handler in handlers:
                         target = "%s>" % handler
@@ -212,19 +212,19 @@ class XMLStream(NodeBuilder):
                                     self.buffer = ""
                                     break
                             except: handle_exception()
-            except AttributeError, ex: 
+            except AttributeError as ex:
                 logging.error("%s - connection disappeared: %s" % (self.cfg.name, str(ex)))
                 self.buffer = ""
                 self.error = str(ex)
                 self.disconnectHandler(ex)
                 break
-            except xml.parsers.expat.ExpatError, ex:
+            except xml.parsers.expat.ExpatError as ex:
                 logging.error("%s - %s - %s" % (self.cfg.name, str(ex), data))
                 self.buffer = ""
                 self.error = str(ex)
                 self.disconnectHandler(ex)
                 break
-            except Exception, ex:
+            except Exception as ex:
                 handle_exception()
                 self.error = str(ex)
                 self.disconnectHandler(ex)
@@ -247,25 +247,25 @@ class XMLStream(NodeBuilder):
                 return
             start = what[:3]
             if start in ['<st', '<me', '<pr', '<iq', "<au", "<re", "<fa", "<ab"]:
-                if start == "<pr": logging.debug(u"> %s" % what)
-                else: logging.info(u"> %s" % what)
+                if start == "<pr": logging.debug("> %s" % what)
+                else: logging.info("> %s" % what)
                 if not self.connection: self.sock.send(what)
                 else:
-                    try: self.connection.send(what + u"\r\n")
+                    try: self.connection.send(what + "\r\n")
                     except AttributeError:
                         try: self.connection.write(what)
                         except AttributeError: self.sock.send(what)
             else: logging.error('%s - invalid stanza: %s' % (self.cfg.name, what))
             if self.cfg.sleeptime: time.sleep(self.cfg.sleeptime)
             else: time.sleep(0.01)
-        except socket.error, ex:
+        except socket.error as ex:
             if 'Broken pipe' in str(ex):
                 logging.debug('%s - core - broken pipe .. ignoring' % self.cfg.name)
                 return
             self.error = str(ex)
             handle_exception()
         except AttributeError: logging.warn("%s - socket went away: %s" % (self.cfg.name, stanza))
-        except Exception, ex:
+        except Exception as ex:
             self.error = str(ex)
             handle_exception()
 
@@ -282,7 +282,7 @@ class XMLStream(NodeBuilder):
                 if self.stopped or self.failure: break
                 if not find: break
                 elif find in result: break
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
         return res
 
     def doconnect(self):
@@ -308,7 +308,7 @@ class XMLStream(NodeBuilder):
                     try:
                         intmax += answer.priority
                         addresses[intmax] = (answer.target.to_text()[:-1], answer.port)
-                    except Exception, ex: logging.debug("%s - skipping %s: %s" % (self.cfg.name, str(answer), str(ex)))
+                    except Exception as ex: logging.debug("%s - skipping %s: %s" % (self.cfg.name, str(answer), str(ex)))
                 priorities = [x for x in addresses.keys()]
                 priorities.sort()
 
@@ -334,7 +334,7 @@ class XMLStream(NodeBuilder):
         iq = self.init_stream('features')
         #iq = self.waiter('<stream:stream to="%s" xmlns="jabber:client" xmlns:stream="http://etherx.jabber.org/streams" version="1.0">' % self.cfg.user.split('@')[1], "features")
         self.auth_methods(iq)
-        self.init_tls() 
+        self.init_tls()
         self.sock.settimeout(60)
         self.sock.setblocking(1)
         self.dossl()
@@ -359,7 +359,7 @@ class XMLStream(NodeBuilder):
         if self.failure: raise CannotAuth(self.failure.orig)
         self.sock.settimeout(60)
         self.sock.setblocking(1)
-        
+
     def auth_methods(self, iq):
         if self.stopped: return []
         if not iq.orig: raise Exception("%s - can't detect auth method" % self.cfg.name)
@@ -470,8 +470,8 @@ class XMLStream(NodeBuilder):
                     result.bot = self
                     result.orig = data
                     result.jabber = True
-                    method(result) 
-                except Exception, ex: handle_exception()
+                    method(result)
+                except Exception as ex: handle_exception()
         if self.tags:
             element = self.tags[0]
             logging.debug("%s - setting element: %s" % (self.cfg.name, element))
@@ -484,8 +484,8 @@ class XMLStream(NodeBuilder):
                 result.bot = self
                 result.orig = data
                 result.jabber = True
-                method(result) 
-            except Exception, ex:
+                method(result)
+            except Exception as ex:
                 handle_exception()
                 result = {}
         else:
@@ -506,13 +506,13 @@ class XMLStream(NodeBuilder):
         if not self.tags: self.final.update(attrs)
         else: self.result[tag] = attrs
         self.tags.append(tag)
- 
+
     def unknown_endtag(self,  tag):
         """ handler called by the self._parser on start of a unknown endtag. """
         NodeBuilder.unknown_endtag(self, tag)
         self.result = {}
-        self.cur = u""
-        
+        self.cur = ""
+
     def handle_data(self, data):
         """ node data handler. """
         NodeBuilder.handle_data(self, data)
@@ -529,9 +529,9 @@ class XMLStream(NodeBuilder):
         ns = dom.getNamespace()
         res[parentname] = LazyDict()
         res[parentname]['data'] = data
-        res[parentname].update(attrs) 
+        res[parentname].update(attrs)
         if ns: res[parentname]['xmlns'] = ns
-        for child in dom.getChildren():  
+        for child in dom.getChildren():
             name = child.getName()
             data = child.getData()
             if data: self.final[name] = data
@@ -539,7 +539,7 @@ class XMLStream(NodeBuilder):
             ns = child.getNamespace()
             res[parentname][name] = LazyDict()
             res[parentname][name]['data'] = data
-            res[parentname][name].update(attrs) 
+            res[parentname][name].update(attrs)
             self.final.update(attrs)
             if ns: res[parentname][name]['xmlns'] = ns
         self.subelements.append(res)

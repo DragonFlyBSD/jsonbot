@@ -39,36 +39,36 @@ class NSAuth(Pdod):
             'identify': 'identify',
         }
         options.update(kwargs)
-        assert options.has_key('password'), 'A password must be set'
-        for key in options.keys(): Pdod.set(self, bot.cfg.name, key, options[key])
+        assert 'password' in options, 'A password must be set'
+        for key in list(options.keys()): Pdod.set(self, bot.cfg.name, key, options[key])
         self.save()
 
     def remove(self, bot):
         """ remove a nickserv entry. """
-        if self.has_key(bot.cfg.name):
+        if bot.cfg.name in self:
             del self[bot.cfg.name]
             self.save()
 
     def has(self, bot):
         """ check if a bot is in the nickserv list. """
-        return self.has_key(bot.cfg.name)
+        return bot.cfg.name in self
 
     def register(self, bot, passwd):
         """ register a bot to nickserv. """
-        if self.has_key(bot.cfg.name) and self.has_key2(bot.cfg.name, 'nickserv'):
+        if bot.cfg.name in self and self.has_key2(bot.cfg.name, 'nickserv'):
             bot.sendraw('PRIVMSG %s :%s %s' % (self.get(bot.cfg.name, 'nickserv'),  'REGISTER', passwd))
             logging.warn('nickserv - register sent on %s' % bot.cfg.server)
 
     def identify(self, bot):
         """ identify a bot to nickserv. """
-        if self.has_key(bot.cfg.name):
+        if bot.cfg.name in self:
             logging.warn('nickserv - identify sent on %s' % bot.cfg.server)
             bot.outnocb(self.get(bot.cfg.name, 'nickserv'), '%s %s' % (self.get(bot.cfg.name, 'identify'), self.get(bot.cfg.name, 'password')), how="msg")
 
     def listbots(self):
         """ list all bots know. """
         all = []
-        for bot in self.data.keys(): all.append((bot, self.data[bot]['nickserv']))
+        for bot in list(self.data.keys()): all.append((bot, self.data[bot]['nickserv']))
         return all
 
     def sendstring(self, bot, txt):
@@ -177,7 +177,7 @@ def handle_nslist(bot, ievent):
     if bot.jabber: return
     all = dict(nsauth.listbots())
     rpl = []
-    for bot in all.keys(): rpl.append('%s: authenticating through %s' % (bot, all[bot]))
+    for bot in list(all.keys()): rpl.append('%s: authenticating through %s' % (bot, all[bot]))
     rpl.sort()
     ievent.reply(' .. '.join(rpl))
 

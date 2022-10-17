@@ -31,12 +31,12 @@ class Examples(dict):
 
     def size(self):
         """ return size of examples dict. """
-        return len(self.keys())
+        return len(list(self.keys()))
 
     def getexamples(self):
         """ get all examples in list. """
         result = []
-        for i in self.values():
+        for i in list(self.values()):
             ex = i.example.lower()
             exampleslist = re.split('\d\)', ex)
             for example in exampleslist:

@@ -27,13 +27,13 @@ from jsb.utils.timeutils import striptime, strtotime2
 import time
 import os
 import logging
-import thread
+import _thread
 from os import path
 from datetime import datetime
 
 ## locks
 
-outlock = thread.allocate_lock()
+outlock = _thread.allocate_lock()
 outlocked = lockdec(outlock)
 
 ## defines
@@ -138,7 +138,7 @@ def log_write(m):
     global loggers
     try: loggers[logname].info(line.strip())
     except KeyError: logging.error("no logger available for channel %s" % logname)
-    except Exception, ex: handle_exception()
+    except Exception as ex: handle_exception()
 
 backends['log'] = log_write
 
@@ -203,7 +203,7 @@ def shutdown():
     """ shutdown the plugin. """
     global stopped
     stopped = True
-    for file in logfiles.values():
+    for file in list(logfiles.values()):
         file.close()
     return 1
 
@@ -229,7 +229,7 @@ def handle_chatlogoff(bot, ievent):
     except ValueError: ievent.reply('chatlog is not enabled in (%s,%s)' % (bot.cfg.name, ievent.channel)) ; return
     try: del loggers["%s-%s" % (bot.cfg.name, stripname(ievent.channel))]
     except KeyError: pass
-    except Exception, ex: handle_exception()
+    except Exception as ex: handle_exception()
     ievent.reply('chatlog disabled on (%s,%s)' % (bot.cfg.name, ievent.channel))
 
 cmnds.add('chatlog-off', handle_chatlogoff, 'OPER')

@@ -321,8 +321,8 @@ try:
     import Crypto.Cipher.Blowfish
     import Crypto.Cipher.AES
 except ImportError:
-    print "This module requires PyCrypto / The Python Cryptographic Toolkit."
-    print "Get it from http://www.dlitz.net/software/pycrypto/."
+    print("This module requires PyCrypto / The Python Cryptographic Toolkit.")
+    print("Get it from http://www.dlitz.net/software/pycrypto/.")
     raise
 from os import urandom
 import struct
@@ -387,7 +387,7 @@ def padto(msg, length):
 def xorstring(a, b, blocksize): # Slow.
     """xor string a and b, both of length blocksize."""
     xored = ''
-    for i in xrange(blocksize):
+    for i in range(blocksize):
         xored += chr(ord(a[i]) ^ ord(b[i]))  
     return xored
 
@@ -402,7 +402,7 @@ def cbc_encrypt(func, data, blocksize):
     assert len(IV) == blocksize
     
     ciphertext = IV
-    for block_index in xrange(len(data) / blocksize):
+    for block_index in range(len(data) / blocksize):
         xored = xorstring(data, IV, blocksize)
         enc = func(xored)
         
@@ -422,7 +422,7 @@ def cbc_decrypt(func, data, blocksize):
     data = data[blocksize:]
 
     plaintext = ''
-    for block_index in xrange(len(data) / blocksize):
+    for block_index in range(len(data) / blocksize):
         temp = func(data[0:blocksize])
         temp2 = xorstring(temp, IV, blocksize)
         plaintext += temp2
@@ -482,10 +482,10 @@ def blowcrypt_b64encode(s):
     res = ''
     while s:
         left, right = struct.unpack('>LL', s[:8])
-        for i in xrange(6):
+        for i in range(6):
             res += B64[right & 0x3f]
             right >>= 6
-        for i in xrange(6):
+        for i in range(6):
             res += B64[left & 0x3f]
             left >>= 6
         s = s[8:]
@@ -638,7 +638,7 @@ def dh1080_b64decode(s):
     L = len(s)
     if L < 2:
         raise ValueError
-    for i in reversed(range(L-1)):
+    for i in reversed(list(range(L-1))):
         if buf[ord(s[i])] == 0:
             L -= 1
         else:
@@ -740,7 +740,7 @@ def dh1080_unpack(msg, ctx):
                 raise MalformedError
             
             if not dh_validate_public(public, q_dh1080, p_dh1080):
-                print invalidmsg
+                print(invalidmsg)
                 
             ctx.secret = pow(public, ctx.private, p_dh1080)
         except:
@@ -758,7 +758,7 @@ def dh1080_unpack(msg, ctx):
                 raise MalformedError
 
             if not dh_validate_public(public, q_dh1080, p_dh1080):
-                print invalidmsg
+                print(invalidmsg)
             
             ctx.secret = pow(public, ctx.private, p_dh1080)
         except:
@@ -893,7 +893,7 @@ def ircsrp_unpack(ctx, msg):
             raise MalformedError
         ctx.sessionkey = new
         ctx.cipher = AESCBC(new)
-        print "*** Session key changed to:", repr(new)
+        print("*** Session key changed to:", repr(new))
         return None
 
     if not plain[0] == 'M':
@@ -904,8 +904,8 @@ def ircsrp_unpack(ctx, msg):
     timestampstr = plain[2+usernamelen:4+2+usernamelen]
     timestamp = struct.unpack(">L", timestampstr)[0]
 
-    print "*** Sent by username:", username
-    print "*** Sent at time:", time.ctime(timestamp)
+    print("*** Sent by username:", username)
+    print("*** Sent at time:", time.ctime(timestamp))
         
     return plain[4+2+usernamelen:]
 
@@ -1013,7 +1013,7 @@ def ircsrp_exchange(ctx, msg=None, sender=None):
         ctx.sessionkey = sessionkey
         ctx.cipher = AESCBC(sessionkey)
 
-        print "*** Session key is:", repr(sessionkey)
+        print("*** Session key is:", repr(sessionkey))
         
         ctx.ex.status = 0
         

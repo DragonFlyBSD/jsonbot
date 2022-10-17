@@ -22,13 +22,13 @@ from jsb.db import getmaindb
 ## basic imports
 
 import time
-import thread
+import _thread
 import os
 import logging
 
 ## locks
 
-todolock = thread.allocate_lock()
+todolock = _thread.allocate_lock()
 locked = lockdec(todolock)
 
 ## defines

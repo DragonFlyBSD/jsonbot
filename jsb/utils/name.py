@@ -39,7 +39,7 @@ def slugify(value):
     """
     import unicodedata
     value = unicodedata.normalize('NFKD', value)
-    value = unicode(re.sub('[^\w\s-]', '', value).strip())
+    value = str(re.sub('[^\w\s-]', '', value).strip())
     return re.sub('[-\s]+', '-', value)
 
 ## stripname function

@@ -31,16 +31,16 @@ class Channels(Pdod):
         Pdod.__init__(self, fname)
 
         # make sure attributes are initialised
-        for j in self.data.values():
-            if not j.has_key('perms'):
+        for j in list(self.data.values()):
+            if 'perms' not in j:
                 j['perms'] = []
-            if not j.has_key('autovoice'):
+            if 'autovoice' not in j:
                 j['autovoice'] = 0
 
     def __setitem__(self, a, b):
 
         # if item is not in dict initialise it to empty dict
-        if not self.data.has_key(a):
+        if a not in self.data:
            self.data[a] = {}
 
         # assign data
@@ -56,7 +56,7 @@ class Channels(Pdod):
         result = [] # list of channels found
 
         # loop over channels
-        for channel in self.data.keys():
+        for channel in list(self.data.keys()):
             channel = channel.strip()
             if channel not in result:
                 result.append(channel)
@@ -73,7 +73,7 @@ class Channels(Pdod):
         result = []
 
         # loop over channels gathering channel name and key
-        for channel in self.data.keys():
+        for channel in list(self.data.keys()):
             channel = channel.strip()
             try:
                 key = self.data[channel]['key']

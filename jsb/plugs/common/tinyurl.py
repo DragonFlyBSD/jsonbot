@@ -35,15 +35,15 @@ json = getjson()
 
 ## basic imports
 
-import urllib
-import urllib2
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+import urllib.parse
 import re
 import logging
 
 ## defines
 
-re_url_match  = re.compile(u'((?:http|https)://\S+)')
+re_url_match  = re.compile('((?:http|https)://\S+)')
 urlcache = {}
 
 ## functions
@@ -51,7 +51,7 @@ urlcache = {}
 def valid_url(url):
     """ check if url is valid """
     if not re_url_match.search(url): return False
-    parts = urlparse.urlparse(url)
+    parts = urllib.parse.urlparse(url)
     cleanurl = '%s://%s' % (parts[0], parts[1])
     if parts[2]: cleanurl = '%s%s' % (cleanurl, parts[2])
     if parts[3]: cleanurl = '%s;%s' % (cleanurl, parts[3])
@@ -69,7 +69,7 @@ def privmsgcb(bot, ievent):
     test_url = re_url_match.search(ievent.txt)
     if test_url:
         url = test_url.group(1)
-        if not urlcache.has_key(bot.cfg.name): urlcache[bot.cfg.name] = {}
+        if bot.cfg.name not in urlcache: urlcache[bot.cfg.name] = {}
         urlcache[bot.cfg.name][ievent.target] = url
 
 # not enabled right now
@@ -77,19 +77,19 @@ def privmsgcb(bot, ievent):
 
 def get_tinyurl(url):
     """ grab a tinyurl. """
-    res = get(url, namespace='tinyurl') ; logging.debug('tinyurl - cache - %s' % unicode(res))
+    res = get(url, namespace='tinyurl') ; logging.debug('tinyurl - cache - %s' % str(res))
     if res and res[0] == '[': return json.loads(res)
     postarray = [
         ('submit', 'submit'),
         ('url', url),
         ]
-    postdata = urllib.urlencode(postarray)
-    req = urllib2.Request(url=plugcfg.url, data=postdata)
+    postdata = urllib.parse.urlencode(postarray)
+    req = urllib.request.Request(url=plugcfg.url, data=postdata)
     req.add_header('User-agent', useragent())
-    try: res = urllib2.urlopen(req).readlines()
-    except urllib2.URLError, e: logging.warn('tinyurl - %s - URLError: %s' % (url, str(e))) ; return
-    except urllib2.HTTPError, e: logging.warn('tinyurl - %s - HTTP error: %s' % (url, str(e))) ; return
-    except Exception, ex:
+    try: res = urllib.request.urlopen(req).readlines()
+    except urllib.error.URLError as e: logging.warn('tinyurl - %s - URLError: %s' % (url, str(e))) ; return
+    except urllib.error.HTTPError as e: logging.warn('tinyurl - %s - HTTP error: %s' % (url, str(e))) ; return
+    except Exception as ex:
         if "DownloadError" in str(ex): logging.warn('tinyurl - %s - DownloadError: %s' % (url, str(e)))
         else: handle_exception()
         return
@@ -104,7 +104,7 @@ def get_tinyurl(url):
 
 def handle_tinyurl(bot, ievent):
     """ arguments: <url> - get tinyurl from provided url. """
-    if not ievent.rest and (not urlcache.has_key(bot.cfg.name) or not urlcache[bot.cfg.name].has_key(ievent.target)):
+    if not ievent.rest and (bot.cfg.name not in urlcache or ievent.target not in urlcache[bot.cfg.name]):
         ievent.missing('<url>')
         return
     elif not ievent.rest: url = urlcache[bot.cfg.name][ievent.target]

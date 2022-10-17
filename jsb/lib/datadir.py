@@ -57,7 +57,7 @@ def makedirs(ddir=None):
         except:
              raise Exception("can't make %s dir" % ddir)
         logging.info("making dirs in %s" % ddir)
-    try: os.chmod(ddir, 0700)
+    try: os.chmod(ddir, 0o700)
     except: pass
     if ddir: setdatadir(ddir)
     last = datadir.split(os.sep)[-1]
@@ -77,12 +77,12 @@ def makedirs(ddir=None):
         source = getsource("jsb.data.examples")
         if not source: raise Exception("can't find jsb.data.examples package")
         try: shutil.copy(source + os.sep + 'mainconfig.example', ddir + os.sep + 'config' + os.sep + 'mainconfig')
-        except (OSError, IOError), ex: logging.error("datadir - failed to copy jsb.data.config.mainconfig: %s" % str(ex))
+        except (OSError, IOError) as ex: logging.error("datadir - failed to copy jsb.data.config.mainconfig: %s" % str(ex))
     if not os.path.isfile(ddir + os.sep + 'config' + os.sep + "credentials.py"):
         source = getsource("jsb.data.examples")
         if not source: raise Exception("can't find jsb.data.examples package")
         try: shutil.copy(source + os.sep + 'credentials.py.example', ddir + os.sep + 'config' + os.sep + 'credentials.py')
-        except (OSError, IOError), ex: logging.error("datadir - failed to copy jsb.data.config: %s" % str(ex))
+        except (OSError, IOError) as ex: logging.error("datadir - failed to copy jsb.data.config: %s" % str(ex))
     try: touch(ddir + os.sep + "config" + os.sep + "__init__.py")
     except: pass
     # myplugs
@@ -93,25 +93,25 @@ def makedirs(ddir=None):
     if not os.path.isfile(ddir + os.sep + 'myplugs' + os.sep + "__init__.py"):
         try:
             shutil.copy(initsource, os.path.join(ddir, 'myplugs', '__init__.py'))
-        except (OSError, IOError), ex: logging.error("datadir - failed to copy myplugs/__init__.py: %s" % str(ex))
+        except (OSError, IOError) as ex: logging.error("datadir - failed to copy myplugs/__init__.py: %s" % str(ex))
     # myplugs.common
     if not os.path.isdir(os.path.join(ddir, 'myplugs', 'common')): os.mkdir(os.path.join(ddir, 'myplugs', 'common'))
     if not os.path.isfile(os.path.join(ddir, 'myplugs', "common", "__init__.py")):
         try:
             shutil.copy(initsource, os.path.join(ddir, 'myplugs', 'common', '__init__.py'))
-        except (OSError, IOError), ex: logging.error("datadir - failed to copy myplugs/common/__init__.py: %s" % str(ex))
+        except (OSError, IOError) as ex: logging.error("datadir - failed to copy myplugs/common/__init__.py: %s" % str(ex))
     # myplugs.gae
     if not os.path.isdir(os.path.join(ddir, 'myplugs', 'gae')): os.mkdir(os.path.join(ddir, 'myplugs', 'gae'))
     if not os.path.isfile(os.path.join(ddir, 'myplugs', "gae", "__init__.py")):
         try:
             shutil.copy(initsource, os.path.join(ddir, 'myplugs', 'gae', '__init__.py'))
-        except (OSError, IOError), ex: logging.error("datadir - failed to copy myplugs/gae/__init__.py: %s" % str(ex))
+        except (OSError, IOError) as ex: logging.error("datadir - failed to copy myplugs/gae/__init__.py: %s" % str(ex))
     # myplugs.socket
     if not os.path.isdir(os.path.join(ddir, 'myplugs', 'socket')): os.mkdir(os.path.join(ddir, 'myplugs', 'socket'))
     if not os.path.isfile(os.path.join(ddir, 'myplugs', 'socket', "__init__.py")):
         try:
             shutil.copy(initsource, os.path.join(ddir, 'myplugs', 'socket', '__init__.py'))
-        except (OSError, IOError), ex: logging.error("datadir - failed to copy myplugs/socket/__init__.py: %s" % str(ex))
+        except (OSError, IOError) as ex: logging.error("datadir - failed to copy myplugs/socket/__init__.py: %s" % str(ex))
     if not os.path.isdir(ddir + os.sep +'botlogs'): os.mkdir(ddir + os.sep + 'botlogs')
     if not os.path.isdir(ddir + '/run/'): os.mkdir(ddir + '/run/')
     if not os.path.isdir(ddir + '/users/'): os.mkdir(ddir + '/users/')

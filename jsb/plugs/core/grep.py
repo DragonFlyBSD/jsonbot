@@ -22,7 +22,7 @@ def handle_grep(bot, ievent):
     """ no arguments - grep the result list, use this command in a pipeline. """
     if not ievent.rest: ievent.reply('grep <txt>') ; return
     try: (options, rest) = getopt.getopt(ievent.args, 'riv')
-    except getopt.GetoptError, ex: ievent.reply(str(ex)) ; return
+    except getopt.GetoptError as ex: ievent.reply(str(ex)) ; return
     doregex = False
     docasein = False
     doinvert = False
@@ -37,7 +37,7 @@ def handle_grep(bot, ievent):
         try:
             if docasein: reg = re.compile(' '.join(rest), re.I)
             else: reg = re.compile(' '.join(rest))
-        except Exception, ex:
+        except Exception as ex:
             ievent.reply("can't compile regex: %s" % str(ex))
             return
         if doinvert:

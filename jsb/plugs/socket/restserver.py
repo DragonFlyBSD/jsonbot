@@ -36,7 +36,7 @@ try:
     url = "http://%s" % hp
     if cfg.enable: enable = True
 except AttributeError: enable = False # we are on GAE
-except Exception, ex: logging.warn("error binding socket: %s" % str(ex)) ; enable = False
+except Exception as ex: logging.warn("error binding socket: %s" % str(ex)) ; enable = False
 
 ## server part
 
@@ -56,8 +56,8 @@ def startserver(force=False):
             logging.warn('restserver - running at %s:%s' % (cfg.get('host'), cfg.get('port')))
             for mount in cfg.get('disable'): server.disable(mount)
         else: logging.error('restserver - failed to start server at %s:%s' % (cfg.get('host'), cfg.get('port')))
-    except socket.error, ex: logging.warn('restserver - start - socket error: %s' % str(ex))
-    except Exception, ex: handle_exception()
+    except socket.error as ex: logging.warn('restserver - start - socket error: %s' % str(ex))
+    except Exception as ex: handle_exception()
     return server
 
 def stopserver():
@@ -65,7 +65,7 @@ def stopserver():
     try:
         if not server: logging.debug('restserver - server is already stopped') ; return
         server.shutdown()
-    except Exception, ex: handle_exception()
+    except Exception as ex: handle_exception()
 
 ## plugin init
 

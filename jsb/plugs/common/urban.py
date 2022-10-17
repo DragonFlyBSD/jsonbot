@@ -19,7 +19,7 @@ from jsb.lib.persistconfig import PersistConfig
 
 ## basic imports
 
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import simplejson as json
 
 ## defines
@@ -33,14 +33,14 @@ def handle_urban(bot, ievent):
     if len(ievent.args) > 0: what = " ".join(ievent.args)
     else: ievent.missing('<search query>') ; return
     try:
-	data = geturl2(url + urllib.quote_plus(what))
+	data = geturl2(url + urllib.parse.quote_plus(what))
 	if not data: ievent.reply("word not found: %s" % what) ; return
 	data = json.loads(data)
 	if data['result_type'] == 'no_result': ievent.reply("word not found: %s" % what) ; return
 	res = []
 	for r in data['list']: res.append(r['definition'])
 	ievent.reply("result: ", res)
-    except Exception, ex: ievent.reply(str(ex))
+    except Exception as ex: ievent.reply(str(ex))
 
 cmnds.add('urban', handle_urban, ['OPER', 'USER', 'GUEST'])
 examples.add('urban', 'urban <what> .. search urbandictionary for <what>','1) urban bot 2) urban shizzle')

@@ -30,7 +30,7 @@ from jsb.contrib import tweepy
 ## basic imports
 
 import os
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import types
 import logging
 
@@ -72,7 +72,7 @@ def postmsg(username, txt):
         for txt in result:
             status = twitter.update_status(txt)
         logging.info("logged %s tweets for %s" % (len(result), username))
-    except TweepError, ex: logging.error("twitter - error: %s" % str(ex))
+    except TweepError as ex: logging.error("twitter - error: %s" % str(ex))
     return len(result)
     
 ## TwitterUsers class
@@ -112,9 +112,9 @@ def handle_twitter(bot, ievent):
     if not ievent.rest: ievent.missing('<txt>') ; return
     else:
         try: nritems = postmsg(ievent.user.data.name, ievent.rest) ; ievent.reply("%s tweet posted" % nritems)
-        except TweepError, ex:
+        except TweepError as ex:
              if "token" in str(ex): ievent.reply("you are not registered yet.. use !twitter-auth")
-        except (TweepError, urllib2.HTTPError), e: ievent.reply('twitter failed: %s' % (str(e),))
+        except (TweepError, urllib.error.HTTPError) as e: ievent.reply('twitter failed: %s' % (str(e),))
  
 cmnds.add('twitter', handle_twitter, ['USER', 'GUEST'])
 examples.add('twitter', 'posts a message on twitter', 'twitter just found the http://jsonbot.org project')
@@ -148,11 +148,11 @@ def handle_twittercmnd(bot, ievent):
             except AttributeError:
                 try: res.append("%s - %s" % (item.screen_name, item.description))
                 except AttributeError:
-                    try: res.append(unicode(item.__getstate__()))
-                    except AttributeError: res.append(dir(i)) ; res.append(unicode(item))
+                    try: res.append(str(item.__getstate__()))
+                    except AttributeError: res.append(dir(i)) ; res.append(str(item))
         ievent.reply("result of %s: " % target, res) 
     except KeyError: ievent.reply('you are not logged in yet. see the twitter-auth command.')
-    except (TweepError, urllib2.HTTPError), e: ievent.reply('twitter failed: %s' % (str(e),))
+    except (TweepError, urllib.error.HTTPError) as e: ievent.reply('twitter failed: %s' % (str(e),))
 
 cmnds.add('twitter-cmnd', handle_twittercmnd, 'OPER')
 examples.add('twitter-cmnd', 'do a cmnd on the twitter API', 'twitter-cmnd home_timeline')
@@ -165,7 +165,7 @@ def handle_twitter_confirm(bot, ievent):
     pin = ievent.args[0]
     if not pin: ievent.missing("<PIN> .. see the twitter-auth command.") ; return
     try: access_token = getauth(getdatadir()).get_access_token(pin)
-    except (TweepError, urllib2.HTTPError), e: ievent.reply('twitter failed: %s' % (str(e),)) ; return
+    except (TweepError, urllib.error.HTTPError) as e: ievent.reply('twitter failed: %s' % (str(e),)) ; return
     twitteruser = TwitterUsers("users")
     twitteruser.add(ievent.user.data.name, access_token.to_string())
     ievent.reply("access token saved.")
@@ -179,7 +179,7 @@ def handle_twitter_auth(bot, ievent):
     """ no arguments - get url to get the auth PIN needed for the twitter-confirm command. """
     if not go: ievent.reply("the twitter plugin needs the credentials.py file in the .jsb/data/config dir. see .jsb/data/examples") ; return
     try: auth_url = getauth(getdatadir()).get_authorization_url()
-    except (TweepError, urllib2.HTTPError), e: ievent.reply('twitter failed: %s' % (str(e),)) ; return
+    except (TweepError, urllib.error.HTTPError) as e: ievent.reply('twitter failed: %s' % (str(e),)) ; return
     if bot.type == "irc":
         bot.say(ievent.nick, "sign in at %s" % auth_url)
         bot.say(ievent.nick, "use the provided code in the twitter-confirm command.")
@@ -207,10 +207,10 @@ def handle_twitterfriends(bot, ievent):
         res = []
         for item in result:
             try: res.append("%s - %s" % (item.author.screen_name, item.text))
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
         ievent.reply("results: ", res) 
     except KeyError: ievent.reply('you are not logged in yet. see the twitter-auth command.')
-    except (TweepError, urllib2.HTTPError), e: ievent.reply('twitter failed: %s' % (str(e),))
+    except (TweepError, urllib.error.HTTPError) as e: ievent.reply('twitter failed: %s' % (str(e),))
 
 cmnds.add('twitter-friends', handle_twitterfriends, ['OPER', 'USER', 'GUEST'], threaded=True)
 examples.add('twitter-friends', 'show your friends_timeline', 'twitter-friends')

@@ -6,7 +6,7 @@
 
 ## basic imports
 
-import thread
+import _thread
 import threading
 import logging
 
@@ -26,22 +26,22 @@ class LockManager(object):
     def allocate(self, name):
         """ allocate a new lock """
         if self.gae: self.locks[name] = None
-        else: self.locks[name] = thread.allocate_lock()
+        else: self.locks[name] = _thread.allocate_lock()
         logging.debug('lockmanager - allocated %s' % name)
         
     def get(self, name):
         """ get lock """
-        if not self.locks.has_key(name): self.allocate(name)
+        if name not in self.locks: self.allocate(name)
         return self.locks[name]
         
     def delete(self, name):
         """ delete lock """
-        if self.locks.has_key(name): del self.locks[name]
+        if name in self.locks: del self.locks[name]
 
     def acquire(self, name):
         """ acquire lock """
         if self.gae: return
-        if not self.locks.has_key(name): self.allocate(name)
+        if name not in self.locks: self.allocate(name)
         logging.debug('lockmanager - *acquire* %s' % name)
         self.locks[name].acquire()
 

@@ -7,11 +7,11 @@
 ## lib imports
 
 from jsb.utils.exception import handle_exception
-from threads import start_new_thread, getname
+from .threads import start_new_thread, getname
 
 ## basic imports
 
-import Queue
+import queue
 import time
 import logging
 from collections import deque
@@ -27,8 +27,8 @@ class ThreadLoop(object):
         self.stopped = False
         self.running = False
         self.outs = []
-        try: self.queue = queue or Queue.PriorityQueue()
-        except AttributeError: self.queue = queue or Queue.Queue()
+        try: self.queue = queue or queue.PriorityQueue()
+        except AttributeError: self.queue = queue or queue.Queue()
         self.nowrunning = "none"
 
     def _loop(self):
@@ -45,7 +45,7 @@ class ThreadLoop(object):
             if self.stopped: break
             if not data: break
             try: self.handle(*data)
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
         self.running = False
         logging.warn('stopping %s' % getname(self))
         
@@ -89,7 +89,7 @@ class RunnerLoop(ThreadLoop):
                 self.nowrunning = getname(data[1])
                 self.handle(speed, data)
             except IndexError: time.sleep(0.1) ; continue
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
             #self.nowrunning = getname(data[1]) + "-done"
         self.running = False
         logging.debug('%s - stopping threadloop' % self.name)
@@ -111,6 +111,6 @@ class TimedLoop(ThreadLoop):
             time.sleep(self.sleepsec)
             if self.stopped: break
             try: self.handle()
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
         self.running = False
         logging.warn('%s - stopping timedloop' % self.name)

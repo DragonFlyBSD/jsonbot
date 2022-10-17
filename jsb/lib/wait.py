@@ -33,10 +33,10 @@ class Wait(object):
 
     def __init__(self, cbtypes, cbs=None, userhosts=None, modname=None, event=None, queue=None):
         self.created = time.time()
-        if type(cbtypes) != types.ListType: cbtypes = [cbtypes, ]
+        if type(cbtypes) != list: cbtypes = [cbtypes, ]
         self.cbtypes = cbtypes
         self.userhosts = userhosts
-        if cbs and type(cbs) != types.ListType: cbs = [cbs, ]
+        if cbs and type(cbs) != list: cbs = [cbs, ]
         self.cbs = cbs
         self.modname = modname
         self.origevent = event
@@ -63,7 +63,7 @@ class Wait(object):
         logging.warn("%s - found wait match: %s" % (bot.cfg.name, event.dump()))
         for cb in self.cbs:
             try: cb(bot, event) #waitrunner.put(event.speed, (self.modname, cb, bot, event))
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
 
 ## Waiter class
 
@@ -90,7 +90,7 @@ class Waiter(object):
     def check(self, bot, event):
         """ scan waiters for possible wait object that match. """
         matches = []
-        for wait in self.waiters.values():
+        for wait in list(self.waiters.values()):
             result = wait.check(bot, event)
             if not wait.cbtypes: matches.append(wait)
         if matches: self.delete(matches)
@@ -106,7 +106,7 @@ class Waiter(object):
     def remove(self, modname):
         """ remove all waiter registered by modname. """
         removed = []
-        for wait in self.waiters.values():
+        for wait in list(self.waiters.values()):
             if wait.modname == modname: removed.append(wait)
         if removed: self.delete(removed)
 

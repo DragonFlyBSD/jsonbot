@@ -60,7 +60,7 @@ def plusscan(skip=False):
     if teller % 5 != 0: return 
     logging.warn("running plus scan")
     fleet = getfleet()
-    for id, channels in state.data.ids.iteritems():
+    for id, channels in state.data.ids.items():
         if not id in state.data.seen: state.data.seen[id] = []
         for botname, chan in channels:
             try:
@@ -76,8 +76,8 @@ def plusscan(skip=False):
                             todo.append(r)
                     if todo: bot.say(chan, "new plus update: " , todo)
                 else: logging.warn("no %s bot in fleet" % botname)
-            except AttributeError, ex: logging.error(str(ex))
-            except Exception, ex: handle_exception()
+            except AttributeError as ex: logging.error(str(ex))
+            except Exception as ex: handle_exception()
     state.save()
 
 ## plus command
@@ -86,7 +86,7 @@ def handle_plus(bot, event):
     if event.args: target = event.args[0]
     else: event.missing("userid") ; return
     try: res = getplus(target)
-    except Exception, ex: event.reply("an error occured: %s" % str(ex)) ; return
+    except Exception as ex: event.reply("an error occured: %s" % str(ex)) ; return
     if res: event.reply("results: ", res, dot=" || ")
     else: event.repy("no data found")
 
@@ -100,7 +100,7 @@ def handle_plusstart(bot, event):
     global state
     gid = event.args[0]
     target = [bot.cfg.name, event.channel]
-    if not state.data.ids.has_key(gid): state.data.ids[gid] = []
+    if gid not in state.data.ids: state.data.ids[gid] = []
     if not target in state.data.ids[gid]:
         state.data.ids[gid].append(target)
         state.save()

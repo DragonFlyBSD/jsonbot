@@ -25,7 +25,7 @@ def handle_outputcache(bot, event):
         for result in res[::-1]:
             if result:
                 try: bot.saynocb(event.channel, result, event=event)
-                except Exception, ex: logging.error("outputcache - %s - %s" % (str(ex), result))
+                except Exception as ex: logging.error("outputcache - %s - %s" % (str(ex), result))
     event.done()
 
 cmnds.add('outputcache', handle_outputcache, ['OPER', 'USER', 'GUEST'])

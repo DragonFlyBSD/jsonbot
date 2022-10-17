@@ -34,7 +34,7 @@ def handle_rc(bot, event):
         try:
             if getmainconfig().allowremoterc and t.startswith("http"): data = geturl2(t)
             else: data = open(t, 'r').read()
-        except IOError, ex: event.reply("I/O error: %s" % str(ex)) ; return
+        except IOError as ex: event.reply("I/O error: %s" % str(ex)) ; return
         if not data: event.reply("can't get data from %s" % event.rest) ; return
         for d in data.split("\n"):
             i = d.strip()
@@ -47,7 +47,7 @@ def handle_rc(bot, event):
             waiting.append(e)
             teller += 1
         event.reply("%s commands executed" % teller)
-    except Exception, ex: event.reply("an error occured: %s" % str(ex)) ; handle_exception()
+    except Exception as ex: event.reply("an error occured: %s" % str(ex)) ; handle_exception()
 
 cmnds.add("rc", handle_rc, ["OPER"], threaded=True)
 examples.add("rc", "execute a file of jsonbot commands .. from file or url", "1) rc resource.jsb 2) rc http://jsonbot.org/resource.jsb")

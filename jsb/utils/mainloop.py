@@ -24,7 +24,7 @@ def mainloop():
             time.sleep(1)
             mainhandler.handle_one()
         except KeyboardInterrupt: break
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
             break
             #globalshutdown()

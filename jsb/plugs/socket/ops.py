@@ -168,7 +168,7 @@ def checkmode(bot, ievent):
         modestr = args[1]
         who = args[2:]
     except: logging.warn('unknow mode string format: %s' % str(ievent)) ; return
-    if not bot.state.has_key('no-op'): bot.state['no-op'] = [] ; bot.state.save()
+    if 'no-op' not in bot.state: bot.state['no-op'] = [] ; bot.state.save()
     for i in modestr:
         if i == '+': plus = 1 ; continue
         if i == '-': plus = 0 ; continue

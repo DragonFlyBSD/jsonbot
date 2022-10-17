@@ -97,7 +97,7 @@ class Seen(Pdod):
 
   
     def size(self):
-        return len(self.data.keys())
+        return len(list(self.data.keys()))
 
 ## init
 
@@ -117,8 +117,8 @@ def handle_seen(bot, ievent):
     if not ievent.args: ievent.missing('<nick>') ; return
     if True:
         nick = ievent.args[0].lower()
-        if not seen.data.has_key(nick):
-            alts = [x for x in seen.data.keys() if nick in x]
+        if nick not in seen.data:
+            alts = [x for x in list(seen.data.keys()) if nick in x]
             if alts:
                 alts.sort()
                 if len(alts) > 10:

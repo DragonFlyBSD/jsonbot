@@ -28,9 +28,9 @@ from jsb.lib.eventbase import EventBase
 from jsb.lib.partyline import partyline
 from jsb.lib.wait import waiter
 
-from channels import Channels
-from irc import Irc
-from ircevent import IrcEvent
+from .channels import Channels
+from .irc import Irc
+from .ircevent import IrcEvent
 
 ## basic imports
 
@@ -38,7 +38,7 @@ from collections import deque
 import re
 import socket
 import struct
-import Queue
+import queue
 import time
 import os
 import types
@@ -57,8 +57,8 @@ class IRCBot(Irc):
     def __init__(self, cfg={}, users=None, plugs=None, *args, **kwargs):
         Irc.__init__(self, cfg, users, plugs, *args, **kwargs)
         if self.state:
-            if not self.state.has_key('opchan'): self.state['opchan'] = []
-        if not self.state.has_key('joinedchannels'): self.state['joinedchannels'] = []
+            if 'opchan' not in self.state: self.state['opchan'] = []
+        if 'joinedchannels' not in self.state: self.state['joinedchannels'] = []
 
     def _resume(self, data, botname, reto=None):
         """ resume the bot. """
@@ -81,7 +81,7 @@ class IRCBot(Irc):
             chatmsg = 'DCC CHAT CHAT %s %s' % (ipip, port)
             self.ctcp(nick, chatmsg)
             self.sock = sock = listensock.accept()[0]
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
             logging.error('%s - dcc error: %s' % (self.cfg.name, str(ex)))
             return
@@ -95,7 +95,7 @@ class IRCBot(Irc):
             partylist = partyline.list_nicks()
             if partylist: sock.send("people on the partyline: %s\n" % ' .. '.join(partylist))
             sock.send("control character is ! .. bot broadcast is @\n")
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
             logging.error('%s - dcc error: %s' % (self.cfg.name, str(ex)))
             return
@@ -118,7 +118,7 @@ class IRCBot(Irc):
                     return
             except socket.timeout:
                 continue
-            except socket.error, ex:
+            except socket.error as ex:
                 try:
                     (errno, errstr) = ex
                 except:
@@ -128,7 +128,7 @@ class IRCBot(Irc):
                     continue
                 else:
                     raise
-            except Exception, ex:
+            except Exception as ex:
                 handle_exception()
                 logging.warn('closing dcc with %s' % (nick, self.cfg.name))
                 partyline.del_party(nick)
@@ -162,7 +162,7 @@ class IRCBot(Irc):
                     continue
                 elif ievent.txt[0] == "@":
                     partyline.say_broadcast_notself(ievent.nick, "[%s] %s" % (ievent.nick, ievent.txt))
-                    q = Queue.Queue()
+                    q = queue.Queue()
                     ievent.queues = [q]
                     ievent.txt = ievent.txt[1:]
                     self.doevent(ievent)
@@ -173,7 +173,7 @@ class IRCBot(Irc):
                     continue
                 else:
                     partyline.say_broadcast_notself(ievent.nick, "[%s] %s" % (ievent.nick, ievent.txt))
-            except socket.error, ex:
+            except socket.error as ex:
                 try:
                     (errno, errstr) = ex
                 except:
@@ -181,7 +181,7 @@ class IRCBot(Irc):
                     errstr = str(ex)
                 if errno == 35 or errno == 11:
                     continue
-            except Exception, ex:
+            except Exception as ex:
                 handle_exception()
         sockfile.close()
         logging.warn('closing dcc with %s (%s)' %  (nick, self.cfg.name))
@@ -197,7 +197,7 @@ class IRCBot(Irc):
             else:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 sock.connect((addr, port))
-        except Exception, ex:
+        except Exception as ex:
             logging.error('%s - dcc error: %s' % (self.cfg.name, str(ex)))
             return
         self._dodcc(sock, nick, userhost, userhost)
@@ -378,7 +378,7 @@ class IRCBot(Irc):
 
     def gettopic(self, channel, event=None):
         """ get topic data. """
-        q = Queue.Queue()
+        q = queue.Queue()
         i332 = waiter.register("332", queue=q)
         i333 = waiter.register("333", queue=q)
         self.putonqueue(7, None, 'TOPIC %s' % channel)

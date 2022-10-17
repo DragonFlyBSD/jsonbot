@@ -16,7 +16,7 @@ from jsb.plugs.common.tinyurl import get_tinyurl
 ## basic imports
 
 import logging
-import xmlrpclib
+import xmlrpc.client
 import re
 
 ## defines
@@ -32,7 +32,7 @@ cfg = PlugPersist('fisheye', {})
 def getRpcClient(project):
     if project["name"] not in rpc_clients:
         base_url = "%s/api/xmlrpc" % project["url"]
-        server = xmlrpclib.ServerProxy(base_url)
+        server = xmlrpc.client.ServerProxy(base_url)
         auth = server.login(project["username"], project["password"])
         logging.info("Created new RPC client for %s with auth token: %s" % (project["name"], auth))
         rpc_clients[project["name"]] = (server, auth)
@@ -41,7 +41,7 @@ def getRpcClient(project):
 
 def containsHash(bot, ievent):
     if ievent.how == "backgound": return 0
-    if cfg.data.has_key(ievent.channel) and len(cfg.data[ievent.channel]):
+    if ievent.channel in cfg.data and len(cfg.data[ievent.channel]):
         if gitHashRule.match(ievent.txt): return 1
     return 0
 
@@ -58,7 +58,7 @@ def doLookup(bot, ievent):
             bot.say(ievent.channel, "%s- %s by %s: %s %s" % (pname, res["csid"][:7], res["author"], res["log"].strip()[:60], get_tinyurl(cs_url)[0]))
             return
         except:
-            print "Couldn't find %s" % fnd.group(1)
+            print("Couldn't find %s" % fnd.group(1))
 
 callbacks.add('PRIVMSG', doLookup, containsHash, threaded=True)
 callbacks.add('CONSOLE', doLookup, containsHash, threaded=True)
@@ -81,7 +81,7 @@ def handle_add_fisheye_project(bot, ievent):
         "password": ievent.args[3],
     }
 
-    if not cfg.data.has_key("projects"):
+    if "projects" not in cfg.data:
         cfg.data["projects"] = {}
     cfg.data["projects"][project["name"]] = project
     cfg.save()
@@ -97,7 +97,7 @@ def handle_fisheye_commit_lookup_enable(bot, ievent):
     if len(ievent.args) != 1:
         ievent.reply("syntax: fisheye_commit_lookup_enable project (e.g. firebreath")
         return
-    if not cfg.data.has_key(ievent.channel):
+    if ievent.channel not in cfg.data:
         cfg.data[ievent.channel] = []
     project = ievent.args[0]
 

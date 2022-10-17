@@ -31,7 +31,7 @@ logging.warn(getversion("INIT"))
 ddir = opts.datadir or getdatadir()
 try:
     makedirs(ddir)
-except Exception, ex: print str(ex) ; os._exit(1)
+except Exception as ex: print(str(ex)) ; os._exit(1)
 from jsb.lib.config import makedefaultconfig
 from jsb.lib.fleet import getfleet
 from jsb.lib.boot import boot

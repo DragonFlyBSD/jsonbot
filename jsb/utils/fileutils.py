@@ -16,7 +16,7 @@ from jsb.utils.generic import istr
 import tarfile
 import os
 import types
-import cStringIO
+import io
 import bz2
 import gzip
 
@@ -31,7 +31,7 @@ def tarextract(package, fileobj=None, prefix=None, base=None):
     '''
     extracted = []
     if fileobj:
-        if type(fileobj) == types.StringType: fileobj = cStringIO.StringIO(fileobj)
+        if type(fileobj) == bytes: fileobj = io.StringIO(fileobj)
         tarf = tarfile.open(mode='r|', fileobj=fileobj)
     else: tarf = tarfile.open(package, 'r')
     for tarinfo in tarf:
@@ -55,7 +55,7 @@ def bunzip2(fileobj):
 
 def gunzip(fileobj):
     """ gunzip the file object. """
-    if type(fileobj) == types.StringType or isinstance(fileobj, istr): fileobj = cStringIO.StringIO(str(fileobj))
+    if type(fileobj) == bytes or isinstance(fileobj, istr): fileobj = io.StringIO(str(fileobj))
     return gzip.GzipFile(mode='rb', fileobj=fileobj).read()
 
 

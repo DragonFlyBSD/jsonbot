@@ -13,7 +13,7 @@ from jsb.utils.exception import handle_exception
 import threading
 import re
 import time
-import thread
+import _thread
 import logging
 import uuid
 
@@ -44,7 +44,7 @@ class Botcommand(threading.Thread):
             self.bot.benice()
             result = threading.Thread.run(self)
             self.ievent.ready()
-        except Exception, ex:
+        except Exception as ex:
             handle_exception(self.ievent)
             time.sleep(1)
 
@@ -64,7 +64,7 @@ class Thr(threading.Thread):
         try:
             logging.debug('threads - running thread %s' % self.name) 
             threading.Thread.run(self)
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
             time.sleep(1)
 
@@ -95,9 +95,9 @@ def start_new_thread(func, arglist, kwargs={}):
     else: name = kwargs['name']
     try:
         thread = Thr(None, target=func, name=name, args=arglist, kwargs=kwargs)
-        thread.start()
+        _thread.start()
         return thread
-    except Exception, ex:
+    except Exception as ex:
         if "can't start" in str(ex): logging.error("threads - thread space is exhausted - can't start thread %s" % name)
         handle_exception()
         time.sleep(3)
@@ -111,7 +111,7 @@ def start_bot_command(func, arglist, kwargs={}):
         name = getname(func)
         if not name: name = 'noname'
         thread = Botcommand(group=None, target=func, name=name, args=arglist, kwargs=kwargs)
-        thread.start()
+        _thread.start()
         return thread
     except:
         handle_exception()

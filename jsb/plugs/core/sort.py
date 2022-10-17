@@ -72,7 +72,7 @@ def handle_sort(bot, ievent):
     parser = SortOptionParser()
     args = []
     try: options, args = parser.parse_args(ievent.args)
-    except SortError, e:
+    except SortError as e:
         ievent.reply(str(e))
         return
     if not ievent.inqueue: time.sleep(0.5)

@@ -33,7 +33,7 @@ parser.add_option('', '--nourl', action="store_true", default=False, dest='nourl
 opts, args = parser.parse_args()
 opts.args = args
 
-if not opts.args: print getversion('CONSOLE')
+if not opts.args: print(getversion('CONSOLE'))
 if opts.datadir:
     if not os.path.isdir(opts.datadir): os.mkdir(opts.datadir)
     from jsb.lib.datadir import setdatadir
@@ -82,27 +82,27 @@ if userid not in cfg.owner: cfg.owner.append(userid) ; cfg.save()
 try:
     bot = ConsoleBot(cfg)
 except NoOwnerSet:
-    print "the owner is not set in %s" % cfg.cfile
+    print("the owner is not set in %s" % cfg.cfile)
     os._exit(1)
 
 if opts.args:
     cmndstring = ";"
     for cmnd in opts.args:
         if "|" in cmnd: break
-        cmndstring += u"%s " % unicode(cmnd)
+        cmndstring += "%s " % str(cmnd)
     event = bot.make_event(userid, opts.channel or userid, cmndstring.strip(), showall=True)
     event.nodispatch = False
     try: event.execute(True)
-    except NoSuchCommand, ex: print "no %s command found." % str(ex).strip()
-    print ""
+    except NoSuchCommand as ex: print("no %s command found." % str(ex).strip())
+    print("")
     try:
         sys.stdout.close()
     except: pass
     os._exit(0)
 
-print "datadir is %s" % getdatadir()
+print("datadir is %s" % getdatadir())
 bot.start(False)
-if bot.maincfg.dbenable: print "dbtype is %s" % bot.maincfg.dbtype
+if bot.maincfg.dbenable: print("dbtype is %s" % bot.maincfg.dbtype)
 fleet = getfleet()
 fleet.addbot(bot)
 

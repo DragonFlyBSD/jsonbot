@@ -34,6 +34,6 @@ def getmaindb():
                 return
             global db
             if db: return db
-            from direct import Db
+            from .direct import Db
             return Db()
-    except Exception, ex: handle_exception()
+    except Exception as ex: handle_exception()

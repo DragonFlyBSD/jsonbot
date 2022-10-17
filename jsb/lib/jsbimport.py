@@ -10,7 +10,7 @@ import time
 import sys
 import imp
 import os
-import thread
+import _thread
 import logging
 
 ## _import function

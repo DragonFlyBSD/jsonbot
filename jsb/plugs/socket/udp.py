@@ -44,7 +44,7 @@ from jsb.lib.callbacks import first_callbacks
 import socket
 import re
 import time
-import Queue
+import queue
 import logging
 
 # defines
@@ -85,8 +85,8 @@ class Udplistener(object):
     """ listen for udp messages and relay them to channel/nick/JID. """
 
     def __init__(self):
-        self.outqueue = Queue.Queue()
-        self.queue = Queue.Queue()
+        self.outqueue = queue.Queue()
+        self.queue = queue.Queue()
         self.stop = 0
         if cfg['udpipv6']: self.sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
         else: self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -136,7 +136,7 @@ class Udplistener(object):
         while not self.stop:
             try: input, addr = self.sock.recvfrom(64000)
             except socket.timeout: continue
-            except Exception, ex:
+            except Exception as ex:
                 try: (errno, errstr) = ex
                 except ValueError: errno = 0 ; errstr = str(ex)
                 if errno == 4: logging.warn("udp - %s - %s" % (self.name, str(ex))) ; break
@@ -152,7 +152,7 @@ class Udplistener(object):
             data = ""
             for i in range(len(input)/16):
                 try: data += crypt.decrypt(input[i*16:i*16+16])
-                except Exception, ex:
+                except Exception as ex:
                     logging.warn("udp - can't decrypt: %s" % str(ex))
                     data = input
                     break

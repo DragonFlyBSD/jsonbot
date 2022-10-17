@@ -15,7 +15,7 @@
 
 """
 
-__author__ = u"Pekka 'raspi' Järvinen - http://raspi.fi/"
+__author__ = "Pekka 'raspi' Järvinen - http://raspi.fi/"
 __license__ = 'BSD'
 
 ## jsb imports
@@ -30,8 +30,8 @@ from jsb.plugs.common.tinyurl import get_tinyurl
 ## basic import
 
 import re
-import urlparse
-import xmlrpclib
+import urllib.parse
+import xmlrpc.client
 import socket
 import logging
 
@@ -74,7 +74,7 @@ def getUrls(text):
     urls = []
     for i in text.split(' '):
         for x in p.findall(i):
-            url = urlparse.urlparse(x)
+            url = urllib.parse.urlparse(x)
             if url.geturl() not in urls: urls.append(url.geturl())
     return urls
 
@@ -90,12 +90,12 @@ def getUrlInfo(text):
         for i in urls:
             o = ''
             try:
-                server = xmlrpclib.ServerProxy("http://whatisthisfile.appspot.com/xmlrpc")
+                server = xmlrpc.client.ServerProxy("http://whatisthisfile.appspot.com/xmlrpc")
                 logging.info('urlinfo - XMLRPC query: %s' % i)
                 urlinfo = server.app.query(i)
-                if urlinfo.has_key('html'):
-                     if urlinfo['html'].has_key('title'): o += 'Title: "%s" ' % urlinfo['html']['title'].strip()
-                elif urlinfo.has_key('image'): o += 'Image: %dx%d ' % (urlinfo['image']['width'], urlinfo['image']['height'])
+                if 'html' in urlinfo:
+                     if 'title' in urlinfo['html']: o += 'Title: "%s" ' % urlinfo['html']['title'].strip()
+                elif 'image' in urlinfo: o += 'Image: %dx%d ' % (urlinfo['image']['width'], urlinfo['image']['height'])
                 if not o: continue
                 if len(o):
                     if len(urls) > 1: out += ' ' + str(idx) + '. ' ; idx += 1
@@ -110,7 +110,7 @@ def getUrlInfo(text):
 def catchHasUrls(bot, ievent):
     """ catch channel chat for possible URLs. """
     if ievent.how == "background": return 0
-    if cfg.data.has_key(ievent.channel) and cfg.data[ievent.channel]:
+    if ievent.channel in cfg.data and cfg.data[ievent.channel]:
         if len(ievent.txt) >= 5:
             if (ievent.txt.find('www.') != -1) or (ievent.txt.find('http') != -1): return 1
     return 0  
@@ -153,7 +153,7 @@ examples.add('urlinfo-disable', 'disable urlinfo in the channel', 'urlinfo-disab
 def handle_urlinfo_list(bot, ievent):
     """ no arguments - list what channels are using urlinfo. """
     chans = []
-    names = cfg.data.keys()
+    names = list(cfg.data.keys())
     names.sort()
     if not names: ievent.reply('none')
     else: ievent.reply('urlinfo enabled on channels: ', names)

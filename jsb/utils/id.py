@@ -16,5 +16,5 @@ import uuid
 
 def getrssid(url, time):
     """ get an id based on url and time. """
-    key = unicode(url) + unicode(time)
+    key = str(url) + str(time)
     return str(uuid.uuid3(uuid.NAMESPACE_DNS, toenc(key)))

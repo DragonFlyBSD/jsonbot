@@ -9,7 +9,7 @@
 import sys
 import traceback
 import logging
-import thread
+import _thread
 import os
 import logging
 

@@ -43,8 +43,8 @@ class IrcEvent(EventBase):
         splitted = re.split('\s+', rawstr)
         if not rawstr[0] == ':':
             assert bot.cfg
-            splitted.insert(0, u":%s!%s@%s" % (bot.cfg.nick, bot.cfg.username, bot.cfg.server))
-            rawstr = u":%s!%s@%s %s" % (bot.cfg.nick, bot.cfg.username, bot.cfg.server, rawstr)
+            splitted.insert(0, ":%s!%s@%s" % (bot.cfg.nick, bot.cfg.username, bot.cfg.server))
+            rawstr = ":%s!%s@%s %s" % (bot.cfg.nick, bot.cfg.username, bot.cfg.server, rawstr)
         self.prefix = splitted[0][1:]
         nickuser = self.prefix.split('!')
         try: 
@@ -53,7 +53,7 @@ class IrcEvent(EventBase):
         except IndexError: self.userhost = None ; self.nick = None ; self.isservermsg = True
         self.cmnd = splitted[1]
         self.cbtype = self.cmnd
-        if pfc.has_key(self.cmnd):
+        if self.cmnd in pfc:
             self.arguments = splitted[2:pfc[self.cmnd]+2]
             txtsplit = re.split('\s+', rawstr, pfc[self.cmnd]+2)
             self.txt = txtsplit[-1]
@@ -101,7 +101,7 @@ class IrcEvent(EventBase):
         self.prepare()
         return self
 
-    def reply(self, txt, result=[], event=None, origin="", dot=u", ", nr=375, extend=0, *args, **kwargs):
+    def reply(self, txt, result=[], event=None, origin="", dot=", ", nr=375, extend=0, *args, **kwargs):
         """ reply to this event """
         if self.isdcc: self.bot.say(self.sock, txt, result, 'msg', self, nr, extend, dot, *args, **kwargs)
         elif self.msg: self.bot.say(self.nick, txt, result, 'msg', self, nr, extend, dot, *args, **kwargs)

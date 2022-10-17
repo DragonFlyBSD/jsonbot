@@ -21,13 +21,13 @@ import jsb.lib.threads as thr
 import datetime
 import sys
 import time
-import thread
+import _thread
 import types
 import logging
 
 ## locks
 
-plock    = thread.allocate_lock()
+plock    = _thread.allocate_lock()
 locked   = lockdec(plock)
 
 ## defines
@@ -66,7 +66,7 @@ class Job(object):
     def do(self):
         """ try the callback. """
         try: self.func(*self.args, **self.kw)
-        except Exception, ex: handle_exception()
+        except Exception as ex: handle_exception()
 
 class JobAt(Job):
 
@@ -80,23 +80,23 @@ class JobAt(Job):
         self.repeat = repeat
         self.description = ""
         self.counts = 0
-        if type(start) in [types.IntType, types.FloatType]: self.next = float(start)
-        elif type(start) in [types.StringType, types.UnicodeType]:
+        if type(start) in [int, float]: self.next = float(start)
+        elif type(start) in [bytes, str]:
             d = strtotime(start)
             if d and d > time.time(): self.next = d
             else: raise JobError("invalid date/time")
-        if type(interval) in [types.IntType]:
+        if type(interval) in [int]:
             d = datetime.timedelta(days=interval)
             self.delta = d.seconds
         else: self.delta = interval
 
     def __repr__(self):
         """ return a string representation of the JobAt object. """
-        return '<JobAt instance next=%s, interval=%s, repeat=%d, function=%s>' % (str(self.next), str(self.delta), self.repeat, str(self.func))
+        return '<JobAt instance next=%s, interval=%s, repeat=%d, function=%s>' % (str(self.__next__), str(self.delta), self.repeat, str(self.func))
 
     def check(self):
         """ run check to see if job needs to be scheduled. """
-        if self.next <= time.time():
+        if self.__next__ <= time.time():
             logging.info('running %s - %s' % (str(self.func), self.description))
             self.func(*self.args, **self.kw)
             self.next += self.delta
@@ -122,11 +122,11 @@ class JobInterval(Job):
         logging.warn('scheduled next run of %s in %d seconds' % (str(self.func), self.interval))
 
     def __repr__(self):
-        return '<JobInterval instance next=%s, interval=%s, repeat=%d, group=%s, function=%s>' % (str(self.next), str(self.interval), self.repeat, self.group, str(self.func))
+        return '<JobInterval instance next=%s, interval=%s, repeat=%d, group=%s, function=%s>' % (str(self.__next__), str(self.interval), self.repeat, self.group, str(self.func))
 
     def check(self):
         """ run check to see if job needs to be scheduled. """
-        if self.next <= time.time():
+        if self.__next__ <= time.time():
             logging.info('running %s - %s' % (str(self.func), self.description))
             self.next = time.time() + self.interval
             thr.start_new_thread(self.do, ())
@@ -165,7 +165,7 @@ class Periodical(object):
     def looponce(self, bot, event):
         """ loop over the jobs. """
         for job in self.jobs:
-            if job.next <= time.time():
+            if job.__next__ <= time.time():
                 self.runjob(job)
 
     def runjob(self, job):
@@ -213,7 +213,7 @@ def interval(sleeptime, repeat=0):
     group = calledfrom(sys._getframe())
 
     def decorator(function):
-        decorator.func_dict = function.func_dict
+        decorator.__dict__ = function.__dict__
 
         def wrapper(*args, **kw):
             job = JobInterval(sleeptime, repeat, function, *args, **kw)
@@ -231,7 +231,7 @@ def at(start, interval=1, repeat=1):
     group = calledfrom(sys._getframe())
 
     def decorator(function):
-        decorator.func_dict = function.func_dict
+        decorator.__dict__ = function.__dict__
 
         def wrapper(*args, **kw):
             job = JobAt(start, interval, repeat, function, *args, **kw)
@@ -239,14 +239,14 @@ def at(start, interval=1, repeat=1):
             job.description = whichmodule()
             periodical.jobs.append(job)
 
-        wrapper.func_dict = function.func_dict
+        wrapper.__dict__ = function.__dict__
         return wrapper
 
     return decorator
 
 def persecond(function):
     """ per second decorator. """
-    minutely.func_dict = function.func_dict
+    minutely.__dict__ = function.__dict__
     group = calledfrom(sys._getframe())
 
     def wrapper(*args, **kw):
@@ -260,7 +260,7 @@ def persecond(function):
 
 def minutely(function):
     """ minute decorator. """
-    minutely.func_dict = function.func_dict
+    minutely.__dict__ = function.__dict__
     group = calledfrom(sys._getframe())
 
     def wrapper(*args, **kw):
@@ -275,7 +275,7 @@ def minutely(function):
 def hourly(function):
     """ hour decorator. """
     logging.warn('@hourly(%s)' % str(function))
-    hourly.func_dict = function.func_dict
+    hourly.__dict__ = function.__dict__
     group = calledfrom(sys._getframe())
 
     def wrapper(*args, **kw):
@@ -290,7 +290,7 @@ def hourly(function):
 def daily(function):
     """ day decorator. """
     logging.warn('@daily(%s)' % str(function))
-    daily.func_dict = function.func_dict
+    daily.__dict__ = function.__dict__
     group = calledfrom(sys._getframe())
 
     def wrapper(*args, **kw):

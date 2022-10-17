@@ -16,7 +16,7 @@ from jsb.lib.datadir import getdatadir
 
 ## basic imports
 
-import thread
+import _thread
 import os
 import time
 import types
@@ -24,7 +24,7 @@ import logging
 
 ## locks
 
-dblock = thread.allocate_lock()
+dblock = _thread.allocate_lock()
 dblocked = lockdec(dblock)
 
 ## Db class
@@ -97,10 +97,10 @@ class Db(object):
         if self.dbtype == 'mysql':
             try: self.ping()
             except AttributeError: self.reconnect()                
-            except Exception, ex:
+            except Exception as ex:
                 logging.warn('reconnecting')
                 try: self.reconnect()
-                except Exception, ex: logging.error('failed reconnect: %s' % str(ex)) ; return
+                except Exception as ex: logging.error('failed reconnect: %s' % str(ex)) ; return
         logging.debug('exec %s %s' % (execstr, args))
         cursor = self.cursor()
         nr = 0
@@ -120,7 +120,7 @@ class Db(object):
         elif execstr.startswith('DELETE'): nr = cursor.rowcount ; got = True
         if got: self.commit()
         # determine rownr
-        if self.dbtype == 'sqlite' and not got and type(nr) != types.IntType:
+        if self.dbtype == 'sqlite' and not got and type(nr) != int:
             nr = cursor.rowcount or cursor.lastrowid
             if nr == -1: nr = 0
         # fetch results
@@ -128,7 +128,7 @@ class Db(object):
         try:
             result = cursor.fetchall()
             if not result: result = nr
-        except Exception, ex:
+        except Exception as ex:
             if 'no results to fetch' in str(ex): pass
             else: handle_exception()
             result = nr
@@ -154,6 +154,6 @@ class Db(object):
 
     def define(self, definestr):
         try: self.executescript(definestr)
-        except Exception, ex:
+        except Exception as ex:
             if 'already exists' in str(ex): pass
             else: handle_exception()

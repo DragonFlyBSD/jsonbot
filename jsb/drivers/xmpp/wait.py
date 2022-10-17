@@ -13,12 +13,12 @@ import jsb.lib.threads as thr
 ## basic imports
 
 import time
-import thread
+import _thread
 import logging
 
 ## locks
 
-waitlock = thread.allocate_lock()
+waitlock = _thread.allocate_lock()
 locked = lockdec(waitlock)
 
 ## classes

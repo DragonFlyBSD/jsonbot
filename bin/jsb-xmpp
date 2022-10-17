@@ -39,7 +39,7 @@ import os
 opts = makesxmppopts()
 if opts.datadir: setdatadir(opts.datadir) 
 from jsb.version import getversion
-print getversion('SXMPP')
+print(getversion('SXMPP'))
 
 ## loglevel
 
@@ -48,7 +48,7 @@ from jsb.utils.log import setloglevel
 setloglevel(opts.loglevel or "warn", not opts.nocolors)
 
 try: cfg = makesxmppconfig(opts)
-except Exception, ex: print str(ex) ; os._exit(1)
+except Exception as ex: print(str(ex)) ; os._exit(1)
 got = False
 if opts.nick: cfg.nick = opts.nick ; got = True
 if opts.port: cfg.port = opts.port ; got = True
@@ -63,8 +63,8 @@ boot(opts.datadir)
 
 try:
     bot = SXMPPBot(cfg, register=opts.doregister)
-except NoOwnerSet, ex:
-    print "owner is not set in %s - use the -o option" % str(ex)
+except NoOwnerSet as ex:
+    print("owner is not set in %s - use the -o option" % str(ex))
     os._exit(1)
 
 if opts.channel and not opts.channel in bot.state['joinedchannels']:

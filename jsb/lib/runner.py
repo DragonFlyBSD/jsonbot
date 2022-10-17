@@ -18,9 +18,9 @@ from jsb.lib.errors import URLNotEnabled
 
 ## basic imports
 
-import Queue
+import queue
 import time
-import thread
+import _thread
 import random
 import logging
 import sys
@@ -59,7 +59,7 @@ class Runner(RunnerLoop):
             self.elapsed = self.finished - self.starttime
             if self.elapsed > 5:
                 logging.debug('ALERT %s %s job taking too long: %s seconds' % (descr, str(func), self.elapsed))
-        except Exception, ex: handle_exception()
+        except Exception as ex: handle_exception()
         #finally: rlockmanager.release()
         self.working = False
 
@@ -91,7 +91,7 @@ class BotEventRunner(Runner):
             if self.elapsed > 5:
                 if self.nowrunning not in self.longrunning: self.longrunning.append(self.nowrunning)
                 if not ievent.nolog: logging.debug('ALERT %s %s job taking too long: %s seconds' % (descr, str(func), self.elapsed))
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
         #finally: lockmanager.release(getname(str(func)))
         self.working = False
@@ -110,7 +110,7 @@ class LongRunner(Runner):
             func(bot, ievent)
             self.elapsed = time.time() - self.starttime
             if self.elapsed < 1 and self.nowrunning not in self.shortrunning: self.shortrunning.append(self.nowrunning)
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
         #finally: lockmanager.release(getname(str(func)))
         self.working = False
@@ -193,8 +193,8 @@ class Runners(object):
 ## show runner status
 
 def runner_status():
-    print cmndrunner.runnersizes()
-    print callbackrunner.runnersizes()
+    print(cmndrunner.runnersizes())
+    print(callbackrunner.runnersizes())
 
 
 ## global runners

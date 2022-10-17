@@ -18,7 +18,7 @@ except ImportError: gotit = False ; logging.warn("github2 is not installed. see 
 cfg = PlugPersist('github', {})
 
 def f_find_github_commit(phenny, input):
-    print "Searching for commit...", input
+    print("Searching for commit...", input)
     query = input.group(1)
     _find_github_commit(phenny, query)
 
@@ -27,7 +27,7 @@ def _find_github_commit(phenny, query):
 
 def containsHash(bot, ievent):
     if ievent.how == "backgound": return 0
-    if cfg.data.has_key(ievent.channel) and len(cfg.data[ievent.channel]):
+    if ievent.channel in cfg.data and len(cfg.data[ievent.channel]):
         if gitHashRule.match(ievent.txt): return 1
     return 0
 
@@ -40,7 +40,7 @@ def doLookup(bot, ievent):
             bot.say(ievent.channel, "%s- %s by %s: %s %s" % (project, res.id[:7], res.author["name"], res.message[:60], get_tinyurl("https://github.com" + res.url)[0]))
             return
         except:
-            print "Couldn't find %s" % fnd.group(1)
+            print("Couldn't find %s" % fnd.group(1))
 
 if gotit:
     callbacks.add('PRIVMSG', doLookup, containsHash, threaded=True)
@@ -54,7 +54,7 @@ def handle_gh_commit_lookup_enable(bot, ievent):
     if len(ievent.args) != 1:
         ievent.reply("syntax: gh_commit_lookup_enable user/project (e.g. firebreath/FireBreath)")
         return
-    if not cfg.data.has_key(ievent.channel):
+    if ievent.channel not in cfg.data:
         cfg.data[ievent.channel] = []
     project = ievent.args[0]
     cfg.data[ievent.channel].append(project)

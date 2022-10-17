@@ -10,8 +10,8 @@ from jsb.utils.trace import whichmodule, calledfrom
 from jsb.utils.lazydict import LazyDict
 from jsb.utils.exception import handle_exception
 from jsb.utils.name import stripname
-from datadir import getdatadir
-from errors import CantSaveConfig, NoSuchFile
+from .datadir import getdatadir
+from .errors import CantSaveConfig, NoSuchFile
 from jsb.utils.locking import lockdec
 
 ## simplejson imports
@@ -24,17 +24,17 @@ json = getjson()
 import sys
 import os
 import types
-import thread
+import _thread
 import logging
 import uuid
-import thread
+import _thread
 import getpass
 import copy
 import time
 
 ## locks
 
-savelock = thread.allocate_lock()
+savelock = _thread.allocate_lock()
 savelocked = lockdec(savelock)
 
 ## defines
@@ -70,10 +70,10 @@ class Config(LazyDict):
         try:
             logging.info("fromfile - %s from %s" % (self.origname, whichmodule(2)))
             self.fromfile(self.cfile)
-        except IOError, ex: handle_exception() ; dodb = True
+        except IOError as ex: handle_exception() ; dodb = True
         if dodb or (self.isgae and not "mainconfig" in filename):
             try:
-                from persist import Persist
+                from .persist import Persist
                 self.jsondb = Persist(self.cfile)
                 if self.jsondb: self.merge(self.jsondb.data)
                 logging.warn("fromdb - %s" % self.cfile)
@@ -81,8 +81,8 @@ class Config(LazyDict):
                 logging.warn("can't read config from %s - %s" % (self.cfile, str(ex))) 
         self.init()
         if self.owner: logging.info("owner is %s" % self.owner)
-        if not self.has_key("uuid"): self.setuuid()
-        if not self.has_key("cfile"): self.cfile = self.setcfile(self.origdir, self.origname) 
+        if "uuid" not in self: self.setuuid()
+        if "cfile" not in self: self.cfile = self.setcfile(self.origdir, self.origname) 
         assert self.cfile
 
     def setcfile(self, ddir, filename):
@@ -103,7 +103,7 @@ class Config(LazyDict):
 
     def __getitem__(self, item):
         """ accessor function. """
-        if not self.has_key(item): return None
+        if item not in self: return None
         else: return LazyDict.__getitem__(self, item)
 
     def merge(self, cfg):
@@ -147,7 +147,7 @@ class Config(LazyDict):
                 try:
                     key, value = curline.split('=', 1)
                     kkey = key.strip()
-                    self[kkey] = json.loads(unicode(value.strip()))
+                    self[kkey] = json.loads(str(value.strip()))
                     if comment: self._comments[kkey] = comment 
                     comment = ""
                 except ValueError: logging.error("skipping line - unable to parse: %s" % line)
@@ -169,7 +169,7 @@ class Config(LazyDict):
             if not os.path.isdir(ddir):
                 logging.debug("persist - creating %s dir" % ddir)
                 try: os.mkdir(ddir)
-                except OSError, ex:
+                except OSError as ex:
                     logging.error("persist - not saving - failed to make %s - %s" % (ddir, str(ex)))
                     return
         written = []
@@ -188,7 +188,7 @@ class Config(LazyDict):
             configtmp.write('# The bot can edit this file!.\n#\n')
             configtmp.write('# ===========================================================\n\n')
             teller = 0
-            keywords = self.keys()
+            keywords = list(self.keys())
             keywords.sort()
             for keyword in keywords:
                 value = self[keyword]
@@ -198,8 +198,8 @@ class Config(LazyDict):
                 if keyword == 'optionslist': continue
                 if keyword == 'gatekeeper': continue
                 if keyword == "_comments": continue
-                if self._comments and self._comments.has_key(keyword):
-                    configtmp.write(self._comments[keyword] + u"\n")
+                if self._comments and keyword in self._comments:
+                    configtmp.write(self._comments[keyword] + "\n")
                 curitem = keyword
                 try: configtmp.write('%s = %s\n' % (keyword, json.dumps(value)))
                 except TypeError: logging.error("%s - can't serialize %s" % (filename, keyword)) ; continue
@@ -209,8 +209,8 @@ class Config(LazyDict):
             configtmp.write("# bot generated stuff.\n#\n")
             configtmp.write('# ============================================================\n\n')
             for keyword in later:
-                if self._comments and self._comments.has_key(keyword):
-                    configtmp.write(self._comments[keyword] + u"\n")
+                if self._comments and keyword in self._comments:
+                    configtmp.write(self._comments[keyword] + "\n")
                 curitem = keyword
                 value = self[keyword]
                 try: configtmp.write(keyword + " = " + json.dumps(value) + "\n")
@@ -222,23 +222,23 @@ class Config(LazyDict):
                     configtmp.write('\n\n# ============================================================\n#\n')
                     configtmp.write("# possible other config variables.\n#\n")
                     configtmp.write('# ============================================================\n\n')
-                    items = self._comments.keys()
-                    keys = self.keys()
+                    items = list(self._comments.keys())
+                    keys = list(self.keys())
                     do = []
                     for var in items:
                         if var not in keys: do.append(var)
                     do.sort()
                     for var in do:
-                         configtmp.write(u"# %s -=- %s\n" % (var, self._comments[var]))
+                         configtmp.write("# %s -=- %s\n" % (var, self._comments[var]))
                     configtmp.write("\n\n")
-                except Exception, ex: handle_exception()
+                except Exception as ex: handle_exception()
             else: configtmp.write("\n\n# jsonbot can run multiple bots at once. see %s/config/fleet for their configurations.\n\n" % self.origdir)
             if not stdout: 
                 configtmp.close()
                 os.rename(filename + '.tmp', filename)
             return teller
 
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
             logging.error("ERROR WRITING %s CONFIG FILE: %s .. %s" % (self.cfile, str(ex), curitem))
 
@@ -379,7 +379,7 @@ mainconfig = None
 def getmainconfig(ddir=None):
     global mainconfig
     if not mainconfig: mainconfig = Config("mainconfig", ddir=ddir)
-    if not mainconfig.has_key("issaved"): mainconfig.save()
+    if "issaved" not in mainconfig: mainconfig.save()
     return mainconfig
 
 irctemplate = """# =====================================================

@@ -31,7 +31,7 @@ from jsb.utils.lazydict import LazyDict
 import copy
 import os
 import re
-import urllib, urllib2
+import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse
 import xml.dom.minidom
 
 feedparser = getfeedparser()  
@@ -99,13 +99,13 @@ class BugTracker:
             status = self.close(ievent.args[0], getusers().getname(ievent.userhost), 
                 ' '.join(ievent.args[2:]), ievent.args[1])
             ievent.reply('ok')
-        except AssertionError, e:
+        except AssertionError as e:
             ievent.reply('error: %s' % e)
         except BugTrackerNotImplemented:
             ievent.reply('error: not implemented in this bug tracker')
-        except BugTrackerNotSupported, e:
+        except BugTrackerNotSupported as e:
             ievent.reply('error: not supported: %s' % e)
-        except BugTrackerNotFound, e:
+        except BugTrackerNotFound as e:
             ievent.reply('error: not found: %s' % e)
 
     ## bug-comments command
@@ -120,13 +120,13 @@ class BugTracker:
                 ievent.reply('comments: ', comments, dot=' %s ' % cfg.get('sep'), nr=True, nritems=True)
             else:
                 ievent.reply('no comments found')
-        except AssertionError, e:
+        except AssertionError as e:
             ievent.reply('error: %s' % e)
         except BugTrackerNotImplemented:
             ievent.reply('error: not implemented in this bug tracker')
-        except BugTrackerNotSupported, e:
+        except BugTrackerNotSupported as e:
             ievent.reply('error: not supported: %s' % e)
-        except BugTrackerNotFound, e:
+        except BugTrackerNotFound as e:
             ievent.reply('error: not found: %s' % e)
 
     ## bug-list command
@@ -140,9 +140,9 @@ class BugTracker:
                 ievent.reply('no open bugs found!')
         except BugTrackerNotImplemented:
             ievent.reply('error: not implemented in this bug tracker')
-        except BugTrackerNotSupported, e:
+        except BugTrackerNotSupported as e:
             ievent.reply('error: not supported: %s' % e)
-        except BugTrackerNotFound, e:
+        except BugTrackerNotFound as e:
             ievent.reply('error: not found: %s' % e)
 
     ## bug-show command
@@ -158,17 +158,17 @@ class BugTracker:
         try:
             status = self.show(ievent.args[0])
             result = []
-            keys   = status.keys() ; keys.sort()
+            keys   = list(status.keys()) ; keys.sort()
             for key in keys:
                 if status[key]:
                     result.append('%s=%s' % (key, status[key]))
             #result.append(self.show_url(ievent.args[0]))
             ievent.reply("bug #%s: " % ievent.args[0], result)
-        except urllib2.HTTPError, e: ievent.reply("no #%s bug found: %s" % (ievent.args[0], str(e))) ; return
-        except AssertionError, e: ievent.reply('error: %s' % e)
+        except urllib.error.HTTPError as e: ievent.reply("no #%s bug found: %s" % (ievent.args[0], str(e))) ; return
+        except AssertionError as e: ievent.reply('error: %s' % e)
         except BugTrackerNotImplemented: ievent.reply('error: not implemented in this bug tracker')
-        except BugTrackerNotSupported, e: ievent.reply('error: not supported: %s' % e)
-        except BugTrackerNotFound, e: ievent.reply('error: not found: %s' % e)
+        except BugTrackerNotSupported as e: ievent.reply('error: not supported: %s' % e)
+        except BugTrackerNotFound as e: ievent.reply('error: not found: %s' % e)
 
     def scan_privmsg(self, bot, ievent):
         if not self.autoshow:
@@ -236,7 +236,7 @@ class Bugzilla(BugTracker):
             'priority': 'priority', 'bug_severity': 'severity', 'reporter': 'reporter',
             'short_desc': 'description', 'assigned_to': 'assigned to'}
         data = {}
-        for tag in bugget.keys():
+        for tag in list(bugget.keys()):
             try:
                 value = bugset.getElementsByTagName(tag)[0].firstChild.nodeValue
                 data[bugget[tag]] = value
@@ -340,7 +340,7 @@ class GoogleCode(BugTracker):
         assert bugId.isdigit(), "bug id has to ba a number"
         # https://code.google.com/feeds/issues/p/googleappengine/
         feed = feedparser.parse(self.show_url(bugId), agent=useragent())
-        print feed
+        print(feed)
         """</content><link rel='replies' type='application/atom+xml' href='http://code.google.com/feeds/issues/p/jsonbot/issues/1/comments/full'/>
            <link rel='alternate' type='text/html' href='http://code.google.com/p/jsonbot/issues/detail?id=1'/>
            <link rel='self' type='application/atom+xml' href='https://code.google.com/feeds/issues/p/jsonbot/issues/full/1'/>
@@ -354,13 +354,13 @@ class GoogleCode(BugTracker):
            <issues:state>closed</issues:state>
            <issues:status>Fixed</issues:status></entry>"""
         if not feed.entries: return {}
-        print feed.entries[0].keys()
+        print(list(feed.entries[0].keys()))
         """[u'issues_label', 'updated_parsed', 'links', u'issues_owner', u'issues_closeddate', 'href', u'issues_status', 'id', u'issues_uri', 'published_parsed', 
              'title', u'issues_id', u'issues_stars', 'content', 'title_detail', u'issues_state', 'updated', 'link', 'authors', 'author_detail', 'author', 
              u'issues_username', 'summary', 'published']"""
-        wantlist = [u'issues_label', u'issues_owner', u'issues_closeddate', u'issues_status', u'issues_uri', 
-             'title', u'issues_id', u'issues_stars', u'issues_state', 'updated', 'link', 'author', 
-             u'issues_username', 'published']
+        wantlist = ['issues_label', 'issues_owner', 'issues_closeddate', 'issues_status', 'issues_uri', 
+             'title', 'issues_id', 'issues_stars', 'issues_state', 'updated', 'link', 'author', 
+             'issues_username', 'published']
         data = feed.entries[0]
         res = {}
         for name in wantlist:
@@ -466,7 +466,7 @@ class Trac(BugTracker):
         tsv = geturl2(self.list_url()).splitlines()
         #print tsv
         bugs = []
-	keys = map(lambda x: x.strip(), tsv[0].split())
+	keys = [x.strip() for x in tsv[0].split()]
 	for item in tsv[1:]:
 		data = {}
 		part = item.split('\t')
@@ -484,9 +484,9 @@ class Trac(BugTracker):
     def show(self, bugId):
         assert bugId.isdigit(), "bug id has to be a number"
         tsv = geturl2(self.show_url(bugId)+'?format=tab').splitlines()
-	keys = map(lambda x: x.strip(), tsv[0].split())
+	keys = [x.strip() for x in tsv[0].split()]
 	part = tsv[1].split('\t')
-	data = dict(zip(keys, part))
+	data = dict(list(zip(keys, part)))
         return data
 
     def show_url(self, bugId):
@@ -534,10 +534,10 @@ class Trac(BugTracker):
             'keywords':         showdata['keywords'],
             'cc':               '',
             }
-        postdata = urllib.urlencode(postdata)
-        req = urllib2.Request('%s/ticket/%s' % (self.url, bugId), data=postdata)
+        postdata = urllib.parse.urlencode(postdata)
+        req = urllib.request.Request('%s/ticket/%s' % (self.url, bugId), data=postdata)
         req.add_header('User-agent', useragent())
-        return urllib2.urlopen(req).read()
+        return urllib.request.urlopen(req).read()
 
 class BugManager(Pdod):
 
@@ -557,7 +557,7 @@ class BugManager(Pdod):
         self.load()
 
     def add(self, bot, ievent, type, url):
-        assert type in self.types.keys(), "unknown bugtracker type, supported: %s" % ', '.join(self.types.keys())
+        assert type in list(self.types.keys()), "unknown bugtracker type, supported: %s" % ', '.join(list(self.types.keys()))
         if hasattr(bot, 'name'):
             botname = bot.cfg.name
         else:
@@ -566,22 +566,22 @@ class BugManager(Pdod):
             channel = ievent.channel
         else:
             channel = ievent
-        if not self.data.has_key(botname):
+        if botname not in self.data:
             self.data[botname] = {}
         self.data[bot.cfg.name][channel] = [url, type, False]
         self.save()
         self.start(bot, ievent)
 
     def check(self, bot, ievent):
-        if not self.instances.has_key(bot.cfg.name):
+        if bot.cfg.name not in self.instances:
             return False
-        if not self.instances[bot.cfg.name].has_key(ievent.channel):
+        if ievent.channel not in self.instances[bot.cfg.name]:
             return False
         return True
 
     def load(self):
-        for bot in self.data.keys():
-            for channel in self.data[bot].keys():
+        for bot in list(self.data.keys()):
+            for channel in list(self.data[bot].keys()):
                 self.start(bot, channel)
                 
     def start(self, bot, ievent):
@@ -593,7 +593,7 @@ class BugManager(Pdod):
             channel = ievent.channel
         else:
             channel = ievent
-        if not self.instances.has_key(botname):
+        if botname not in self.instances:
             self.instances[botname] = {}
         data = self.data[botname][channel]
         if not len(data) == 3:
@@ -617,7 +617,7 @@ class BugManager(Pdod):
         try:
             self.add(bot, ievent, ievent.args[0], ievent.args[1])
             ievent.reply('ok')
-        except AssertionError, e:
+        except AssertionError as e:
             ievent.reply('error: %s' % e) 
 
     def handle_autoshow(self, bot, ievent):
@@ -639,7 +639,7 @@ class BugManager(Pdod):
             return
         try:
             self.instances[bot.cfg.name][ievent.channel].handle_close(bot, ievent)
-        except Exception, e:
+        except Exception as e:
             ievent.reply('failed to get bug information: %s' % str(e))
 
     def handle_comments(self, bot, ievent):
@@ -659,7 +659,7 @@ class BugManager(Pdod):
         return
         try:
             self.instances[bot.cfg.name][ievent.channel].handle_list(bot, ievent)
-        except Exception, e:
+        except Exception as e:
             ievent.reply('failed to get bug information: %s' % str(e))
 
     def handle_open(self, bot, ievent):
@@ -668,24 +668,24 @@ class BugManager(Pdod):
             return
         try:
             self.instances[bot.cfg.name][ievent.channel].handle_open(bot, ievent)
-        except Exception, e:
+        except Exception as e:
             ievent.reply('failed to get bug information: %s' % str(e))
 
     def handle_show(self, bot, ievent):
-        if not self.data.has_key(bot.cfg.name):
+        if bot.cfg.name not in self.data:
             ievent.reply('no bugtracker configured')
             return False
         try:
             self.instances[bot.cfg.name][ievent.channel].handle_show(bot, ievent)
-        except KeyError, ex: ievent.reply("key error: %s" % str(ex)) ; return False
-        except Exception, e:
+        except KeyError as ex: ievent.reply("key error: %s" % str(ex)) ; return False
+        except Exception as e:
             handle_exception()
             ievent.reply('failed to fetch bug information: %s' % str(e))
 
     def cb_privmsg(self, bot, ievent):
-        if not self.instances.has_key(bot.cfg.name):
+        if bot.cfg.name not in self.instances:
             return 0
-        if not self.instances[bot.cfg.name].has_key(ievent.channel):
+        if ievent.channel not in self.instances[bot.cfg.name]:
             return 0
         self.instances[bot.cfg.name][ievent.channel].scan_privmsg(bot, ievent)
 

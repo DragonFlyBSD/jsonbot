@@ -46,7 +46,7 @@ def boteventcb(inputdict, request, response):
         logging.warn("created event: %s" % event.tojson(full=True))
         event.notask = True
         bot.doevent(event)
-    except Exception, ex: handle_exception()
+    except Exception as ex: handle_exception()
 
 taskmanager.add('botevent', boteventcb)
 

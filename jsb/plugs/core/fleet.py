@@ -61,7 +61,7 @@ def handle_fleetconnect(bot, ievent):
                 ievent.reply('enabled and started %s bot' % botname)
                 start_new_thread(bot.start, ())
             else: ievent.reply("can't make %s bot" % cfg.name)
-    except Exception, ex:
+    except Exception as ex:
         ievent.reply(str(ex))
 
 cmnds.add('fleet-connect', handle_fleetconnect, 'OPER', threaded=True)
@@ -80,7 +80,7 @@ def handle_fleetdisconnect(bot, ievent):
         fleet = getfleet()
         if fleet.exit(botname): ievent.reply("%s bot stopped" % botname)
         else: ievent.reply("can't stop %s bot" % botname)
-    except Exception, ex: ievent.reply("fleet - %s" % str(ex))
+    except Exception as ex: ievent.reply("fleet - %s" % str(ex))
 
 cmnds.add('fleet-disconnect', handle_fleetdisconnect, 'OPER', threaded=True)
 examples.add('fleet-disconnect', 'fleet-disconnect <name> .. disconnect bot with <name> from irc server', 'fleet-disconnect test')
@@ -105,7 +105,7 @@ def handle_fleetdel(bot, ievent):
     try:
         if getfleet().delete(name): ievent.reply('%s deleted' % name)
         else: ievent.reply('%s delete failed' % name)
-    except Exception, ex: ievent.reply(str(ex))
+    except Exception as ex: ievent.reply(str(ex))
 
 cmnds.add('fleet-del', handle_fleetdel, 'OPER', threaded=True)
 examples.add('fleet-del', 'fleet-del <botname> .. delete bot from fleet list', 'fleet-del test')
@@ -210,7 +210,7 @@ def fleet_cmnd(bot, ievent):
     fleet = getfleet()
     if name.startswith("@"): name = name[1:] ; power = True
     else: power = False
-    if not cmndtxt.startswith(";"): cmndtxt = u";" + cmndtxt
+    if not cmndtxt.startswith(";"): cmndtxt = ";" + cmndtxt
     if name == "all":
         for b in fleet.bots:
             e = b.make_event(ievent.userhost, channel, cmndtxt)

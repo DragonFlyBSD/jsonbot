@@ -8,7 +8,7 @@
 
 from jsb.utils.name import stripname
 from jsb.utils.trace import calledfrom
-from persist import Persist
+from .persist import Persist
 from jsb.lib.datadir import getdatadir
 
 ## basic imports
@@ -26,7 +26,7 @@ class PersistState(Persist):
 
     def __init__(self, filename):
         Persist.__init__(self, filename)
-        self.types = dict((i, type(j)) for i, j in self.data.iteritems())
+        self.types = dict((i, type(j)) for i, j in self.data.items())
 
     def __getitem__(self, key):
         """ get state item. """
@@ -38,9 +38,9 @@ class PersistState(Persist):
 
     def define(self, key, value):
         """ define a state item. """
-        if not self.data.has_key(key) or type(value) != self.types[key]:
-            if type(value) == types.StringType: value = unicode(value)
-            if type(value) == types.IntType: value = long(value)
+        if key not in self.data or type(value) != self.types[key]:
+            if type(value) == bytes: value = str(value)
+            if type(value) == int: value = int(value)
             self.data[key] = value
 
 class PlugState(PersistState):

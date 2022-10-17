@@ -32,7 +32,7 @@ def handle_get(bot, ievent):
     if target: target = target.lower()
     userstate = ievent.user.state
     result = []
-    for i, j in userstate.data.iteritems():
+    for i, j in userstate.data.items():
         if target == i or not target: result.append("%s=%s" % (i, j))
     if result: ievent.reply("state: ", result)
     else: ievent.reply('no userstate of %s known' % ievent.userhost)

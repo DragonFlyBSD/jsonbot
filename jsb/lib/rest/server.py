@@ -12,9 +12,9 @@ from jsb.version import version
 
 ## basic imports
 
-from SocketServer import BaseServer, ThreadingMixIn
-from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-from urllib import unquote_plus
+from socketserver import BaseServer, ThreadingMixIn
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from urllib.parse import unquote_plus
 from asyncore import dispatcher
 from cgi import escape
 import time
@@ -55,7 +55,7 @@ class RestServerBase(HTTPServer):
             self.stop = True
             time.sleep(0.2)
             self.server_close()
-        except Exception, ex: handle_exception()
+        except Exception as ex: handle_exception()
 
     def serve(self):
         """ serving loop. """
@@ -64,10 +64,10 @@ class RestServerBase(HTTPServer):
         while not self.stop:
             self.running = True
             try: got = self.poll.poll(100)
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
             if got and not self.stop:
                 try: self.handle_request()
-                except Exception, ex: handle_exception()
+                except Exception as ex: handle_exception()
             time.sleep(0.01)
         self.running = False
         logging.warn('rest.server - stopping')
@@ -105,7 +105,7 @@ class RestServerBase(HTTPServer):
             if i: splitted.append(i)
             else: splitted.append("/")
         splitted = tuple(splitted)
-        if not self.handlers.has_key(splitted): self.handlers[splitted] = {}
+        if splitted not in self.handlers: self.handlers[splitted] = {}
         self.handlers[splitted][type] = handler
         logging.info('rest.server - %s %s handler added' % (splitted[0], type))
 
@@ -203,7 +203,7 @@ class RestRequestHandler(BaseHTTPRequestHandler):
             result = self.server.do(self)
             if not result: return
             self.size = len(result)
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
             self.send_error(501)
             return

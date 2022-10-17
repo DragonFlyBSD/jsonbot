@@ -24,14 +24,14 @@ from jsb.utils.lazydict import LazyDict
 ## basic imports
 
 import time
-import thread
+import _thread
 import os
 from datetime import datetime, timedelta
 from time import localtime
 
 ## defines
 
-todolock = thread.allocate_lock()
+todolock = _thread.allocate_lock()
 locked = lockdec(todolock)
 
 ## Todo-class
@@ -142,7 +142,7 @@ def handle_tododone(bot, ievent):
     for i in nrs[::-1]:
         try: del todo.data.list[i-1] ; nrdone += 1
         except IndexError: continue
-        except Exception, ex: failed.append(str(i)) ; handle_exception()
+        except Exception as ex: failed.append(str(i)) ; handle_exception()
     if failed: ievent.reply('failed to delete %s' % ' .. '.join(failed))
     if nrdone == 1: todo.save() ; ievent.reply('%s item deleted' % nrdone)
     elif nrdone == 0: ievent.reply('no items deleted')

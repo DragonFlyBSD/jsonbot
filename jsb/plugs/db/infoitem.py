@@ -16,14 +16,14 @@ from jsb.lib.config import getmainconfig
 
 ## basic imports
 
-import thread
+import _thread
 import os
 import time
 import logging
 
 ## locks
 
-infolock = thread.allocate_lock()
+infolock = _thread.allocate_lock()
 locked = lockdec(infolock)
 
 ## defines

@@ -23,6 +23,7 @@ import os
 import sys
 import types
 import copy
+import importlib
 
 ## paths
 
@@ -71,7 +72,7 @@ def scandir(d, dbenable=False):
                 if ongae and 'socket' in plugfile: logging.warn("on GAE .. skipping %s" % plugfile) ; continue
                 if not ongae and ('gae' in plugfile or 'wave' in plugfile): logging.warn("not on GAE .. skipping %s" % plugfile) ; continue
         return changed
-    except Exception, ex: logging.error("boot - can't read %s dir." % d) ; handle_exception()
+    except Exception as ex: logging.error("boot - can't read %s dir." % d) ; handle_exception()
     if changed: logging.debug("%s files changed -=- %s" % (len(changed), str(changed)))
     return changed
 
@@ -83,7 +84,7 @@ def boot(ddir=None, force=False, encoding="utf-8", umask=None, saveperms=True, f
     if not ongae:
         try:
             if os.getuid() == 0:
-                print "don't run the bot as root"
+                print("don't run the bot as root")
                 os._exit(1)
         except AttributeError: pass
     logging.warn("starting!")
@@ -103,12 +104,12 @@ def boot(ddir=None, force=False, encoding="utf-8", umask=None, saveperms=True, f
     except IOError: pass
     try:
         if not ongae:
-            reload(sys)
+            importlib.reload(sys)
             sys.setdefaultencoding(encoding)
     except (AttributeError, IOError): pass
     if not ongae:
         try:
-            if not umask: checkpermissions(getdatadir(), 0700) 
+            if not umask: checkpermissions(getdatadir(), 0o700) 
             else: checkpermissions(getdatadir(), umask)  
         except: handle_exception()
     from jsb.lib.plugins import plugs
@@ -158,7 +159,7 @@ def boot(ddir=None, force=False, encoding="utf-8", umask=None, saveperms=True, f
         logging.debug("myplugs has changed -=- %s" % str(changed))
         for plugfile in changed:
             try: plugs.reloadfile(plugfile, force=True)
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
         dosave = True
     configchanges = checkconfig()
     if configchanges:
@@ -172,7 +173,7 @@ def boot(ddir=None, force=False, encoding="utf-8", umask=None, saveperms=True, f
             for plugfile in corechanges:
                 if not maincfg.dbenable and "db" in plugfile: continue
                 try: plugs.reloadfile(plugfile, force=True)
-                except Exception, ex: handle_exception()
+                except Exception as ex: handle_exception()
             dosave = True
     if not ongae and maincfg.dbenable:
         plugin_packages.append("jsb.plugs.db") 
@@ -181,7 +182,7 @@ def boot(ddir=None, force=False, encoding="utf-8", umask=None, saveperms=True, f
             from jsb.db.tables import tablestxt
             db = getmaindb()
             if db: db.define(tablestxt)
-        except Exception, ex: logging.warn("could not initialize database %s" % str(ex))
+        except Exception as ex: logging.warn("could not initialize database %s" % str(ex))
     else:
         logging.warn("db not enabled, set dbenable = 1 in %s to enable" % getmainconfig().cfile)
         try: plugin_packages.remove("jsb.plugs.db")
@@ -278,15 +279,15 @@ def savecmndtable(modname=None, saveperms=True):
     global cmndperms
     from jsb.lib.commands import cmnds
     assert cmnds
-    for cmndname, c in cmnds.iteritems():
+    for cmndname, c in cmnds.items():
         if modname and c.modname != modname or cmndname == "subs": continue
         if cmndname and c:
             target[cmndname] = c.modname  
             cmndperms[cmndname] = c.perms
             try:
                  s = cmndname.split("-")[1]
-                 if not target.has_key(s):
-                     if not short.has_key(s): short[s] = [cmndname, ]
+                 if s not in target:
+                     if s not in short: short[s] = [cmndname, ]
                      if cmndname not in short[s]: short[s].append(cmndname)
             except (ValueError, IndexError): pass
     logging.warn("saving command table")
@@ -314,7 +315,7 @@ def removecmnds(modname):
     assert cmndtable
     from jsb.lib.commands import cmnds
     assert cmnds
-    for cmndname, c in cmnds.iteritems():
+    for cmndname, c in cmnds.items():
         if c.modname == modname: del cmndtable.data[cmndname]
     cmndtable.save()
 
@@ -336,10 +337,10 @@ def savecallbacktable(modname=None):
     else: target = LazyDict()
     from jsb.lib.callbacks import first_callbacks, callbacks, last_callbacks, remote_callbacks
     for cb in [first_callbacks, callbacks, last_callbacks, remote_callbacks]:
-        for type, cbs in cb.cbs.iteritems():
+        for type, cbs in cb.cbs.items():
             for c in cbs:
                 if modname and c.modname != modname: continue
-                if not target.has_key(type): target[type] = []
+                if type not in target: target[type] = []
                 if not c.modname in target[type]: target[type].append(c.modname)
     logging.warn("saving callback table")
     assert callbacktable
@@ -353,10 +354,10 @@ def removecallbacks(modname):
     assert callbacktable
     from jsb.lib.callbacks import first_callbacks, callbacks, last_callbacks, remote_callbacks
     for cb in [first_callbacks, callbacks, last_callbacks, remote_callbacks]:
-        for type, cbs in cb.cbs.iteritems():
+        for type, cbs in cb.cbs.items():
             for c in cbs:
                 if not c.modname == modname: continue
-                if not callbacktable.data.has_key(type): callbacktable.data[type] = []
+                if type not in callbacktable.data: callbacktable.data[type] = []
                 if c.modname in callbacktable.data[type]: callbacktable.data[type].remove(c.modname)
     logging.warn("saving callback table")
     assert callbacktable
@@ -378,7 +379,7 @@ def savepluginlist(modname=None):
     else: target = []
     from jsb.lib.commands import cmnds
     assert cmnds
-    for cmndname, c in cmnds.iteritems():
+    for cmndname, c in cmnds.items():
         if modname and c.modname != modname: continue
         if c and not c.plugname: logging.info("boot - not adding %s to pluginlist" % cmndname) ; continue
         if c and c.plugname not in target and c.enable: target.append(c.plugname)
@@ -428,7 +429,7 @@ def update_mod(modname):
 def whatcommands(plug):
     tbl = getcmndtable()
     result = []
-    for cmnd, mod in tbl.iteritems():
+    for cmnd, mod in tbl.items():
         if not mod: continue
         if plug in mod:
             result.append(cmnd)

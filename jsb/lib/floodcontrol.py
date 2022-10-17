@@ -39,7 +39,7 @@ class FloodControl(object):
         u = userhost
         t = time.time()
         w = wait
-        if self.times.has_key(u):
+        if u in self.times:
             if t - self.times[u] > w: self.reset(u) ; return False
             if (t - self.times[u] < timetomonitor): self.stats.upitem(u)
             if (self.stats.get(u) >  threshold) or (t - self.times[u] < floodrate): self.wait[userhost] = wait ; return True

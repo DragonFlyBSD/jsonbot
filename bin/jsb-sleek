@@ -21,7 +21,7 @@ sys.path.insert(0, os.getcwd())
 ## print version
 
 from jsb.version import getversion
-print getversion('SLEEK')
+print(getversion('SLEEK'))
 
 ## options parser
 
@@ -56,7 +56,7 @@ boot(opts.datadir)
 
 from jsb.utils.opts import makesxmppconfig
 try: cfg = makesxmppconfig(opts, botname = opts.name or "default-sleek", type="sleek")
-except Exception, ex: print str(ex) ; os._exit(1) 
+except Exception as ex: print(str(ex)) ; os._exit(1) 
 cfg.type = "sleek"
 if not cfg.user and not opts.user: logging.error("no user set .. use the -u option") 
 got = False
@@ -72,8 +72,8 @@ if got: cfg.save()
 try:
     from jsb.drivers.sleek.bot import SleekBot
     bot = SleekBot(cfg, register=opts.doregister)
-except NoOwnerSet, ex:
-    print "owner is not set in %s - use the -o option" % str(ex)
+except NoOwnerSet as ex:
+    print("owner is not set in %s - use the -o option" % str(ex))
     os._exit(1)
 
 if opts.channel and not opts.channel in bot.state['joinedchannels']:

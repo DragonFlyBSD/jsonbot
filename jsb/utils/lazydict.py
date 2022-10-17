@@ -40,7 +40,7 @@ cpy = copy.deepcopy
 
 def checkignore(name, ignore):
     """ see whether a element attribute (name) should be ignored. """
-    name = unicode(name)
+    name = str(name)
     if name.startswith('_'): return True
     for item in ignore:
         if item == name:
@@ -59,7 +59,7 @@ def stripignore(d):
 def dumpelement(element, prev={}, withtypes=False, full=False):
     """ check each attribute of element whether it is dumpable. """
     try: elem = cpy(element)
-    except Exception, ex: logging.error("can't copy %s" % str(ex)) ; return str(type(element))
+    except Exception as ex: logging.error("can't copy %s" % str(ex)) ; return str(type(element))
     if not elem: elem = element
     try: new = LazyDict(prev)
     except (TypeError, ValueError): new = LazyDict()
@@ -100,25 +100,25 @@ class LazyDict(dict):
 
     def __getattr__(self, attr, default=""):
         """ get attribute. """
-        if not self.has_key(attr): return cpy(default)
+        if attr not in self: return cpy(default)
         return self[attr]
 
     def __setattr__(self, attr, value):
         """ set attribute. """
-        if not self.overload and self.has_key(attr) and type(self[attr]) in [types.FunctionType, types.MethodType]:
+        if not self.overload and attr in self and type(self[attr]) in [types.FunctionType, types.MethodType]:
             mod = whichmodule(2)
             raise Exception("lazydict - cannot change a function of method: %s - called from %s" % (attr, mod))
         self[attr] = value
 
     def all(self):
         result = {}
-        for key, val in self.iteritems():
+        for key, val in self.items():
             if type(val) not in [types.MethodType,]: result[key] = val
         return result
 
     def render(self, template):
         temp = open(template, 'r').read()
-        for key, value in self.iteritems():
+        for key, value in self.items():
             try: temp = temp.replace("{{ %s }}" % key, value)
             except: pass 
         return temp
@@ -127,19 +127,19 @@ class LazyDict(dict):
         """ return a string representation of the dict """
         res = ""
         cp = dict(self)
-        for item, value in cp.iteritems(): res += "%r=%r " % (item, value)
+        for item, value in cp.items(): res += "%r=%r " % (item, value)
         return res
 
     def tojson(self, withtypes=False, full=False):
         """ dump the lazydict object to json. """
         try:
             return json.dumps(dumpelement(self, withtypes, full))
-        except RuntimeError, ex: raise
+        except RuntimeError as ex: raise
 
     def dump(self, withtypes=False):
         """ just dunp the lazydict object. DON'T convert to json. """
         try: return dumpelement(self, withtypes)
-        except RuntimeError, ex: handle_exception()
+        except RuntimeError as ex: handle_exception()
 
     def fordisplay(self):
         res = self.dump()
@@ -170,4 +170,4 @@ class LazyDict(dict):
     def save(self):
         pass
 
-jsontypes = [types.StringType, types.UnicodeType, types.DictType, types.ListType, types.IntType, LazyDict]
+jsontypes = [bytes, str, dict, list, int, LazyDict]

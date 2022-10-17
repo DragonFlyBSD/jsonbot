@@ -54,7 +54,7 @@ class Nextid(object):
         except KeyError:
             start = 1
         stop = start + nr
-        l = range(start, stop)
+        l = list(range(start, stop))
         self.data[item] = stop - 1
         self.save()
         return l

@@ -26,7 +26,7 @@ def handle_learn(bot, event):
     what = what.lower()
     items = GlobalPersist("learndb")
     if not items.data: items.data = LazyDict()
-    if not items.data.has_key(what): items.data[what] = []
+    if what not in items.data: items.data[what] = []
     if description not in items.data[what]: items.data[what].append(description)
     items.save()
     event.reply("%s item added to global database" % what)
@@ -44,7 +44,7 @@ def handle_learnchan(bot, event):
     what = what.lower()
     items = PlugPersist(event.channel)
     if not items.data: items.data = LazyDict()
-    if not items.data.has_key(what): items.data[what] = []
+    if what not in items.data: items.data[what] = []
     if description not in items.data[what]: items.data[what].append(description)
     items.save()
     event.reply("%s item added to %s database" % (what, event.channel))
@@ -62,7 +62,7 @@ def handle_forget(bot, event):
     what = what.lower()
     items = GlobalPersist("learndb")
     if not items.data: items.data = LazyDict()
-    if items.data.has_key(what):
+    if what in items.data:
         for i in range(len(items.data[what])):
             if match in items.data[what][i]:
                 del items.data[what][i]                
@@ -83,7 +83,7 @@ def handle_forgetchan(bot, event):
     what = what.lower()
     items = PlugPersist(event.channel)
     if not items.data: items.data = LazyDict()
-    if items.data.has_key(what):
+    if what in items.data:
         for i in range(len(items.data[what])):
             if match in items.data[what][i]:
                 del items.data[what][i]                
@@ -114,8 +114,8 @@ examples.add("whatis", "whatis learned about a subject", "whatis jsb")
 
 def handle_items(bot, event):
     """ no arguments - show what items the bot has learned. """
-    items = PlugPersist(event.channel).data.keys()
-    globalitems = GlobalPersist("learndb").data.keys()
+    items = list(PlugPersist(event.channel).data.keys())
+    globalitems = list(GlobalPersist("learndb").data.keys())
     result = items + globalitems
     event.reply("i know %s items: " % len(result), result)
 
@@ -127,8 +127,8 @@ examples.add("items", "show what items the bot knows", "items")
 def handle_searchitems(bot, event):
     """ argument: <searchtxt>  - search the items the bot has learned. """
     if not event.rest: event.missing("<searchtxt>") ; return
-    items = PlugPersist(event.channel).data.keys()
-    globalitems = GlobalPersist("learndb").data.keys()
+    items = list(PlugPersist(event.channel).data.keys())
+    globalitems = list(GlobalPersist("learndb").data.keys())
     got = []
     for i in items + globalitems:
         if event.rest in i: got.append(i)
@@ -143,8 +143,8 @@ def handle_learntoglobal(bot, event):
     """ argument: <searchtxt>  - search the items the bot has learned. """
     items = PlugPersist(event.channel)
     globalitems = GlobalPersist("learndb")
-    for i in items.data.keys():
-        if not globalitems.data.has_key(i): globalitems.data[i] = []
+    for i in list(items.data.keys()):
+        if i not in globalitems.data: globalitems.data[i] = []
         globalitems.data[i].extend(items.data)
     globalitems.save()
     event.reply("%s items copy to the global database. " % len(items.data))

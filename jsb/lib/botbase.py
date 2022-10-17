@@ -7,32 +7,32 @@
 ## jsb imports
 
 from jsb.utils.exception import handle_exception
-from runner import defaultrunner, callbackrunner, waitrunner
-from eventhandler import mainhandler
+from .runner import defaultrunner, callbackrunner, waitrunner
+from .eventhandler import mainhandler
 from jsb.utils.lazydict import LazyDict
-from plugins import plugs as coreplugs
-from callbacks import callbacks, first_callbacks, last_callbacks, remote_callbacks
-from eventbase import EventBase
-from errors import NoSuchCommand, PlugsNotConnected, NoOwnerSet, NameNotSet, NoEventProvided
-from commands import Commands, cmnds
-from config import Config, getmainconfig
+from .plugins import plugs as coreplugs
+from .callbacks import callbacks, first_callbacks, last_callbacks, remote_callbacks
+from .eventbase import EventBase
+from .errors import NoSuchCommand, PlugsNotConnected, NoOwnerSet, NameNotSet, NoEventProvided
+from .commands import Commands, cmnds
+from .config import Config, getmainconfig
 from jsb.utils.pdod import Pdod
-from channelbase import ChannelBase
-from less import Less, outcache
-from boot import boot, getcmndperms, default_plugins
+from .channelbase import ChannelBase
+from .less import Less, outcache
+from .boot import boot, getcmndperms, default_plugins
 from jsb.utils.locking import lockdec
-from exit import globalshutdown
+from .exit import globalshutdown
 from jsb.utils.generic import splittxt, toenc, fromenc, waitforqueue, strippedtxt, waitevents, stripcolor
 from jsb.utils.trace import whichmodule
-from fleet import getfleet
-from aliases import getaliases
+from .fleet import getfleet
+from .aliases import getaliases
 from jsb.utils.name import stripname
-from tick import tickloop
-from threads import start_new_thread, threaded
-from morphs import inputmorphs, outputmorphs
-from gatekeeper import GateKeeper
-from wait import waiter
-from factory import bot_factory
+from .tick import tickloop
+from .threads import start_new_thread, threaded
+from .morphs import inputmorphs, outputmorphs
+from .gatekeeper import GateKeeper
+from .wait import waiter
+from .factory import bot_factory
 from jsb.lib.threads import threaded
 from jsb.utils.locking import lock_object, release_object
 from jsb.utils.url import decode_html_entities
@@ -52,12 +52,12 @@ import copy
 import sys
 import getpass
 import os
-import thread
+import _thread
 import types
 import threading
-import Queue
+import queue
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from collections import deque
 
 ## defines
@@ -69,7 +69,7 @@ cpy = copy.deepcopy
 reconnectlock = threading.RLock()
 reconnectlocked = lockdec(reconnectlock)
 
-lock = thread.allocate_lock()
+lock = _thread.allocate_lock()
 locked = lockdec(lock)
 
 ## classes
@@ -81,10 +81,10 @@ class BotBase(LazyDict):
     def __init__(self, cfg=None, usersin=None, plugs=None, botname=None, nick=None, bottype=None, *args, **kwargs):
         logging.debug("type is %s" % str(type(self)))
         if cfg: self.cfg = cfg ; botname = botname or self.cfg.name
-        if not botname: botname = u"default-%s" % str(type(self)).split('.')[-1][:-2]
+        if not botname: botname = "default-%s" % str(type(self)).split('.')[-1][:-2]
         if not botname: raise Exception("can't determine  botname")
-        self.fleetdir = u'fleet' + os.sep + stripname(botname)
-        if not self.cfg: self.cfg = Config(self.fleetdir + os.sep + u'config')
+        self.fleetdir = 'fleet' + os.sep + stripname(botname)
+        if not self.cfg: self.cfg = Config(self.fleetdir + os.sep + 'config')
         self.cfg.name = botname or self.cfg.name
         if not self.cfg.name: raise Exception("name is not set in %s config file" % self.fleetdir)
         logging.debug("name is %s" % self.cfg.name)
@@ -115,28 +115,28 @@ class BotBase(LazyDict):
         self.maincfg = getmainconfig()
         self.owner = self.cfg.owner
         if not self.owner:
-            logging.debug(u"owner is not set in %s - using mainconfig" % self.cfg.cfile)
+            logging.debug("owner is not set in %s - using mainconfig" % self.cfg.cfile)
             self.owner = self.maincfg.owner
         self.users = usersin or getusers()
-        logging.debug(u"owner is %s" % self.owner)
+        logging.debug("owner is %s" % self.owner)
         self.users.make_owner(self.owner)
         self.outcache = outcache
         self.userhosts = LazyDict()
         self.nicks = LazyDict()
         self.connectok = threading.Event()
         self.reconnectcount = 0
-        self.cfg.nick = nick or self.cfg.nick or u'jsb'
+        self.cfg.nick = nick or self.cfg.nick or 'jsb'
         try:
             if not os.isdir(self.datadir): os.mkdir(self.datadir)
         except: pass
         self.setstate()
-        self.outputlock = thread.allocate_lock()
+        self.outputlock = _thread.allocate_lock()
         try:
-            self.outqueue = Queue.PriorityQueue()
-            self.eventqueue = Queue.PriorityQueue()
+            self.outqueue = queue.PriorityQueue()
+            self.eventqueue = queue.PriorityQueue()
         except AttributeError:
-            self.outqueue = Queue.Queue()
-            self.eventqueue = Queue.Queue()
+            self.outqueue = queue.Queue()
+            self.eventqueue = queue.Queue()
         self.encoding = self.cfg.encoding or "utf-8"
         self.cmndperms = getcmndperms()
         self.outputmorphs = outputmorphs
@@ -209,8 +209,8 @@ class BotBase(LazyDict):
                 event.speed = prio
                 self.doevent(event)
                 self.benice()
-            except Queue.Empty: time.sleep(0.01) ; continue
-            except Exception, ex: handle_exception() ; logging.warn("error in eventloop: %s" % str(ex))
+            except queue.Empty: time.sleep(0.01) ; continue
+            except Exception as ex: handle_exception() ; logging.warn("error in eventloop: %s" % str(ex))
         logging.debug('%s - stopping eventloop' % self.cfg.name)
 
     def input(self, prio, event):
@@ -229,8 +229,8 @@ class BotBase(LazyDict):
                 logging.debug("%s - OUT - %s - %s" % (self.cfg.name, self.type, str(res))) 
                 if not res: continue
                 self.out(*res)
-            except Queue.Empty: time.sleep(0.1) ; continue
-            except Exception, ex: handle_exception()
+            except queue.Empty: time.sleep(0.1) ; continue
+            except Exception as ex: handle_exception()
         logging.debug('%s - stopping output loop' % self.cfg.name)
 
     def _pingloop(self):
@@ -240,7 +240,7 @@ class BotBase(LazyDict):
         while not self.stopped:
             try:
                 if self.status != "start" and not self.pingcheck(): self.reconnect() ; break
-            except Exception, ex: logging.error(str(ex)) ; self.reconnect() ; break
+            except Exception as ex: logging.error(str(ex)) ; self.reconnect() ; break
             time.sleep(self.cfg.pingsleep or 60)
         logging.debug('%s - stopping ping loop' % self.cfg.name)
 
@@ -288,7 +288,7 @@ class BotBase(LazyDict):
                 else: key = None
                 if channel.data.nick: self.ids.append("%s/%s" % (i, channel.data.nick))
                 start_new_thread(self.join, (i, key))
-            except Exception, ex:
+            except Exception as ex:
                 logging.warn('%s - failed to join %s: %s' % (self.cfg.name, i, str(ex)))
                 handle_exception()
             time.sleep(3)
@@ -304,7 +304,7 @@ class BotBase(LazyDict):
                 #self.exit(close=False, save=False)
                 self.started = False
                 if self.start(): break
-            except Exception, ex:
+            except Exception as ex:
                 logging.error(str(ex))
                 logging.error("sleeping 15 seconds")
                 time.sleep(15)       
@@ -415,8 +415,8 @@ class BotBase(LazyDict):
         
     def _raw(self, txt, *args, **kwargs):
         """ override this. outnocb() is used more though. """ 
-        logging.debug(u"%s - out - %s" % (self.cfg.name, txt))
-        print txt
+        logging.debug("%s - out - %s" % (self.cfg.name, txt))
+        print(txt)
 
     def makeoutput(self, printto, txt, result=[], nr=375, extend=0, dot=", ", origin=None, showall=False, *args, **kwargs):
         """ chop output in pieces and stored it for !more command. """
@@ -480,7 +480,7 @@ class BotBase(LazyDict):
 
     def less(self, printto, what, nr=365):
         """ split up in parts of <nr> chars overflowing on word boundaries. """
-        if type(what) == types.ListType: txtlist = what
+        if type(what) == list: txtlist = what
         else:
             what = what.strip()
             txtlist = splittxt(what, nr)
@@ -492,7 +492,7 @@ class BotBase(LazyDict):
         length = len(txtlist)
         if length > 1:
             logging.debug("addding %s lines to %s outcache (less)" % (len(txtlist), printto))
-            outcache.set(u"%s-%s" % (self.cfg.name, printto), txtlist[1:])
+            outcache.set("%s-%s" % (self.cfg.name, printto), txtlist[1:])
             res += "<b> - %s more</b>" % (length - 1) 
         return [res, length]
 
@@ -512,7 +512,7 @@ class BotBase(LazyDict):
             try:
                 if not start: self.exit(close=close)
                 if self.doreconnect(): break
-            except Exception, ex: logging.error(str(ex))
+            except Exception as ex: logging.error(str(ex))
             
     def doreconnect(self, start=False):
         self.started = False
@@ -527,23 +527,23 @@ class BotBase(LazyDict):
         """ create a response from a string and result list. """
         res = []
         dres = []
-        if type(txt) == types.DictType or type(txt) == types.ListType:
+        if type(txt) == dict or type(txt) == list:
             result = txt
-        if type(result) == types.DictType:
-            for key, value in result.iteritems():
-                dres.append(u"%s: %s" % (key, unicode(value)))
+        if type(result) == dict:
+            for key, value in result.items():
+                dres.append("%s: %s" % (key, str(value)))
         if dres: target = dres
         else: target = result
         if target:
-            txt = u"<b>" + txt + u"</b>"
+            txt = "<b>" + txt + "</b>"
             for i in target:
                 if not i: continue
-                if type(i) == types.DictType:
-                    for key, value in i.iteritems():
-                        res.append(u"%s: %s" % (key, unicode(value)))
-                else: res.append(unicode(i))
+                if type(i) == dict:
+                    for key, value in i.items():
+                        res.append("%s: %s" % (key, str(value)))
+                else: res.append(str(i))
         ret = ""
-        if txt: ret = unicode(txt) + dot.join(res)   
+        if txt: ret = str(txt) + dot.join(res)   
         elif res: ret =  dot.join(res)
         if ret: return ret
         return ""
@@ -619,7 +619,7 @@ class BotBase(LazyDict):
         e.auth = e.origin
         e.userhost = e.origin
         e.channel = channel
-        e.txt = unicode(txt)
+        e.txt = str(txt)
         e.nick = e.userhost.split('@')[0]
         e.showall = showall
         e.nooutput = nooutput
@@ -642,7 +642,7 @@ class BotBase(LazyDict):
         e.auth = origin
         e.userhost = origin
         e.channel = channel
-        e.txt = unicode(txt)
+        e.txt = str(txt)
         e.nick = e.userhost.split('@')[0]
         e.usercmnd = e.txt.split()[0]
         e.allowqueues = True

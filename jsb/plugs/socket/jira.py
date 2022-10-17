@@ -21,7 +21,7 @@ from jsb.plugs.common.tinyurl import get_tinyurl
 ## basic imports
 
 import logging
-import xmlrpclib
+import xmlrpc.client
 import re
 import time
 #import modules.activecollab
@@ -56,13 +56,13 @@ def getServerInfo(server, auth):
             "priorityMap": priorityMap,
             "baseUrl": jira_baseurl
         }
-    except xmlrpclib.Error, v:
-        print "XMLRPC ERROR: ",
+    except xmlrpc.client.Error as v:
+        print("XMLRPC ERROR: ", end=' ')
 
 
 def getRpcClient(sInfo):
     base_url = "%s/rpc/xmlrpc" % sInfo["url"]
-    server = xmlrpclib.ServerProxy(base_url)
+    server = xmlrpc.client.ServerProxy(base_url)
 
     username, password = sInfo["username"], sInfo["password"]
     auth = server.jira1.login(username, password)
@@ -77,8 +77,8 @@ def getJiraIssue(s, ticket):
     try:
         info = server.jira1.getIssue(auth, ticket)
         return info
-    except xmlrpclib.Error, v:
-        print "XMLRPC ERROR:", v
+    except xmlrpc.client.Error as v:
+        print("XMLRPC ERROR:", v)
     return None
 
 def getJiraIssueMessage(s, ticket):
@@ -88,7 +88,7 @@ def getJiraIssueMessage(s, ticket):
     if info:
         outInfo = []
         outInfo.append("%s: Summary:     %s" % (info['key'], info['summary']))
-        if info.has_key('assignee'):
+        if 'assignee' in info:
             outInfo.append( "%s: Assigned To: %s" % (info['key'], info['assignee']))
         else:
             outInfo.append( "%s: Assigned To: Unassigned" % (info['key']))
@@ -109,7 +109,7 @@ def containsJiraTag(bot, ievent):
     if ievent.how == "backgound": return 0
     if not cfg.data.servers: return 0
     prefixList = set()
-    for server, serverData in cfg.data["servers"].iteritems():
+    for server, serverData in cfg.data["servers"].items():
         if ievent.channel in serverData["channels"]:
             prefixList.update(serverData["channels"][ievent.channel])
 
@@ -125,7 +125,7 @@ def doLookup(bot, ievent):
     if not cfg.data.servers: logging.warn("servers is not defined in config.") ; return 0
     prefixList = set()
     serversForPrefix = {}
-    for server, serverData in cfg.data["servers"].iteritems():
+    for server, serverData in cfg.data["servers"].items():
         if ievent.channel in serverData["channels"]:
             for prefix in serverData["channels"][ievent.channel]:
                 serversForPrefix[prefix] = server
@@ -171,7 +171,7 @@ def handle_add_jira_server(bot, ievent):
         "serverInfo": {},
     }
 
-    if not cfg.data.has_key("servers"):
+    if "servers" not in cfg.data:
         cfg.data["servers"] = {}
     cfg.data["servers"][server["name"]] = server
     cfg.save()
@@ -189,7 +189,7 @@ def handle_del_jira_server(bot, ievent):
         return
 
     serverName = ievent.args[0]
-    if not cfg.data.has_key("servers"):
+    if "servers" not in cfg.data:
         cfg.data["servers"] = {}
     if serverName in cfg.data["servers"]:
         del cfg.data["servers"][serverName]

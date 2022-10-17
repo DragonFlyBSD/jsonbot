@@ -17,11 +17,11 @@ class Pdod(Persist):
 
     def __getitem__(self, name):
         """ return item with name """
-        if self.data.has_key(name): return self.data[name]
+        if name in self.data: return self.data[name]
 
     def __delitem__(self, name):
         """ delete name item """
-        if self.data.has_key(name): return self.data.__delitem__(name)
+        if name in self.data: return self.data.__delitem__(name)
 
     def __setitem__(self, name, item):
         """ set name item """
@@ -36,11 +36,11 @@ class Pdod(Persist):
 
     def has_key(self, name):
         """ has name key """
-        return self.data.has_key(name)
+        return name in self.data
 
     def has_key2(self, name1, najsb):
         """ has [name1][najsb] key """
-        if self.data.has_key(name1): return self.data[name1].has_key(najsb)
+        if name1 in self.data: return najsb in self.data[name1]
 
     def get(self, name1, najsb):
         """ get data[name1][najsb] """
@@ -51,5 +51,5 @@ class Pdod(Persist):
 
     def set(self, name1, najsb, item):
         """ set name, najsb item """
-        if not self.data.has_key(name1): self.data[name1] = {}
+        if name1 not in self.data: self.data[name1] = {}
         self.data[name1][najsb] = item

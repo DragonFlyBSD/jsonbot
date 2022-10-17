@@ -12,7 +12,7 @@ from jsb.utils.trace import whichmodule
 from jsb.memcached import killmcdaemon
 from jsb.lib.persist import cleanup
 from jsb.lib.boot import ongae
-from runner import defaultrunner, cmndrunner, callbackrunner, waitrunner
+from .runner import defaultrunner, cmndrunner, callbackrunner, waitrunner
 
 ## basic imports
 
@@ -31,7 +31,7 @@ def globalshutdown(exit=True):
         try: sys.stdout.write("\n")
         except: pass
         logging.error('shutting down'.upper())
-        from fleet import getfleet
+        from .fleet import getfleet
         fleet = getfleet()
         if fleet:
             logging.warn('shutting down fleet')
@@ -49,8 +49,8 @@ def globalshutdown(exit=True):
         except: pass
         killmcdaemon()
         logging.warn('done')
-        if not ongae: print ""
+        if not ongae: print("")
         if exit and not ongae: os._exit(0)
-    except Exception, ex:
-        print str(ex)
+    except Exception as ex:
+        print(str(ex))
         if exit and not ongae: os._exit(1)

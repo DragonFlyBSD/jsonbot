@@ -32,7 +32,7 @@ def docolormorph(txt, event):
     if event and not event.bottype == "irc": return txt
     splitted = txt.split()
     for s in splitted:
-        for t, color in state.data.colormapping.iteritems():
+        for t, color in state.data.colormapping.items():
             try: c = int(color)
             except: logging.warn("color - %s is not a digit" % color) ; continue
             if c < 0: d = "00"

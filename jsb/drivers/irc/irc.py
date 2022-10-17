@@ -25,16 +25,16 @@ from jsb.lib.config import Config, getmainconfig
 
 ## jsb.irc imports
 
-from ircevent import IrcEvent
+from .ircevent import IrcEvent
 
 ## basic imports
 
 import time
-import thread
+import _thread
 import socket
 import threading
 import os
-import Queue
+import queue
 import random
 import logging
 import types
@@ -43,7 +43,7 @@ import select
 
 ## locks
 
-outlock = thread.allocate_lock()
+outlock = _thread.allocate_lock()
 outlocked = lockdec(outlock)
 
 ## exceptions
@@ -64,8 +64,8 @@ class Irc(BotBase):
         self.nickchanged = False
         self.noauto433 = False
         if self.state:
-            if not self.state.has_key('alternick'): self.state['alternick'] = self.cfg['alternick']
-            if not self.state.has_key('no-op'): self.state['no-op'] = []
+            if 'alternick' not in self.state: self.state['alternick'] = self.cfg['alternick']
+            if 'no-op' not in self.state: self.state['no-op'] = []
         self.nicks401 = []
         self.cfg.port = self.cfg.port or 6667
         self.connecttime = 0
@@ -88,9 +88,9 @@ class Irc(BotBase):
             if not self.sock: logging.debug("%s - socket disappeared - not sending." % self.cfg.name) ; return
             if not txt.startswith("PONG"): logging.warn("> %s (%s)" % (itxt, self.cfg.name))
             else: logging.info("> %s (%s)" % (itxt, self.cfg.name))             
-            if self.cfg.has_key('ssl') and self.cfg['ssl']: self.sock.write(itxt + '\n')
+            if 'ssl' in self.cfg and self.cfg['ssl']: self.sock.write(itxt + '\n')
             else: self.sock.send(itxt[:500] + '\n')
-        except Exception, ex: logging.error("%s - can't send: %s" % (self.cfg.name, str(ex)))
+        except Exception as ex: logging.error("%s - can't send: %s" % (self.cfg.name, str(ex)))
 
     def _connect(self):
         """ connect to server/port using nick. """
@@ -122,13 +122,13 @@ class Irc(BotBase):
                 socktimeout = float(socktimeout)
             self.oldsock.settimeout(socktimeout)
             self.fsock._sock.settimeout(socktimeout)
-        if self.cfg.has_key('ssl') and self.cfg['ssl']:
+        if 'ssl' in self.cfg and self.cfg['ssl']:
             logging.warn('ssl enabled (%s)' % self.cfg.name)
             self.sock = socket.ssl(self.oldsock) 
         else: self.sock = self.oldsock
         try:
             self.outputlock.release()
-        except thread.error:
+        except _thread.error:
             pass
         self.connecttime = time.time()
         return True
@@ -172,7 +172,7 @@ class Irc(BotBase):
         while not self.stopped and not self.stopreadloop and self.sock and self.fsock:
             try:
                 time.sleep(0.01)
-                if self.cfg.has_key('ssl') and self.cfg['ssl']: intxt = inputmorphs.do(self.sock.read()).split('\n')
+                if 'ssl' in self.cfg and self.cfg['ssl']: intxt = inputmorphs.do(self.sock.read()).split('\n')
                 else: intxt = inputmorphs.do(self.fsock.readline()).split('\n')
                 if self.stopreadloop or self.stopped:
                     doreconnect = 0
@@ -191,7 +191,7 @@ class Irc(BotBase):
                     if not r: continue
                     try:
                         r = strippedtxt(r.rstrip(), ["\001", "\002", "\003"]) 
-                        rr = unicode(fromenc(r.rstrip(), self.encoding))
+                        rr = str(fromenc(r.rstrip(), self.encoding))
                     except UnicodeDecodeError:
                         logging.warn("decode error - ignoring (%s)" % self.cfg.name)
                         continue
@@ -199,21 +199,21 @@ class Irc(BotBase):
                     res = rr
                     try:
                         ievent = IrcEvent().parse(self, res)
-                    except Exception, ex:
+                    except Exception as ex:
                         handle_exception()
                         continue
                     try:
-                        if int(ievent.cmnd) > 400: logging.error(u"< %s (%s)" % (res, self.cfg.name))
-                        elif int(ievent.cmnd) >= 300: logging.info(u"< %s (%s)" % (res, self.cfg.name))
+                        if int(ievent.cmnd) > 400: logging.error("< %s (%s)" % (res, self.cfg.name))
+                        elif int(ievent.cmnd) >= 300: logging.info("< %s (%s)" % (res, self.cfg.name))
                     except ValueError:
-                        if not res.startswith("PING") and not res.startswith("NOTICE"): logging.warn(u"< %s (%s)" % (res, self.cfg.name))
-                        else: logging.info(u"< %s (%s)" % (res, self.cfg.name))
+                        if not res.startswith("PING") and not res.startswith("NOTICE"): logging.warn("< %s (%s)" % (res, self.cfg.name))
+                        else: logging.info("< %s (%s)" % (res, self.cfg.name))
                     if ievent: self.handle_ievent(ievent)
                     timeout = 1
             except UnicodeError:
                 handle_exception()
                 continue
-            except socket.timeout, ex:
+            except socket.timeout as ex:
                 logging.warn("socket timeout (%s)" % self.cfg.name)
                 self.error = str(ex)
                 if self.stopped or self.stopreadloop: break
@@ -227,7 +227,7 @@ class Irc(BotBase):
                     doreconnect = 1
                     break
                 continue
-            except socket.sslerror, ex:
+            except socket.sslerror as ex:
                 self.error = str(ex)
                 if self.stopped or self.stopreadloop: break
                 if not 'timed out' in str(ex):
@@ -245,7 +245,7 @@ class Irc(BotBase):
                     doreconnect = 1
                     break
                 continue
-            except IOError, ex:
+            except IOError as ex:
                 self.error = str(ex)
                 if self.blocking and 'temporarily' in str(ex):
                     logging.warn("iorror: %s (%s)" % (self.error, self.cfg.name))
@@ -256,7 +256,7 @@ class Irc(BotBase):
                     handle_exception()
                     doreconnect = 1
                 break
-            except socket.error, ex:
+            except socket.error as ex:
                 self.error = str(ex)
                 if self.blocking and 'temporarily' in str(ex):
                     logging.warn("ioerror: %s (%s)" % (self.error, self.cfg.name))
@@ -266,7 +266,7 @@ class Irc(BotBase):
                     logging.error('connecting error: %s (%s)' % (str(ex), self.cfg.name))
                     doreconnect = 1
                 break
-            except Exception, ex:
+            except Exception as ex:
                 self.error = str(ex)
                 if self.stopped or self.stopreadloop:
                     break
@@ -322,7 +322,7 @@ class Irc(BotBase):
         except (KeyError, TypeError, ValueError):
             fd = None
             logging.error("%s - can't determine file descriptor" % self.cfg.name)
-            print data.tojson()
+            print(data.tojson())
             return 0
         logging.warn("resume - file descriptor is %s (%s)" % (fd, data.name))
         # create socket
@@ -354,7 +354,7 @@ class Irc(BotBase):
         what = fix_format(what)
         what = self.normalize(what)
         if 'socket' in repr(printto) and self.sock:
-            printto.send(unicode(what) + u"\n")
+            printto.send(str(what) + "\n")
             return True
         if not printto: self._raw(what)
         elif how == 'notice': self.notice(printto, what)
@@ -420,12 +420,12 @@ class Irc(BotBase):
     def close(self):
         """ close the connection. """
         try:
-            if self.cfg.has_key('ssl') and self.cfg['ssl']: self.oldsock.shutdown(2)
+            if 'ssl' in self.cfg and self.cfg['ssl']: self.oldsock.shutdown(2)
             else: self.sock.shutdown(2)
         except:
             pass
         try:
-            if self.cfg.has_key('ssl') and self.cfg['ssl']: self.oldsock.close()
+            if 'ssl' in self.cfg and self.cfg['ssl']: self.oldsock.close()
             else: self.sock.close()
             self.fsock.close()
         except:
@@ -439,7 +439,7 @@ class Irc(BotBase):
     def sendraw(self, txt):
         """ send raw text to the server. """
         if self.stopped: return
-        logging.debug(u'%s - sending %s' % (self.cfg.name, txt))
+        logging.debug('%s - sending %s' % (self.cfg.name, txt))
         self._raw(txt)
 
     def fakein(self, txt):
@@ -474,7 +474,7 @@ class Irc(BotBase):
         try:
             self.state.data['joinedchannels'].remove(channel)
             self.state.save()
-        except (KeyError, ValueError), ex:
+        except (KeyError, ValueError) as ex:
             logging.error("error removing %s from joinedchannels: %s" % (channel, str(ex)))
         if self.cfg.channels and channel in self.cfg.channels: self.cfg.channels.remove(channel) ; self.cfg.save()
 
@@ -513,7 +513,7 @@ class Irc(BotBase):
             if timetosleep > 0 and not self.cfg.nolimiter and not (time.time() - self.connecttime < 5):
                 logging.debug('%s - flood protect' % self.cfg.name)
                 time.sleep(timetosleep)
-        except Exception, ex:
+        except Exception as ex:
             logging.error('%s - send error: %s' % (self.cfg.name, str(ex)))
             handle_exception()
         #finally: release_object(self)
@@ -653,7 +653,7 @@ class Irc(BotBase):
         try:
             self._raw('PING :%s' % self.cfg.server)
             return 1
-        except Exception, ex:
+        except Exception as ex:
             logging.warn("can't send ping: %s (%s)" % (str(ex), self.cfg.name))
             return 0
 

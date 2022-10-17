@@ -15,7 +15,7 @@ json = getjson()
 
 # basic imports
 
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import random
 import logging
 
@@ -65,9 +65,9 @@ def handle_yacy(bot, event):
     for h in prio1 + hosts:
         if h in errorhosts: continue
         try:
-            r = json.loads(getresults(queryurl % (h, urllib.quote_plus(event.rest))))
+            r = json.loads(getresults(queryurl % (h, urllib.parse.quote_plus(event.rest))))
             if r: got = h ; break
-        except Exception, ex: errorhosts.append(h) ; handle_exception() ; continue
+        except Exception as ex: errorhosts.append(h) ; handle_exception() ; continue
     result = []
     for channel in r['channels']:
          for item in channel['items']: result.append("%s - %s (%s)" % (item['title'], item['link'], item['size']))

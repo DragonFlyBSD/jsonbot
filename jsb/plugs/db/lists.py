@@ -90,7 +90,7 @@ def handle_lists(bot, ievent):
     if not listname or not item: ievent.missing("<listname> [',' <item>]") ; return
     ok = 0
     try: ok = addtolist(username, listname, item)
-    except Exception, ex:
+    except Exception as ex:
         handle_exception()
         ievent.reply('ERROR: %s' % str(ex))
         return
@@ -118,7 +118,7 @@ def handle_listsdel(bot, ievent):
             result = delfromlist(username, i)
             if not result: failed.append(str(i))
             else: itemsdeleted += 1
-    except Exception, ex:
+    except Exception as ex:
         handle_exception()
         ievent.reply('ERROR: %s' % str(ex))
         return
@@ -157,7 +157,7 @@ def handle_listsmerge(bot, ievent):
     for i in res: l.append(i[3])
     result = 0
     try: result = mergelist(username, tolist, l)
-    except Exception, ex:
+    except Exception as ex:
         handle_exception()
         ievent.reply('ERROR: %s' % str(ex))
         return

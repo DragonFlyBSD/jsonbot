@@ -90,7 +90,7 @@ def handle_ask(bot, event):
         return
     asker = event.userhost
     for expert in expertslist:
-        if not questions.data.has_key(expert): questions.data[expert] = []
+        if expert not in questions.data: questions.data[expert] = []
         questions.data[expert].append([bot.cfg.name, bot.type, event.userhost, event.channel])
     questions.save()
     event.reply('question is sent to %s' % ' .. '.join(expertslist))
@@ -119,12 +119,12 @@ def handle_askjoin(bot, event):
     except IndexError:
         event.missing('<subject>')
         return
-    if not experts.data.has_key(subject): experts.data[subject] = []
+    if subject not in experts.data: experts.data[subject] = []
     if not event.userhost in experts.data[subject]:
         experts.data[subject].append(event.userhost)
         experts.save()
     expert = event.userhost
-    if not subjects.data.has_key(expert): subjects.data[expert] = []
+    if expert not in subjects.data: subjects.data[expert] = []
     if not subject in subjects.data[expert]:
         subjects.data[expert].append(subject)
         subjects.save()
@@ -155,7 +155,7 @@ examples.add('ask-part', 'leave the subject expert list', 'ask-part ask-bot')
 
 def handle_asklist(bot, event):
     """ show all available subjects. """
-    event.reply('available subjects: ', experts.data.keys())
+    event.reply('available subjects: ', list(experts.data.keys()))
 
 cmnds.add('ask-list', handle_asklist, ['OPER', 'USER', 'GUEST'])
 examples.add('ask-list', 'list available subjects', 'ask-list')

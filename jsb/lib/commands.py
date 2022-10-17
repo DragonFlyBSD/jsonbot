@@ -10,17 +10,17 @@
 
 ## jsb imports
 
-from threads import start_new_thread, start_bot_command
+from .threads import start_new_thread, start_bot_command
 from jsb.utils.xmpp import stripped
 from jsb.utils.trace import calledfrom, whichmodule
 from jsb.utils.exception import handle_exception
 from jsb.utils.lazydict import LazyDict
-from errors import NoSuchCommand, NoSuchUser
-from persiststate import UserState
-from runner import cmndrunner
-from boot import getcmndperms
-from floodcontrol import floodcontrol
-from aliases import getaliases, aliascheck
+from .errors import NoSuchCommand, NoSuchUser
+from .persiststate import UserState
+from .runner import cmndrunner
+from .boot import getcmndperms
+from .floodcontrol import floodcontrol
+from .aliases import getaliases, aliascheck
 
 ## basic imports
 
@@ -50,7 +50,7 @@ class Command(LazyDict):
         self.cmnd = cpy(cmnd)
         self.orig = cpy(orig)
         self.func = func
-        if type(perms) == types.StringType: perms = [perms, ]
+        if type(perms) == bytes: perms = [perms, ]
         self.perms = cpy(perms)
         self.plugin = self.plugname
         self.threaded = cpy(threaded)
@@ -84,7 +84,7 @@ class Commands(LazyDict):
         try:
             p = cmnd.split('-')[0]
             if not self.pre: self.pre = LazyDict()
-            if self.pre.has_key(p):
+            if p in self.pre:
                 if not self.pre[p]: self.pre[p] = []
                 if prev in self.pre[p]: self.pre[p].remove(prev) 
                 if target not in self.pre[p]: self.pre[p].append(target)
@@ -115,7 +115,7 @@ class Commands(LazyDict):
             cmnd = event.stripcc().split()[0]
             if event.execstr and not cmnd: cmnd = event.execstr.split()[0]
             if not cmnd: cmnd = event.txt.split()[0]
-        except Exception, ex: logging.debug("can't determine command") ; return None
+        except Exception as ex: logging.debug("can't determine command") ; return None
         try:
             a = event.chan.data.aliases[cmnd]
             if a: cmnd = a.split()[0]
@@ -124,14 +124,14 @@ class Commands(LazyDict):
                 a = getaliases()[cmnd]
                 if a: cmnd = a.split()[0]
             except (KeyError, TypeError): 
-                if not self.has_key(cmnd):
+                if cmnd not in self:
                     try:
-                        from boot import shorttable
-                        if shorttable.data.has_key(cmnd):
+                        from .boot import shorttable
+                        if cmnd in shorttable.data:
                             cmndlist = shorttable.data[cmnd]
                             if len(cmndlist) == 1: cmnd = cmndlist[0]
                             else: event.reply("choose one of: ", cmndlist) ; return
-                    except Exception, ex: handle_exception()
+                    except Exception as ex: handle_exception()
         logging.info("trying for %s" % cmnd)
         result = None
         try:
@@ -192,7 +192,7 @@ class Commands(LazyDict):
                     t = start_bot_command(target.func, (bot, event))
                     event.thread = t
                 else: event.dontclose = False; cmndrunner.put(target.speed or event.speed, target.modname, target.func, bot, event)
-        except Exception, ex:
+        except Exception as ex:
             logging.error('%s - error executing %s' % (whichmodule(), str(target.func)))
             raise
         return event
@@ -200,7 +200,7 @@ class Commands(LazyDict):
     def unload(self, modname):
         """ remove modname registered commands from store. """
         delete = []
-        for name, cmnd in self.iteritems():
+        for name, cmnd in self.items():
             if not cmnd: continue
             if cmnd.modname == modname: delete.append(cmnd)
         for cmnd in delete: cmnd.enable = False
@@ -209,8 +209,8 @@ class Commands(LazyDict):
     def apropos(self, search):
         """ search existing commands for search term. """
         result = []
-        from boot import getcmndtable
-        for name, plugname in getcmndtable().iteritems():
+        from .boot import getcmndtable
+        for name, plugname in getcmndtable().items():
             if search in name: result.append(name)
         return result
 
@@ -221,7 +221,7 @@ class Commands(LazyDict):
 
     def whereis(self, cmnd):
         """ return plugin name in which command is implemented. """
-        from boot import getcmndtable
+        from .boot import getcmndtable
         try: return getcmndtable()[cmnd]
         except KeyError: return ""
 
@@ -236,8 +236,8 @@ class Commands(LazyDict):
             reload the plugin.  
 
         """
-        from boot import getcmndtable
-        from boot import plugblacklist
+        from .boot import getcmndtable
+        from .boot import plugblacklist
         plugloaded = None
         plugin = None
         target = target or event.usercmnd.lower()
@@ -247,23 +247,23 @@ class Commands(LazyDict):
         except KeyError:
             try: target = event.chan.data.aliases[target]
             except (AttributeError, KeyError, TypeError): pass
-            if not getcmndtable().has_key(target):
+            if target not in getcmndtable():
                 try:
-                    from boot import shorttable
-                    if shorttable.data.has_key(target):
+                    from .boot import shorttable
+                    if target in shorttable.data:
                         cmndlist = shorttable.data[target]
                         if len(cmndlist) == 1: target = cmndlist[0]
-                except Exception, ex: handle_exception()
+                except Exception as ex: handle_exception()
         if target: target = target.split()[0]
         logging.debug("checking for reload of %s" % target)
         try:
             plugin = getcmndtable()[target]
         except KeyError:
             try:
-                from boot import retable
-                for regex, mod in retable.data.iteritems():
+                from .boot import retable
+                for regex, mod in retable.data.items():
                     if re.search(regex, event.stripcc() or event.txt): plugin = mod ; break
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
         logging.info("plugin is %s" % plugin)
         if not plugin: logging.debug("can't find plugin to reload for %s" % target) ; return
         if plugin in bot.plugs: logging.info(" %s already loaded" % plugin) ; return plugloaded

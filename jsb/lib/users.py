@@ -9,12 +9,12 @@
 from jsb.utils.exception import handle_exception, exceptionmsg
 from jsb.utils.generic import stripped
 from jsb.utils.name import stripname
-from persiststate import UserState
-from persist import Persist
+from .persiststate import UserState
+from .persist import Persist
 from jsb.utils.lazydict import LazyDict
-from datadir import getdatadir
-from errors import NoSuchUser
-from config import Config, getmainconfig
+from .datadir import getdatadir
+from .errors import NoSuchUser
+from .config import Config, getmainconfig
 
 ## basic imports
 
@@ -64,7 +64,7 @@ class Users(Persist):
     def all(self):
         """ get all users. """
         result = []
-        for name in self.data['names'].values(): result.append(JsonUser(name).lower())
+        for name in list(self.data['names'].values()): result.append(JsonUser(name).lower())
         return result
 
     ## Misc. Functions
@@ -75,7 +75,7 @@ class Users(Persist):
 
     def names(self):
         """ get names of all users. """
-        return self.data.names.values()
+        return list(self.data.names.values())
 
     def byname(self, name):
         """ return user by name. """ 
@@ -102,7 +102,7 @@ class Users(Persist):
     def usersearch(self, userhost):
         """ search for users with a userhost like the one specified """
         result = []
-        for u, name in self.data.names.iteritems():
+        for u, name in self.data.names.items():
             if userhost in u: result.append((name.lower(), u))
         return result
 
@@ -122,7 +122,7 @@ class Users(Persist):
 
     def allowed(self, userhost, perms, log=True, bot=None):
         """ check if user with userhosts is allowed to execute perm command """
-        if not type(perms) == types.ListType: perms = [perms, ]
+        if not type(perms) == list: perms = [perms, ]
         if 'ANY' in perms: return 1
         if bot and bot.allowall: return 1
         res = None
@@ -488,12 +488,12 @@ class Users(Persist):
             logging.info("no usershosts provided in make_owner")
             return
         owner = []
-        if type(userhosts) != types.ListType: owner.append(userhosts)
+        if type(userhosts) != list: owner.append(userhosts)
         else: owner = userhosts
         for userhost in owner:
-            username = self.getname(unicode(userhost))
+            username = self.getname(str(userhost))
             if not username or username != 'owner':
-                if not self.merge('owner', unicode(userhost)): self.add('owner', [unicode(userhost), ], ['USER', 'OPER', 'GUEST'])
+                if not self.merge('owner', str(userhost)): self.add('owner', [str(userhost), ], ['USER', 'OPER', 'GUEST'])
 
 ## global users object
 

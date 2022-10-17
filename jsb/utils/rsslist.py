@@ -6,7 +6,7 @@
 
 ## jsb imports
 
-from exception import handle_exception
+from .exception import handle_exception
 
 ## basic imports
 

@@ -115,7 +115,7 @@ def handle_commands(bot, ievent):
     except IndexError: plugin = ""
     result = []
     cmnds = getcmndtable()
-    for cmnd, plugname in cmnds.iteritems(): 
+    for cmnd, plugname in cmnds.items(): 
         if plugname:
             if not plugin or plugin in plugname: result.append(cmnd)
     if result:
@@ -217,7 +217,7 @@ def handle_helpplug(bot, ievent):
         perms = ievent.user.data.perms
         if not perms: perms = ['GUEST', ]
         counter = 1
-        for i, j in cmnds.iteritems():
+        for i, j in cmnds.items():
             if what == j.plugname:
                 for perm in j.perms:
                     if perm in perms:
@@ -225,7 +225,7 @@ def handle_helpplug(bot, ievent):
                             try:
                                 descr = j.func.__doc__
                                 if not descr: descr = "no description provided"
-                                try: cmndresult.append(u"    <b>!%s</b> - <i>%s</i>" % (i, descr))
+                                try: cmndresult.append("    <b>!%s</b> - <i>%s</i>" % (i, descr))
                                 except KeyError: pass
                             except AttributeError: pass
                             counter += 1
@@ -319,7 +319,7 @@ def handle_whatcommands(bot, ievent):
         return
     result = cmnds
     res = []
-    for cmnd in result.values():
+    for cmnd in list(result.values()):
         if cmnd and cmnd.perms and ievent.rest in cmnd.perms:
             res.append(cmnd.cmnd)
     res.sort()
@@ -336,10 +336,10 @@ def handle_versions(bot, ievent):
     versions = {}
     for mod in copy.copy(sys.modules):
         try: versions[mod] = sys.modules[mod].__version__
-        except AttributeError, ex: pass
+        except AttributeError as ex: pass
         try: versions['python'] = sys.version
-        except AttributeError, ex: pass
-    ievent.reply("versions ==> %s" % unicode(versions))
+        except AttributeError as ex: pass
+    ievent.reply("versions ==> %s" % str(versions))
 
 cmnds.add('versions', handle_versions, ['USER', 'GUEST'])
 examples.add('versions', 'show versions of all loaded modules', 'versions')
@@ -383,7 +383,7 @@ examples.add('threads', 'show running threads', 'threads')
 
 def handle_loaded(bot, event):
     """ no arguments - show plugins in cache. """
-    event.reply("loaded plugins (cache): ", plugs.keys())
+    event.reply("loaded plugins (cache): ", list(plugs.keys()))
 
 cmnds.add('loaded', handle_loaded, ['USER', 'GUEST'])
 examples.add('loaded', 'show list of loaded plugins', 'loaded')
@@ -401,7 +401,7 @@ examples.add('statusline', 'show status line', 'statusline')
 
 def handle_topper(bot, event):
     """ no arguments - show a 'topper' startus line. """
-    event.reply("<b>forwards:</b> %s - <b>watched:</b> %s  - <b>feeds:</b> %s" % (", ".join(event.chan.data.forwards) or "none", ", ".join(event.chan.data.watched) or "none", ", ".join([unicode(x) for x in event.chan.data.feeds]) or "none"))
+    event.reply("<b>forwards:</b> %s - <b>watched:</b> %s  - <b>feeds:</b> %s" % (", ".join(event.chan.data.forwards) or "none", ", ".join(event.chan.data.watched) or "none", ", ".join([str(x) for x in event.chan.data.feeds]) or "none"))
 
 cmnds.add('topper', handle_topper, ['USER', 'GUEST'])
 examples.add('topper', 'show topper line', 'topper')
@@ -421,7 +421,7 @@ def handle_descriptions(bot, event):
     """ no arguments - show descriptions of all plugins. """
     bot.plugs.loadall()
     result = []
-    target = bot.plugs.keys()
+    target = list(bot.plugs.keys())
     target.sort()
     for modname in target:
         plug = bot.plugs.get(modname)

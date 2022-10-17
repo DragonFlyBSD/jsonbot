@@ -6,8 +6,8 @@
 
 ## jsb imports
 
-from lazydict import LazyDict
-from generic import fromenc, toenc
+from .lazydict import LazyDict
+from .generic import fromenc, toenc
 from jsb.lib.errors import URLNotEnabled
 
 ## basic imports
@@ -17,25 +17,25 @@ import time
 import sys
 import re
 import traceback
-import Queue
-import urllib
-import urllib2
-import urlparse
+import queue
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+import urllib.parse
 import socket
 import random
 import os
 import sgmllib
-import thread
+import _thread
 import types
-import httplib
-import StringIO
-import htmlentitydefs
+import http.client
+import io
+import html.entities
 import tempfile
 import cgi
 
 ## defines
 
-re_url_match  = re.compile(u'((?:http|https)://\S+)')
+re_url_match  = re.compile('((?:http|https)://\S+)')
 
 try: import chardet
 except ImportError: chardet = None
@@ -87,15 +87,15 @@ class Url(LazyDict):
         
         """
         if url: self.url = url
-        self.parsed = urlparse.urlsplit(url or self.url)
+        self.parsed = urllib.parse.urlsplit(url or self.url)
         self.target = self.parsed[2].split("/")
         if "." in self.target[-1]:
             self.basepath = "/".join(self.target[:-1])
             self.file = self.target[-1]
         else: self.basepath = self.parsed[2] ; self.file = None
         if self.basepath.endswith("/"): self.basepath = self.basepath[:-1]
-        self.base = urlparse.urlunsplit((self.parsed[0], self.parsed[1], self.basepath , "", ""))
-        self.root = urlparse.urlunsplit((self.parsed[0], self.parsed[1], "", "", ""))
+        self.base = urllib.parse.urlunsplit((self.parsed[0], self.parsed[1], self.basepath , "", ""))
+        self.root = urllib.parse.urlunsplit((self.parsed[0], self.parsed[1], "", "", ""))
 
     def fetch(self, *args, **kwargs):
         self.html = geturl2(self.url)
@@ -130,12 +130,12 @@ class Url(LazyDict):
 
 ## CBURLopener class
 
-class CBURLopener(urllib.FancyURLopener):
+class CBURLopener(urllib.request.FancyURLopener):
     """ our URLOpener """
     def __init__(self, version, *args):
         if version: self.version = version
         else: self.version = useragent()
-        urllib.FancyURLopener.__init__(self, *args)
+        urllib.request.FancyURLopener.__init__(self, *args)
 
 ## geturl function
 
@@ -143,9 +143,9 @@ def geturl(url, version=None):
     """ fetch an url. """
     global enabled
     if not enabled: raise URLNotEnabled(url)
-    urllib._urlopener = CBURLopener(version)
+    urllib.request._urlopener = CBURLopener(version)
     logging.warn('fetching %s' % url)
-    result = urllib.urlopen(url)
+    result = urllib.request.urlopen(url)
     tmp = result.read()
     result.close()
     return tmp
@@ -157,9 +157,9 @@ def geturl2(url, decode=False, timeout=5):
     global enabled
     if not enabled: raise URLNotEnabled(url)
     logging.warn('fetching %s' % url)
-    request = urllib2.Request(url)
+    request = urllib.request.Request(url)
     request.add_header('User-Agent', useragent())
-    opener = urllib2.build_opener()
+    opener = urllib.request.build_opener()
     result = opener.open(request, timeout=timeout)
     tmp = result.read()
     info = result.info()
@@ -181,15 +181,15 @@ def geturl4(url, myheaders={}, postdata={}, keyfile="", certfile="", port=80):
     if not enabled: raise URLNotEnabled(url)
     headers = {'Content-Type': 'text/html', 'Accept': 'text/plain; text/html', 'User-Agent': useragent()}
     headers.update(myheaders)
-    urlparts = urlparse.urlparse(url)
+    urlparts = urllib.parse.urlparse(url)
     try:
        port = int(urlparts[1].split(':')[1])
        host = urlparts[1].split(':')[0]
     except: host = urlparts[1]
-    if keyfile: connection = httplib.HTTPSConnection(host, port, keyfile, certfile)
-    elif 'https' in urlparts[0]: connection = httplib.HTTPSConnection(host, port)
-    else: connection = httplib.HTTPConnection(host, port)
-    if type(postdata) == types.DictType: postdata = urllib.urlencode(postdata)
+    if keyfile: connection = http.client.HTTPSConnection(host, port, keyfile, certfile)
+    elif 'https' in urlparts[0]: connection = http.client.HTTPSConnection(host, port)
+    else: connection = http.client.HTTPConnection(host, port)
+    if type(postdata) == dict: postdata = urllib.parse.urlencode(postdata)
     logging.warn('fetching %s' % url)
     connection.request('GET', urlparts[2])
     return connection.getresponse()
@@ -203,10 +203,10 @@ def posturl(url, myheaders, postdata, keyfile=None, certfile="",port=80):
     if not enabled: raise URLNotEnabled(url)
     headers = {'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain; text/html', 'User-Agent': useragent()}
     headers.update(myheaders)
-    urlparts = urlparse.urlparse(url)
-    if keyfile: connection = httplib.HTTPSConnection(urlparts[1], port, keyfile, certfile)
-    else: connection = httplib.HTTPConnection(urlparts[1])
-    if type(postdata) == types.DictType: postdata = urllib.urlencode(postdata)
+    urlparts = urllib.parse.urlparse(url)
+    if keyfile: connection = http.client.HTTPSConnection(urlparts[1], port, keyfile, certfile)
+    else: connection = http.client.HTTPConnection(urlparts[1])
+    if type(postdata) == dict: postdata = urllib.parse.urlencode(postdata)
     logging.warn('post %s' % url)
     connection.request('POST', urlparts[2], postdata, headers)
     return connection.getresponse()
@@ -219,10 +219,10 @@ def deleteurl(url, myheaders={}, postdata={}, keyfile="", certfile="", port=80):
     if not enabled: raise URLNotEnabled(url)
     headers = {'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain; text/html', 'User-Agent': useragent()}
     headers.update(myheaders)
-    urlparts = urlparse.urlparse(url)
-    if keyfile and certfile: connection = httplib.HTTPSConnection(urlparts[1], port, keyfile, certfile)
-    else: connection = httplib.HTTPConnection(urlparts[1])
-    if type(postdata) == types.DictType: postdata = urllib.urlencode(postdata)
+    urlparts = urllib.parse.urlparse(url)
+    if keyfile and certfile: connection = http.client.HTTPSConnection(urlparts[1], port, keyfile, certfile)
+    else: connection = http.client.HTTPConnection(urlparts[1])
+    if type(postdata) == dict: postdata = urllib.parse.urlencode(postdata)
     logging.info('delete %s' % url)
     connection.request('DELETE', urlparts[2], postdata, headers)
     return connection.getresponse()
@@ -235,10 +235,10 @@ def puturl(url, myheaders={}, postdata={}, keyfile="", certfile="", port=80):
     if not enabled: raise URLNotEnabled(url)
     headers = {'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain; text/html', 'User-Agent': useragent()}
     headers.update(myheaders)
-    urlparts = urlparse.urlparse(url)
-    if keyfile: connection = httplib.HTTPSConnection(urlparts[1], port, keyfile, certfile)
-    else: connection = httplib.HTTPConnection(urlparts[1])
-    if type(postdata) == types.DictType: postdata = urllib.urlencode(postdata)
+    urlparts = urllib.parse.urlparse(url)
+    if keyfile: connection = http.client.HTTPSConnection(urlparts[1], port, keyfile, certfile)
+    else: connection = http.client.HTTPConnection(urlparts[1])
+    if type(postdata) == dict: postdata = urllib.parse.urlencode(postdata)
     logging.info('put %s' % url)
     connection.request('PUT', urlparts[2], postdata, headers)
     return connection.getresponse()
@@ -263,7 +263,7 @@ def getpostdata_gae(request):
     #    ctype, pdict = cgi.parse_header(request.headers.getheader('content-type'))
     #except AttributeError: ctype, pdict = cgi.parse_header(request.headers.get('content-type'))
     #body = cgi.FieldStorage(headers=request.headers, environ = {'REQUEST_METHOD':'POST'}, keep_blank_values = 1)
-    return urllib.unquote_plus(request.body[:-1].strip())
+    return urllib.parse.unquote_plus(request.body[:-1].strip())
     #result = {}
     #for name in dict(body): result[name] = body.getfirst(name)
     #return result
@@ -272,20 +272,20 @@ def getpostdata_gae(request):
 
 def decode_html_entities(s):
     """ smart decoding of html entities to utf-8 """
-    re_ent_match = re.compile(u'&([^;]+);')
-    re_entn_match = re.compile(u'&#([^;]+);')
+    re_ent_match = re.compile('&([^;]+);')
+    re_entn_match = re.compile('&#([^;]+);')
     try: s = s.decode('utf-8', 'replace')
     except: return s
 
     def to_entn(match):
         """ convert to entities """
-        if htmlentitydefs.entitydefs.has_key(match.group(1)):
-            return htmlentitydefs.entitydefs[match.group(1)].decode('latin1', 'replace')
+        if match.group(1) in html.entities.entitydefs:
+            return html.entities.entitydefs[match.group(1)].decode('latin1', 'replace')
         return match.group(0)
 
     def to_utf8(match):
         """ convert to utf-8 """
-        return unichr(long(match.group(1)))
+        return chr(int(match.group(1)))
 
     s = re_ent_match.sub(to_entn, s)
     s = re_entn_match.sub(to_utf8, s)
@@ -295,14 +295,14 @@ def decode_html_entities(s):
 
 def get_encoding(data):
     """ get encoding from web data """
-    if hasattr(data, 'info') and data.info.has_key('content-type') and 'charset' in data.info['content-type'].lower():
+    if hasattr(data, 'info') and 'content-type' in data.info and 'charset' in data.info['content-type'].lower():
         charset = data.info['content-type'].lower().split('charset', 1)[1].strip()
         if charset[0] == '=':
             charset = charset[1:].strip()
             if ';' in charset: return charset.split(';')[0].strip()
             return charset
     if '<meta' in data.lower():
-        metas = re.findall(u'<meta[^>]+>', data, re.I | re.M)
+        metas = re.findall('<meta[^>]+>', data, re.I | re.M)
         if metas:
             for meta in metas:
                 test_http_equiv = re.search('http-equiv\s*=\s*[\'"]([^\'"]+)[\'"]', meta, re.I)
@@ -313,7 +313,7 @@ def get_encoding(data):
                         if test_charset: return test_charset.group(1)
     if chardet:
         test = chardet.detect(data)
-        if test.has_key('encoding'): return test['encoding']
+        if 'encoding' in test: return test['encoding']
     return sys.getdefaultencoding()
 
 ## Stripper class
@@ -327,7 +327,7 @@ class Stripper(sgmllib.SGMLParser):
 
     def strip(self, some_html):
         """ strip html. """
-        self.theString = u""
+        self.theString = ""
         self.feed(fromenc(some_html, "ascii"))
         self.close()
         return self.theString

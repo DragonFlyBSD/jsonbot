@@ -31,8 +31,7 @@ class ConsoleEvent(EventBase):
         self.origin = self.userhost
         self.txt = input
         self.channel = self.userhost
-        self.cbtype = self.cmnd = unicode("CONSOLE")
+        self.cbtype = self.cmnd = "CONSOLE"
         self.showall = True
         self.prepare()
         return self
-        

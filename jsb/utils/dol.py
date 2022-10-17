@@ -12,19 +12,19 @@ class Dol(dict):
 
     def insert(self, nr, item, issue):
         """ add issue to item entry """
-        if self.has_key(item): self[item].insert(nr, issue)
+        if item in self: self[item].insert(nr, issue)
         else: self[item] = [issue]
         return True
 
     def add(self, item, issue):
         """ add issue to item entry """
-        if self.has_key(item): self[item].append(issue)
+        if item in self: self[item].append(issue)
         else: self[item] = [issue]
         return True
 
     def adduniq(self, item, issue):
         """ only add issue to item if it is not already there """
-        if self.has_key(item):
+        if item in self:
             if issue in self[item]: return False
         self.add(item, issue)
         return True
@@ -32,7 +32,7 @@ class Dol(dict):
     def delete(self, item, number):
         """ del self[item][number] """
         number = int(number)
-        if self.has_key(item):
+        if item in self:
             try:
                 del self[item][number]
                 return True

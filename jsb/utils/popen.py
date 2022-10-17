@@ -12,8 +12,8 @@ go = False
 
 try:
     from subprocess import Popen, PIPE
-    from locking import lockdec
-    import thread, StringIO, logging, types
+    from .locking import lockdec
+    import _thread, io, logging, types
     go = True
 except: go = False
 
@@ -21,7 +21,7 @@ if go:
 
     ## locks
 
-    popenlock = thread.allocate_lock()
+    popenlock = _thread.allocate_lock()
     popenlocked = lockdec(popenlock)
 
     ## exceptions
@@ -46,7 +46,7 @@ if go:
 
     ## GozerStringIO class
 
-    class GozerStringIO(StringIO.StringIO):
+    class GozerStringIO(io.StringIO):
 
         """ provide readlines support on a StringIO object. """
 
@@ -81,8 +81,8 @@ if go:
 
     def gozerpopen(args, userargs=[]):
         """ do the actual popen .. make sure the arguments are passed on as list. """
-        if type(args) != types.ListType: raise PopenListError(args)
-        if type(userargs) != types.ListType: raise PopenListError(args)
+        if type(args) != list: raise PopenListError(args)
+        if type(userargs) != list: raise PopenListError(args)
         for i in userargs:
             if i.startswith('-'): raise PopenWhitelistError(i)
         proces = GozerPopen4(args + userargs)

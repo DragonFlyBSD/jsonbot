@@ -8,18 +8,18 @@
 
 from jsb.utils.exception import handle_exception
 from jsb.utils.locking import lockdec
-from threads import start_new_thread
+from .threads import start_new_thread
 
 ## basic imports
 
-import Queue
-import thread
+import queue
+import _thread
 import logging
 import time
 
 ## locks
 
-handlerlock = thread.allocate_lock()
+handlerlock = _thread.allocate_lock()
 locked = lockdec(handlerlock)
 
 ## classes
@@ -34,8 +34,8 @@ class EventHandler(object):
 
     def __init__(self):
         self.sortedlist = []
-        try: self.queue = Queue.PriorityQueue()
-        except AttributeError: self.queue = Queue.Queue()
+        try: self.queue = queue.PriorityQueue()
+        except AttributeError: self.queue = queue.Queue()
         self.stopped = False
         self.running = False
         self.nooutput = False
@@ -51,7 +51,7 @@ class EventHandler(object):
         try:
             speed, todo = self.queue.get_nowait()
             self.dispatch(todo)
-        except Queue.Empty: pass
+        except queue.Empty: pass
 
     def stop(self):
         """ stop the eventhandler thread. """
@@ -71,8 +71,8 @@ class EventHandler(object):
                 (speed, todo) = self.queue.get()
                 logging.warn("running at speed %s - %s" % (speed, str(todo)))
                 self.dispatch(todo)
-            except Queue.Empty: time.sleep(0.1)
-            except Exception, ex: handle_exception()
+            except queue.Empty: time.sleep(0.1)
+            except Exception as ex: handle_exception()
         logging.warn('stopping - %s' % str(self))
 
     runforever = handleloop

@@ -30,7 +30,7 @@ def handle_aliassearch(bot, ievent):
     res = []
     aliases = ievent.chan.data.aliases
     if aliases:
-        for i, j in aliases.iteritems():
+        for i, j in aliases.items():
             if what in i or what in j: result.append((i, j))
     if not result: ievent.reply('no %s found' % what)
     else:
@@ -51,12 +51,12 @@ def handle_aliasset(bot, ievent):
     if not aliasto:
         ievent.missing('<from> <to>')
         return
-    if cmnds.has_key(aliasfrom):
+    if aliasfrom in cmnds:
         ievent.reply('command with same name already exists.')
         return
     aliases = ievent.chan.data.aliases
     if not aliases: ievent.chan.data.aliases = aliases = {}
-    if aliases.has_key(aliasto):
+    if aliasto in aliases:
         ievent.reply("can't alias an alias")
         return
     ievent.chan.data.aliases[aliasfrom] = aliasto

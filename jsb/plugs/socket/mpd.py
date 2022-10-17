@@ -125,10 +125,10 @@ class MPDWatcher(Pdod):
             return
         status['time'] = mpd_duration(status['time'])
         song = cfg.get('song-status') % status
-        for name in self.data.keys():
+        for name in list(self.data.keys()):
             bot = fleet.byname(name)
             if bot:
-                for channel in self.data[name].keys():
+                for channel in list(self.data[name].keys()):
                     bot.say(channel, song)
 
 ## init
@@ -155,17 +155,17 @@ def mpd(command):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(cfg.get('socket-timeout'))
         s.connect((cfg.get('server-host'), cfg.get('server-port')))
-    except socket.error, e:
-        raise MPDError, 'Failed to connect to server: %s' % str(e)
+    except socket.error as e:
+        raise MPDError('Failed to connect to server: %s' % str(e))
     m = s.makefile('r')
     l = m.readline()
-    if not l.startswith('OK MPD '): s.close() ; raise MPDError, 'Protocol error'
+    if not l.startswith('OK MPD '): s.close() ; raise MPDError('Protocol error')
     if cfg.get('server-pass') and cfg.get('server-pass') != 'off':
         s.send('password %s\n' % cfg.get('server-pass'))
         l = m.readline()
         if not l.startswith('OK'):
             s.close()
-            raise MPDError, 'Protocol error'
+            raise MPDError('Protocol error')
     s.send('%s\n' % command)
     s.send('close\n')
     d = []
@@ -221,7 +221,7 @@ def handle_mpd(bot, ievent):
         if status['state'] == 'stop': status['state'] = 'stopped'
         reply += 'volume: %s | repeat: %s | random: %s | single: %s | consume: %s' % (status['volume'], status['repeat'], status['random'], status['single'], status['consume'])
         ievent.reply(reply)
-    except MPDError, e: ievent.reply(str(e))
+    except MPDError as e: ievent.reply(str(e))
 
 #mpd                                           Display status
 cmnds.add('mpd', handle_mpd, 'USER', threaded=True)
@@ -250,7 +250,7 @@ def handle_mpd_outputs(bot, ievent):
                 outputname = '?'
                 outputenabled = '?'
         ievent.reply("\n".join(result))
-    except MPDError, e:
+    except MPDError as e:
         ievent.reply(str(e))
 
 ## mpd-enable command
@@ -262,7 +262,7 @@ def handle_mpd_enable(bot, ievent):
         except: ievent.missing('<output #>') ; return
         result = mpd('enableoutput %d' % output)
         ievent.reply(result)
-    except MPDError, e:
+    except MPDError as e:
         ievent.reply(str(e))
 
 ## mpd-disable command
@@ -274,7 +274,7 @@ def handle_mpd_disable(bot, ievent):
         except: ievent.missing('<output #>') ; return
         result = mpd('disableoutput %d' % output)
         ievent.reply(result)
-    except MPDError, e:
+    except MPDError as e:
         ievent.reply(str(e))
 
 ## mpd-playlist command
@@ -292,7 +292,7 @@ def handle_mpd_playlist(bot, ievent):
            if item[0] == 'title': tmp = item[1]
            if item[0] == 'name': tmp = '%s: %s' % (item[1], tmp)
         ievent.reply("\n".join(result))
-    except MPDError, e:
+    except MPDError as e:
         ievent.reply(str(e))
 
 ## mpd-lsplaylists command
@@ -306,7 +306,7 @@ def handle_mpd_lsplaylists(bot, ievent):
            if item[0] == 'playlist': 
               result.append(item[1])
         ievent.reply("\n".join(result))
-    except MPDError, e:
+    except MPDError as e:
         ievent.reply(str(e))
 
 ## mpd-playlistmanipulation command
@@ -320,7 +320,7 @@ def handle_mpd_playlist_manipulation(bot, ievent, command):
         playlist = str(ievent.args[0])
         result = mpd('%s %s' % (command, playlist))
         ievent.reply('Playlist %s loaded.' % playlist)
-    except MPDError, e:
+    except MPDError as e:
         ievent.reply(str(e))
 
 ## mpd-load command
@@ -349,7 +349,7 @@ def handle_mpd_np(bot, ievent):
         status = MPDDict(mpd('currentsong'))
         status['time'] = mpd_duration(status['time'])
         ievent.reply(cfg.get('song-status') % status)
-    except MPDError, e:
+    except MPDError as e:
         ievent.reply(str(e))
 
 #mpd-current                                   Show the currently playing song
@@ -366,7 +366,7 @@ def handle_mpd_simple_seek(bot, ievent, command):
         #handle_mpd_np(bot, ievent)
         handle_mpd(bot, ievent)
         ievent.done()
-    except MPDError, e:
+    except MPDError as e:
         ievent.reply(str(e))
 
 ## mpd-next command
@@ -455,7 +455,7 @@ def handle_mpd_find(bot, ievent):
             if item == 'file': show.append(value)
         if show: ievent.reply("results: ", show)
         else: ievent.reply('no result')
-    except MPDError, e: ievent.reply(str(e))
+    except MPDError as e: ievent.reply(str(e))
 
 ## mpd-add command
 
@@ -466,11 +466,11 @@ def handle_mpd_add(bot, ievent):
         return
     try:
         addid = MPDDict(mpd('addid "%s"' % ievent.rest))
-        if not addid.has_key('id'):
+        if 'id' not in addid:
             ievent.reply('failed to load song "%s"' % ievent.rest)
         else:
             ievent.reply('added song with id "%s", use "mpd-jump %s" to start playback' % (addid['id'], addid['id']))
-    except MPDError, e:
+    except MPDError as e:
         ievent.reply(str(e))
 
 #mpd-add <file>                                Add a song to the current playlist
@@ -484,7 +484,7 @@ def handle_mpd_del(bot, ievent):
     """ arguments: <position> - remove a song from the current playlist. """
     if not ievent.args: ievent.missing('<position>') ; return
     try: result = mpd('delete %d' % int(ievent.args[0])) ; ievent.reply(result)
-    except MPDError, e: ievent.reply(str(e))
+    except MPDError as e: ievent.reply(str(e))
 
 #mpd-del <position>                            Remove a song from the current playlist
 cmnds.add('mpd-del',  handle_mpd_del,  'MPD', threaded=True)
@@ -501,7 +501,7 @@ def handle_mpd_jump(bot, ievent):
     try:
         mpd('playid %d' % pos)
         handle_mpd_np(bot, ievent)
-    except MPDError, e: ievent.reply(str(e))
+    except MPDError as e: ievent.reply(str(e))
 
 cmnds.add('mpd-jump',  handle_mpd_jump, 'MPD', threaded=True)
 examples.add('mpd-jump', 'jump to the specified playlist id', 'mpd-jump 777')
@@ -522,7 +522,7 @@ def handle_mpd_stats(bot, ievent):
         for item in sorted(status.keys()):
             result.append('%s: %s' % (item, status[item]))
         ievent.reply(" | ".join(result))
-    except MPDError, e:
+    except MPDError as e:
         ievent.reply(str(e))
 
 #mpd-stats                                     Display statistics about MPD
@@ -543,7 +543,7 @@ def handle_mpd_volume(bot, ievent):
     try:
         mpd('setvol %d' % volume)
         ievent.reply('Volume set to %d' % volume)
-    except MPDError, e:
+    except MPDError as e:
         ievent.reply(str(s))
 
 ## mpd-toggleoption command
@@ -563,7 +563,7 @@ def handle_mpd_toggle_option(bot, ievent, option):
     try:
         mpd('%s %s' % (option, val))
         handle_mpd(bot, ievent)
-    except MPDError, e:
+    except MPDError as e:
         ievent.reply(str(e))
 
 ## mpd-setoption command
@@ -584,7 +584,7 @@ def handle_mpd_set_option(bot, ievent, option):
         else:
             status = MPDDict(mpd('status'))
             ievent.reply("%s %s" % (option, status['xfade']))
-    except MPDError, e:
+    except MPDError as e:
         ievent.reply(str(e))
 
 ## mpd-watchstart command

@@ -19,11 +19,11 @@ import sys
 def handle_size(bot, event):
     res = []
     mods = dict(sys.modules)
-    for name, mod in mods.iteritems():
+    for name, mod in mods.items():
        if not 'jsb' in name: continue
-       try: res.append("<i><%s></i> %s" % (name.split(".")[-1], unicode(getattr(mod, 'size')())))
+       try: res.append("<i><%s></i> %s" % (name.split(".")[-1], str(getattr(mod, 'size')())))
        except (TypeError, AttributeError): continue
-       except Exception, ex: handle_exception()
+       except Exception as ex: handle_exception()
     event.reply("sizes in %s modules scanned: " % len(res), res, dot=", ")
 
 cmnds.add("size", handle_size, "OPER")

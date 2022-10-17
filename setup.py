@@ -7,13 +7,13 @@ target = "jsb" # BHJTW change this to /var/cache/jsb on debian
 import os
 
 try: from setuptools import setup
-except: print "i need setuptools to properly install JSONBOT" ; os._exit(1)
+except: print("i need setuptools to properly install JSONBOT") ; os._exit(1)
 
 upload = []
 
 def uploadfiles(dir):
     upl = []
-    if not os.path.isdir(dir): print "%s does not exist" % dir ; os._exit(1)
+    if not os.path.isdir(dir): print("%s does not exist" % dir) ; os._exit(1)
     for file in os.listdir(dir):
         if not file or file.startswith('.'):
             continue

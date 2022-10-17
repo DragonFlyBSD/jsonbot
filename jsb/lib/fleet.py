@@ -9,14 +9,14 @@
 from jsb.utils.exception import handle_exception
 from jsb.utils.generic import waitforqueue
 from jsb.utils.trace import whichmodule
-from config import Config, getmainconfig
-from datadir import getdatadir
-from users import users
-from plugins import plugs
-from persist import Persist
-from errors import NoSuchBotType, BotNotEnabled
-from threads import start_new_thread
-from eventhandler import mainhandler
+from .config import Config, getmainconfig
+from .datadir import getdatadir
+from .users import users
+from .plugins import plugs
+from .persist import Persist
+from .errors import NoSuchBotType, BotNotEnabled
+from .threads import start_new_thread
+from .eventhandler import mainhandler
 from jsb.utils.name import stripname
 from jsb.lib.factory import BotFactory
 from jsb.utils.lazydict import LazyDict## simplejson imports
@@ -26,14 +26,14 @@ json = getjson()
 
 ## basic imports
 
-import Queue
+import queue
 import os
 import types
 import time
 import glob
 import logging
 import threading
-import thread
+import _thread
 import copy
 
 ## defines
@@ -48,7 +48,7 @@ class FleetBotAlreadyExists(Exception):
 ## locks
 
 from jsb.utils.locking import lockdec
-lock = thread.allocate_lock()
+lock = _thread.allocate_lock()
 locked = lockdec(lock)
 
 ## Fleet class
@@ -62,8 +62,8 @@ class Fleet(Persist):
 
     def __init__(self, datadir):
         Persist.__init__(self, datadir + os.sep + 'fleet' + os.sep + 'fleet.main')
-        if not self.data.has_key('names'): self.data['names'] = []
-        if not self.data.has_key('types'): self.data['types'] = {}
+        if 'names' not in self.data: self.data['names'] = []
+        if 'types' not in self.data: self.data['types'] = {}
         self.startok = threading.Event()
         self.bots = []
 
@@ -94,7 +94,7 @@ class Fleet(Persist):
             except KeyError: continue
             except BotNotEnabled: logging.info("%s is not enabled" % name) ; continue
             except KeyError: logging.error("no type know for %s bot" % name)
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
             if bot and bot not in bots: bots.append(bot)
         return bots
 
@@ -161,7 +161,7 @@ class Fleet(Persist):
         Persist.save(self)
         for i in self.bots:
             try: i.save()
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
 
     def list(self):
         """ return list of bot names. """
@@ -234,7 +234,7 @@ class Fleet(Persist):
             for bot in self.bots:
                 if jabber and bot.type != 'sxmpp' and bot.type != 'jabber': continue
                 threads.append(start_new_thread(bot.exit, ()))
-            for thread in threads: thread.join()
+            for thread in threads: _thread.join()
             return
         for bot in self.bots:
             if bot.cfg.name == name:
@@ -284,7 +284,7 @@ class Fleet(Persist):
             logging.debug('starting %s bot (%s)' % (bot.cfg.name, bot.type))
             if usethreads or bot.type in ["sleek", "tornado"]: threads.append(start_new_thread(bot.boot, ())) ; continue
             try: bot.boot()
-            except Excepton, ex: handle_exception()
+            except Excepton as ex: handle_exception()
             time.sleep(1)
         if usethreads:
            for t in threads: t.join(15)
@@ -295,7 +295,7 @@ class Fleet(Persist):
         """ resume bot from session file. """
         session = json.load(open(sessionfile, 'r'))
         chan = session.get("channel")
-        for name, cfg in session['bots'].iteritems():
+        for name, cfg in session['bots'].items():
             dont = False
             for ex in exclude:
                 if ex in name: dont = True

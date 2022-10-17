@@ -60,7 +60,7 @@ except ImportError:
 import time
 import os
 import types
-import thread
+import _thread
 import socket
 import xml
 import logging
@@ -118,8 +118,8 @@ if not runners.data: runners.data = LazyDict() ; runners.save()
 
 def txtindicts(result, d):
     """ return lowlevel values in (nested) dicts. """
-    for j in d.values():
-        if type(j) == types.DictType: txtindicts(result, j) 
+    for j in list(d.values()):
+        if type(j) == dict: txtindicts(result, j) 
         else: result.append(j)
 
 def checkfordate(data, date):
@@ -156,9 +156,9 @@ sleeptime=15*60, running=0):
             if not self.data: self.data = {}
             self.data = LazyDict(self.data)
             self.data.length = 200
-            self.data['name'] = self.data.name or unicode(name)
-            self.data['url'] = self.data.url or unicode(url)
-            self.data['owner'] = self.data.owner or unicode(owner)
+            self.data['name'] = self.data.name or str(name)
+            self.data['url'] = self.data.url or str(url)
+            self.data['owner'] = self.data.owner or str(owner)
             self.data['result'] = []
             self.data['seen'] = self.data.seen or []
             self.data['watchchannels'] = self.data.watchchannels or list(watchchannels)
@@ -172,7 +172,7 @@ sleeptime=15*60, running=0):
         for item in itemslist:
             try: d[item] = data[item]
             except (KeyError, TypeError): continue
-        digest = hashlib.md5(unicode(d)).hexdigest()
+        digest = hashlib.md5(str(d)).hexdigest()
         return digest in self.data.seen
 
     def setseen(self, data, itemslist=['title', 'link'], length=200):
@@ -180,7 +180,7 @@ sleeptime=15*60, running=0):
         got = False
         for item in itemslist:
             d[item] = data[item]
-        digest = hashlib.md5(unicode(d)).hexdigest()
+        digest = hashlib.md5(str(d)).hexdigest()
         if digest not in self.data.seen: self.data.seen.insert(0, digest) ; got = True
         self.data.seen = self.data.seen[:self.data.length]
         return got
@@ -216,7 +216,7 @@ sleeptime=15*60, running=0):
         if not enabled: return []
         logging.info("fetching %s" % name)
         global etags
-        if name and etags.data.has_key(name): etag = etags.data[name]
+        if name and name in etags.data: etag = etags.data[name]
         else: etag = None
         if data:
             result = feedparser.parse(data.content, etag=etag)
@@ -239,7 +239,7 @@ sleeptime=15*60, running=0):
             except (AttributeError, KeyError): etag = None
         if not name in urls.data: urls.data[name] = self.data.url ; urls.save()
         logging.debug("got result from %s" % strippassword(self.data.url))
-        if result and result.has_key('bozo_exception'): logging.debug('%s bozo_exception: %s' % (strippassword(self.data.url), result['bozo_exception']))
+        if result and 'bozo_exception' in result: logging.debug('%s bozo_exception: %s' % (strippassword(self.data.url), result['bozo_exception']))
         l = len(result.entries)
         if l > self.data.length: self.data.length = l ; self.save(coreonly=True) 
         return result.entries
@@ -295,7 +295,7 @@ sleeptime=15*60, running=0):
                 try:
                     bot = getfleet().byname(botname)
                     if not bot and ongae: bot = getfleet().makebot(type, botname)
-                except NoSuchBotType, ex: logging.warn("can't make bot - %s" % str(ex)) ; continue
+                except NoSuchBotType as ex: logging.warn("can't make bot - %s" % str(ex)) ; continue
                 if not bot: logging.warn("can't find %s bot in fleet" % botname) ; continue
                 if bot.type == "irc": logging.debug("waiting for irc bot to connect") ; bot.connectok.wait()
                 res2 = datalist
@@ -308,47 +308,47 @@ sleeptime=15*60, running=0):
                     for i in res2: 
                         response = self.makeresponse(name, type, [i, ], channel)
                         try: bot.say(nick or channel, response, **{'headlines': True})
-                        except Exception, ex: handle_exception()
+                        except Exception as ex: handle_exception()
                 else:
                     sep =  self.markup.get(jsonstring([name, type, channel]), 'separator')
                     if sep: response = self.makeresponse(name, type, res2, channel, sep=sep)
                     else: response = self.makeresponse(name, type, res2, channel)
                     try: bot.say(nick or channel, response, **{'headlines': True})
-                    except Exception, ex: handle_exception()
+                    except Exception as ex: handle_exception()
             return True
-        except Exception, ex: handle_exception(txt=name) ; return False
+        except Exception as ex: handle_exception(txt=name) ; return False
 
     def makeresponse(self, name, type, res, channel, sep=" || "):
         """ loop over result to make a response. """
-        if self.markup.get(jsonstring([name, type, channel]), 'nofeedname'): result = u""
-        else: result = u"<b>[%s]</b> - " % name 
+        if self.markup.get(jsonstring([name, type, channel]), 'nofeedname'): result = ""
+        else: result = "<b>[%s]</b> - " % name 
         try: itemslist = self.itemslists.data[jsonstring([name, type, channel])]
         except KeyError:
             itemslist = self.itemslists.data[jsonstring([name, type, channel])] = ['title', 'link']
             self.itemslists.save()
         for j in res:
             if self.markup.get(jsonstring([name, type, channel]), 'skipmerge') and 'Merge branch' in j['title']: continue
-            resultstr = u""
+            resultstr = ""
             for i in itemslist:
                 try:
                     item = getattr(j, i)
                     if not item: continue
-                    item = unicode(item)
+                    item = str(item)
                     if item.startswith('http://'):
                         if self.markup.get(jsonstring([name, type, channel]), 'tinyurl'):
                             try:
                                 tinyurl = get_tinyurl(item)
                                 logging.debug(' tinyurl is: %s' % str(tinyurl))
-                                if not tinyurl: resultstr += u"%s - " % item
-                                else: resultstr += u"%s - " % tinyurl[0]
-                            except Exception, ex:
+                                if not tinyurl: resultstr += "%s - " % item
+                                else: resultstr += "%s - " % tinyurl[0]
+                            except Exception as ex:
                                 handle_exception()
-                                resultstr += u"%s - " % item
-                        else: resultstr += u"%s - " % item
-                    else: resultstr += u"%s - " % item.strip()
-                except (KeyError, AttributeError, TypeError), ex: logging.warn('%s - %s' % (name, str(ex))) ; continue
+                                resultstr += "%s - " % item
+                        else: resultstr += "%s - " % item
+                    else: resultstr += "%s - " % item.strip()
+                except (KeyError, AttributeError, TypeError) as ex: logging.warn('%s - %s' % (name, str(ex))) ; continue
             resultstr = resultstr[:-3]
-            if resultstr: result += u"%s %s " % (resultstr, sep)
+            if resultstr: result += "%s %s " % (resultstr, sep)
         return result[:-(len(sep)+2)]
 
     def all(self):
@@ -380,8 +380,8 @@ class Rssdict(PlugPersist):
             self.data['urls'] = {}
         else:
             self.data = LazyDict(self.data)
-            if not self.data.has_key('names'): self.data['names'] = []
-            if not self.data.has_key('urls'): self.data['urls'] = {}
+            if 'names' not in self.data: self.data['names'] = []
+            if 'urls' not in self.data: self.data['urls'] = {}
             if not feedname: pass
             else: self.feeds[feedname] = Feed(feedname)
         #self.startwatchers()
@@ -389,10 +389,10 @@ class Rssdict(PlugPersist):
     def save(self, namein=None):
         """ save all feeds or provide a feedname to save. """
         PlugPersist.save(self)
-        for name, feed in self.feeds.iteritems():
+        for name, feed in self.feeds.items():
             if namein and name != namein: continue
             try: feed.save()
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
 
     def size(self):
         """ return number of rss feeds. """
@@ -471,7 +471,7 @@ class Rsswatcher(Rssdict):
         """ get data of rss feed. """
         result = feedparser.parse(url, agent=useragent())
         logging.info("fetch - got result from %s" % strippassword(url))
-        if result and result.has_key('bozo_exception'):
+        if result and 'bozo_exception' in result:
             event.reply('%s bozo_exception: %s' % (strippassword(url), result['bozo_exception']))
             return True
         try: status = result.status ; event.reply("%s - status is %s" % (strippassword(url), status))
@@ -497,7 +497,7 @@ class Rsswatcher(Rssdict):
             res = rssitem.check(result)
             if res: rssitem.deliver(res, save=True)
             else: logging.info("%s - no items to deliver" % name)
-        except Exception, ex: handle_exception(txt=name)
+        except Exception as ex: handle_exception(txt=name)
         del data
         return True
 
@@ -546,7 +546,7 @@ class Rsswatcher(Rssdict):
 
     def stopwatchers(self):
         """ stop all watcher threads. """
-        for j, z in self.data.iteritems():
+        for j, z in self.data.items():
             if z.data.running: z.data.stoprunning = 1 ; z.data.running = 0
             z.save()
 
@@ -558,7 +558,7 @@ class Rsswatcher(Rssdict):
             return
         while 1:
             try: self.watch(name)
-            except Exception, ex:
+            except Exception as ex:
                 logging.warn('%s feed error: %s' % (name, str(ex)))
                 if not rssitem.data.running: break
             else: break
@@ -585,7 +585,7 @@ class Rsswatcher(Rssdict):
         return feeds
 
     def runners(self):
-        if runners.data: return runners.data.keys()
+        if runners.data: return list(runners.data.keys())
         return []
 
     def checkrunners(self):	
@@ -728,7 +728,7 @@ def dosync(feedname):
         else:
             global watcher 
             watcher.syncdeliver(feedname)
-    except RssException, ex: logging.error("%s - error: %s" % (feedname, str(ex)))
+    except RssException as ex: logging.error("%s - error: %s" % (feedname, str(ex)))
 
 ## shouldpoll function
 
@@ -754,9 +754,9 @@ def rssfetchcb(rpc):
     """ used on GAE todo a async fetch of the feeds. """
     import google
     try: data = rpc.get_result()
-    except google.appengine.api.urlfetch_errors.DownloadError, ex: logging.warn("%s - error: %s" % (strippassword(rpc.final_url), str(ex))) ; return
+    except google.appengine.api.urlfetch_errors.DownloadError as ex: logging.warn("%s - error: %s" % (strippassword(rpc.final_url), str(ex))) ; return
     name = rpc.feedname
-    logging.debug("headers of %s: %s" % (name, unicode(data.headers)))
+    logging.debug("headers of %s: %s" % (name, str(data.headers)))
     if data.status_code == 200:
         logging.info("defered %s feed" % rpc.feedname)
         from google.appengine.ext.deferred import defer
@@ -797,11 +797,11 @@ def doperiodicalGAE(*args, **kwargs):
         logging.info("%s - sending request - %s" % (f, etag))
         try: urlfetch.make_fetch_call(rpc, url, headers={"If-None-Match": etag}) ; rpcs.append(rpc)
         except urlfetch_errors.InvalidURLError: logging.warn("%s url is invalid" % url) ; continue
-        except Exception, ex: handle_exception()
+        except Exception as ex: handle_exception()
     for rpc in rpcs: 
         try: rpc.wait()
-        except google.appengine.api.urlfetch_errors.InvalidURLError, ex: logging.warn("url is invalid: %s" % str(ex))
-        except Exception, ex: handle_exception()
+        except google.appengine.api.urlfetch_errors.InvalidURLError as ex: logging.warn("url is invalid: %s" % str(ex))
+        except Exception as ex: handle_exception()
     if feedstofetch: lastpoll.save()
     if got: urls.save()
 
@@ -821,7 +821,7 @@ def doperiodical(*args, **kwargs):
             defer(dosync, feed)
         except ImportError:
             try: start_new_thread(dosync, (feed, ))
-            except Exception, ex: handle_exception() ; return
+            except Exception as ex: handle_exception() ; return
         time.sleep(2)
     if got: lastpoll.save()
 
@@ -953,9 +953,9 @@ def handle_rsswatch(bot, ievent):
     for feed in target:
         rssitem = watcher.byname(feed)
         if rssitem == None: continue
-        if not sleeptime.data.has_key(name): sleeptime.data[feed] = sleepsec ; sleeptime.save()
+        if name not in sleeptime.data: sleeptime.data[feed] = sleepsec ; sleeptime.save()
         try: watcher.watch(feed, sleepsec)
-        except Exception, ex: ievent.reply('%s - %s' % (feed, str(ex))) ; continue
+        except Exception as ex: ievent.reply('%s - %s' % (feed, str(ex))) ; continue
         got.append(feed)
     if got: ievent.reply('watcher started ', got)
     else: ievent.reply('already watching ', target)
@@ -1257,7 +1257,7 @@ def handle_rsssetsleeptime(bot, ievent):
     rssitem.data.sleeptime = sec
     if rssitem.data.running:
         try: watcher.changeinterval(name, sec)
-        except KeyError, ex: ievent.reply("failed to set interval: %s" % str(ex)) ; return
+        except KeyError as ex: ievent.reply("failed to set interval: %s" % str(ex)) ; return
     ievent.reply('sleeptime set')
 
 cmnds.add('rss-setsleeptime', handle_rsssetsleeptime, ['OPER', ])
@@ -1273,7 +1273,7 @@ def handle_rssget(bot, ievent):
     rssitem = watcher.byname(name)
     if rssitem == None: ievent.reply("we don't have a %s rss item" % name) ; return
     try: result = watcher.getdata(name)
-    except Exception, ex: ievent.reply('%s error: %s' % (name, str(ex))) ; return
+    except Exception as ex: ievent.reply('%s error: %s' % (name, str(ex))) ; return
     if rssitem.markup.get(jsonstring([name, bot.type, channel]), 'reverse-order'): result = result[::-1]
     response = rssitem.makeresponse(name, bot.type, result, ievent.channel)
     if response: ievent.reply("results of %s: %s" % (name, response))
@@ -1364,7 +1364,7 @@ def handle_rssscan(bot, ievent):
     except IndexError: ievent.missing('<feedname>') ; return
     if not watcher.byname(name): ievent.reply('no %s feeds available' % name) ; return
     try: result = watcher.scan(name)
-    except Exception, ex: ievent.reply(str(ex)) ; return
+    except Exception as ex: ievent.reply(str(ex)) ; return
     if result == None: ievent.reply("can't get data for %s" % name) ; return
     res = []
     for i in result: res.append("%s=%s" % i)
@@ -1448,9 +1448,9 @@ def handle_rssimport(bot, ievent):
     try:
         data = geturl2(ievent.rest)
         if not data: ievent.reply("can't fetch data from %s" % ievent.rest)
-    except Exception, ex: ievent.reply("error fetching %s: %s" % (ievent.rest, str(ex))) ; return
+    except Exception as ex: ievent.reply("error fetching %s: %s" % (ievent.rest, str(ex))) ; return
     try: element = etree.fromstring(data)
-    except Exception, ex: ievent.reply("error reading %s: %s" % (ievent.rest, str(ex))) ; return
+    except Exception as ex: ievent.reply("error reading %s: %s" % (ievent.rest, str(ex))) ; return
     teller = 0
     errors = {}
     for elem in element.getiterator():
@@ -1463,12 +1463,12 @@ def handle_rssimport(bot, ievent):
             logging.warn("import - adding %s - %s" % (name, strippassword(url)))
             watcher.add(fromenc(name), fromenc(url), ievent.userhost)
             teller += 1
-        except Exception, ex:
+        except Exception as ex:
             errors[name] = str(ex)
     ievent.reply("added %s items" % teller)
     if errors:
         errlist = []
-        for name, err in errors.iteritems():
+        for name, err in errors.items():
             errlist.append("%s - %s" % (name, err))
         ievent.reply("there were errors: ", errlist)
 

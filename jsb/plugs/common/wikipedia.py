@@ -14,7 +14,7 @@ from jsb.utils.rsslist import rsslist
 
 ## generic imports
 
-from urllib import quote
+from urllib.parse import quote
 import re
 import logging
 
@@ -34,19 +34,19 @@ def searchwiki(txt, lang='en'):
             continue
         input.append(i.strip().capitalize())
     what = "_".join(input)
-    url = u'http://%s.wikipedia.org/wiki/Special:Export/%s' % (lang, quote(what.encode('utf-8')))
-    url2 = u'http://%s.wikipedia.org/wiki/%s' % (lang, quote(what.encode('utf-8')))
+    url = 'http://%s.wikipedia.org/wiki/Special:Export/%s' % (lang, quote(what.encode('utf-8')))
+    url2 = 'http://%s.wikipedia.org/wiki/%s' % (lang, quote(what.encode('utf-8')))
     txt = getwikidata(url)
     if not txt: return ("", url2)
     if 'from other capitalisation' in txt:
         what = what.title()
-        url = u'http://%s.wikipedia.org/wiki/Special:Export/%s' % (lang, quote(what.encode('utf-8')))
-        url2 = u'http://%s.wikipedia.org/wiki/%s' % (lang, quote(what.encode('utf-8')))
+        url = 'http://%s.wikipedia.org/wiki/Special:Export/%s' % (lang, quote(what.encode('utf-8')))
+        url2 = 'http://%s.wikipedia.org/wiki/%s' % (lang, quote(what.encode('utf-8')))
         txt = getwikidata(url)
     if '#REDIRECT' in txt or '#redirect' in txt:
         redir = ' '.join(txt.split()[1:])
-        url = u'http://%s.wikipedia.org/wiki/Special:Export/%s' % (lang, quote(redir.encode('utf-8')))
-        url2 = u'http://%s.wikipedia.org/wiki/%s' % (lang, quote(redir.encode('utf-8')))
+        url = 'http://%s.wikipedia.org/wiki/Special:Export/%s' % (lang, quote(redir.encode('utf-8')))
+        url2 = 'http://%s.wikipedia.org/wiki/%s' % (lang, quote(redir.encode('utf-8')))
         txt = getwikidata(url)
     return (txt, url2)
 
@@ -56,13 +56,13 @@ def getwikidata(url):
     """ fetch wiki data """
     try:
         result = geturl(url)
-    except IOError, ex: logging.error("error fetching %s: %s" % (url, str(ex))) ; return 
+    except IOError as ex: logging.error("error fetching %s: %s" % (url, str(ex))) ; return 
     if not result: return
     res = rsslist(result)
     txt = ""
     for i in res:
         try:
-            logging.debug(unicode(i))
+            logging.debug(str(i))
             txt = i['text']
             break
         except: pass
@@ -87,7 +87,7 @@ def handle_wikipedia(bot, ievent):
     showall = False
     res = searchwiki(ievent.rest)
     if not res[0]: ievent.reply('no result found') ; return
-    prefix = u'%s ===> ' % res[1]
+    prefix = '%s ===> ' % res[1]
     result = resultre1.findall(res[0])
     if result:
         if bot.type == "sxmpp" and not ievent.groupchat: showall = True

@@ -73,10 +73,10 @@ class PersistConfig(Config):
         s = []
         dumpstr = self.tojson()
         logging.warn(dumpstr)
-        for key, optionvalue in sorted(getjson().loads(dumpstr).iteritems()):
+        for key, optionvalue in sorted(getjson().loads(dumpstr).items()):
             if key in self.hide: continue
             v = optionvalue
-            if type(v) in [str, unicode]: v = '"'+v+'"'
+            if type(v) in [str, str]: v = '"'+v+'"'
             v = str(v)
             s.append("%s=%s" % (key, v))
         ievent.reply("options: " + ' .. '.join(s))
@@ -88,11 +88,11 @@ class PersistConfig(Config):
 	
     def cmnd_cfg_edit(self, bot, ievent, args, key, optionvalue):
         """ edit config values. """
-        if not self.has_key(key):
+        if key not in self:
             ievent.reply('option %s is not defined' % key)
             return
         if key in self.hide: return
-        if type(optionvalue) == types.ListType:
+        if type(optionvalue) == list:
 	    if args[0].startswith("[") and args[-1].endswith("]"):
 		values = []
 		for v in ' '.join(args)[1:-1].replace(", ", ",").split(","):
@@ -140,7 +140,7 @@ class PersistConfig(Config):
                 self.set(key, value)
                 self.save()
                 ievent.reply("%s set" % key)
-            elif type(value) == types.LongType and type(option.value) == types.IntType:
+            elif type(value) == int and type(option.value) == int:
                 self.set(key, value)
                 self.save()
                 ievent.reply("%s set" % key)
@@ -188,7 +188,7 @@ class PersistConfig(Config):
         """ define initial value. """
         if name: name = name.lower()
         if not exposed and not key in self.hide: self.hide.append(key)
-        if not self.has_key(key):
+        if key not in self:
             if name == None: name = "%s-cfg-%s" % (self.plugname, str(key))
             self[key] = value
 	
@@ -197,7 +197,7 @@ class PersistConfig(Config):
         try:
             del self[key]
             return True
-        except KeyError, e:
+        except KeyError as e:
             if throw: raise
         self.save()
         return False

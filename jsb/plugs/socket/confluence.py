@@ -23,7 +23,7 @@ from jsb.plugs.common.tinyurl import get_tinyurl
 ## basic imports
 
 import logging
-import xmlrpclib
+import xmlrpc.client
 import re
 import time
 
@@ -39,7 +39,7 @@ cfg = PlugPersist('confluence', {})
 def getRpcClient(sInfo):
     if sInfo["name"] not in rpc_clients:
         base_url = "%s/rpc/xmlrpc" % sInfo["url"]
-        server = xmlrpclib.ServerProxy(base_url).confluence1
+        server = xmlrpc.client.ServerProxy(base_url).confluence1
 
         username, password = sInfo["username"], sInfo["password"]
         auth = server.login(username, password)
@@ -65,7 +65,7 @@ def handle_add_confluence_server(bot, ievent):
         "serverInfo": {},
     }
 
-    if not cfg.data.has_key("servers"):
+    if "servers" not in cfg.data:
         cfg.data["servers"] = {}
     cfg.data["servers"][server["name"]] = server
     cfg.save()
@@ -81,7 +81,7 @@ def handle_del_confluence_server(bot, ievent):
         return
 
     serverName = ievent.args[0]
-    if not cfg.data.has_key("servers"):
+    if "servers" not in cfg.data:
         cfg.data["servers"] = {}
     if serverName in cfg.data["servers"]:
         del cfg.data["servers"][serverName]
@@ -151,7 +151,7 @@ def handle_confluence_search(bot, ievent):
     try:
         client, auth = getRpcClient(server)
         results = client.search(auth, query, maxResults)
-    except Exception, ex: ievent.reply("an error occured: %s" % str(ex)) ; return
+    except Exception as ex: ievent.reply("an error occured: %s" % str(ex)) ; return
 
     ievent.reply("Displaying %s result(s) :" % min(maxResults, len(results)))
     for page in results[:maxResults]:

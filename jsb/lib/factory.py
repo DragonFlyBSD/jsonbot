@@ -60,8 +60,8 @@ class BotFactory(Factory):
                 bot = SleekBot(cfg)
             else: raise NoSuchBotType('%s bot .. unproper type %s' % (type, cfg.dump()))
             return bot
-        except NoUserProvided, ex: logging.info("%s - %s" % (cfg.name, str(ex)))
-        except AssertionError, ex: logging.warn("%s - assertion error: %s" % (cfg.name, str(ex)))
-        except Exception, ex: handle_exception()
+        except NoUserProvided as ex: logging.info("%s - %s" % (cfg.name, str(ex)))
+        except AssertionError as ex: logging.warn("%s - assertion error: %s" % (cfg.name, str(ex)))
+        except Exception as ex: handle_exception()
 
 bot_factory = BotFactory()

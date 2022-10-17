@@ -18,8 +18,8 @@ from jsb.lib.botbase import BotBase
 from jsb.drivers.xmpp.bot import SXMPPBot
 from jsb.lib.errors import NoUserProvided
 from jsb.lib.eventhandler import mainhandler
-from message import Message
-from presence import Presence
+from .message import Message
+from .presence import Presence
 
 ## basic imports
 
@@ -82,7 +82,7 @@ class SleekBot(SXMPPBot):
         try:
             if connect: self.xmpp.connect()
             self.xmpp.process(block=True)
-        except Exception, ex: logging.error(str(ex))
+        except Exception as ex: logging.error(str(ex))
 
     def send(self, event):
         try:
@@ -109,7 +109,7 @@ class SleekBot(SXMPPBot):
             repl.html = txt
         logging.debug("%s - reply is %s" % (self.cfg.name, repl.dump()))
         if not repl.type: repl.type = 'normal'
-        logging.debug("%s - sxmpp - out - %s - %s" % (self.cfg.name, printto, unicode(txt)))
+        logging.debug("%s - sxmpp - out - %s - %s" % (self.cfg.name, printto, str(txt)))
         self.send(repl)
 
     def handle_message(self, data, *args, **kwargs):
@@ -155,7 +155,7 @@ class SleekBot(SXMPPBot):
             jid = p.fromm
             if nickk and jid and self.cfg.fulljids:
                 channel = p.channel
-                if not self.jids.has_key(channel):
+                if channel not in self.jids:
                     self.jids[channel] = {}
                 self.jids[channel][nickk] = jid
                 self.userhosts[nickk] = stripped(jid)
@@ -180,4 +180,4 @@ class SleekBot(SXMPPBot):
                     logging.debug('%s - removed %s jid' % (self.cfg.name, p.nick))
                 except KeyError: pass
             self.put(p)
-        except Exception, ex: logging.error(str(ex))
+        except Exception as ex: logging.error(str(ex))

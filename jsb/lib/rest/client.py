@@ -13,17 +13,14 @@ from jsb.utils.locking import lockdec
 from jsb.utils.lazydict import LazyDict
 from jsb.imports import getjson
 json = getjson()
-
-## basic imports
-
-from urllib2 import HTTPError, URLError
-from httplib import InvalidURL
-from urlparse import urlparse
+from urllib.error import HTTPError, URLError
+from http.client import InvalidURL
+from urllib.parse import urlparse
 import socket
 import asynchat
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import sys
-import thread
+import _thread
 import re
 import asyncore
 import time
@@ -31,7 +28,7 @@ import logging
 
 ## defines
 
-restlock = thread.allocate_lock()
+restlock = _thread.allocate_lock()
 locked = lockdec(restlock)
 
 ## RestResult class
@@ -63,10 +60,10 @@ class RestClient(object):
                 host = splitted[0]
                 port = port or 9999
             path = u[2]
-        except Exception, ex: raise
+        except Exception as ex: raise
         self.host = host 
         try: self.ip = socket.gethostbyname(self.host)
-        except Exception, ex: handle_exception()
+        except Exception as ex: handle_exception()
         self.path = path
         self.port = port
         self.url = url
@@ -103,14 +100,14 @@ class RestClient(object):
                 result.data = json.loads(r)
             else: result.data = None
             logging.info("rest.client - %s - result: %s" % (url, str(result))) 
-        except Exception, ex:
+        except Exception as ex:
             result.error = str(ex)
             result.data = None
         for cb in self.callbacks:
             try:
                 cb(self, result)
                 logging.info('rest.client - %s - called callback %s' % (url, str(cb)))
-            except Exception, ex:
+            except Exception as ex:
                 handle_exception()
         return result
 
@@ -171,7 +168,7 @@ class RestClientAsync(RestClient, asynchat.async_chat):
             try:
                 cb(self, result)
                 logging.info('rest.client - %s - called callback %s' % (url, str(cb)))
-            except Exception, ex: handle_exception()
+            except Exception as ex: handle_exception()
         self.close()
 
     def handle_expt(self):
@@ -190,12 +187,12 @@ class RestClientAsync(RestClient, asynchat.async_chat):
             logging.info('rest.client - %s - starting client' % self.url)
             self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
             self.connect((self.ip, int(self.port)))
-        except socket.error, ex:
+        except socket.error as ex:
             self.error = str(ex)
             try:
                 self.connect((self.ip, int(self.port)))
-            except socket.error, ex: self.error = str(ex)
-        except Exception, ex: self.error = str(ex)
+            except socket.error as ex: self.error = str(ex)
+        except Exception as ex: self.error = str(ex)
         if self.error: self.warn("rest.client - %s - can't start %s" % (self.url, self.error))
         else: return True
 
@@ -249,10 +246,10 @@ class RestClientAsync(RestClient, asynchat.async_chat):
                         return
                     result.data = res
                     result.error = None
-                except ValueError, ex:
+                except ValueError as ex:
                     logging.info("rest.client - %s - can't decode %s" % (self.url, self.buffer))
                     result.error = str(ex)
-                except Exception, ex:
+                except Exception as ex:
                     logging.error("rest.client - %s - %s" % (self.url, exceptionmsg()))
                     result.error = exceptionmsg()                
                     result.data = None
@@ -260,16 +257,16 @@ class RestClientAsync(RestClient, asynchat.async_chat):
                 try:
                     cb(self, result)
                     logging.info('rest.client - %s - called callback %s' % (self.url, str(cb)))
-                except Exception, ex: handle_exception()
+                except Exception as ex: handle_exception()
             self.buffer = ''
 
     @locked
     def dorequest(self, method, path, postdata={}, headers={}):
-        if postdata: postdata = urllib.urlencode(postdata)
+        if postdata: postdata = urllib.parse.urlencode(postdata)
         if headers:
-            if not headers.has_key('Content-Length'): headers['Content-Length'] = len(postdata)
+            if 'Content-Length' not in headers: headers['Content-Length'] = len(postdata)
             headerstxt = ""
-            for i,j in headers.iteritems(): headerstxt += "%s: %s\r\n" % (i.lower(), j)
+            for i,j in headers.items(): headerstxt += "%s: %s\r\n" % (i.lower(), j)
         else: headerstxt = ""
         if method == 'POST': s = toenc("%s %s HTTP/1.0\r\n%s\r\n%s\r\n\r\n" % (method, path, headerstxt, postdata), 'ascii')
         else: s = toenc("%s %s HTTP/1.0\r\n\r\n" % (method, path), 'ascii')

@@ -16,7 +16,7 @@ from jsb.utils.popen import gozerpopen
 from jsb.lib.datadir import getdatadir
 from jsb.version import getversion
 
-print getversion("STOP")
+print(getversion("STOP"))
 
 ## basic imports
 
@@ -37,8 +37,8 @@ if opts.datadir and not os.path.isdir(opts.datadir): os.mkdir(opts.datadir)
 
 ddir = opts.datadir or getdatadir()
 PID = open("%s/run/jsb.pid" % ddir, 'r').read()
-print "PID is %s" % PID
+print("PID is %s" % PID)
 execstring = "kill -s TERM %s" % PID
-print execstring
+print(execstring)
 proc = Popen(execstring.split())
 proc.wait()

@@ -14,7 +14,7 @@ from jsb.imports import getjson
 ## basic imports
 
 import logging
-import thread
+import _thread
 
 ## defines
 
@@ -22,7 +22,7 @@ json = getjson()
 
 ## locks
 
-parselock = thread.allocate_lock()
+parselock = _thread.allocate_lock()
 locked = lockdec(parselock)
 
 ## ConvoreEvent

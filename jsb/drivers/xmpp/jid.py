@@ -34,7 +34,7 @@ class JID(object):
         try:
             self.resource = self.full.split('/')[1]
         except (IndexError, ValueError):
-            self.resource = u""
+            self.resource = ""
 
     def validate(self, s):
         """ validate a JID. """

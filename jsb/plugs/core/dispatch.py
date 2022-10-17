@@ -48,11 +48,11 @@ def dispatch(bot, event):
             event.iscommand = True
             if not event.options: event.makeoptions()
             try: result = event.execute()
-            except NoSuchCommand, ex:
+            except NoSuchCommand as ex:
                 logging.warn("no such command: %s" % event.usercmnd)
                 if event.giveresponse: event.reply("no %s command found" % str(ex).strip())
                 event.launched() ; event.ready()
-        except Exception, ex: handle_exception()
+        except Exception as ex: handle_exception()
     else:
         logging.debug("dispatch - no go for %s" % event.auth or event.userhost)
         event.launched() ; event.ready()

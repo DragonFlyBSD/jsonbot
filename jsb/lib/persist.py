@@ -19,7 +19,7 @@ from jsb.utils.timeutils import elapsedstring
 from jsb.lib.callbacks import callbacks
 from jsb.lib.errors import MemcachedCounterError, JSONParseError
 
-from datadir import getdatadir
+from .datadir import getdatadir
 
 ## simplejson imports
 
@@ -29,7 +29,7 @@ json = getjson()
 ## basic imports
 
 from collections import deque
-import thread
+import _thread
 import logging
 import os
 import os.path
@@ -45,7 +45,7 @@ cpy = copy.deepcopy
 ## locks
 
 
-persistlock = thread.allocate_lock()
+persistlock = _thread.allocate_lock()
 persistlocked = lockdec(persistlock)
 
 ## global list to keeptrack of what persist objects need to be saved
@@ -58,7 +58,7 @@ def cleanup(bot=None, event=None):
     r = []
     for p in todo:
         try: p.dosave() ; r.append(p) ; logging.warn("saved on retry - %s" % p.fn)
-        except (OSError, IOError), ex: logging.error("failed to save %s - %s" % (p, str(ex)))
+        except (OSError, IOError) as ex: logging.error("failed to save %s - %s" % (p, str(ex)))
     for p in r:
         try: needsaving.remove(p)
         except ValueError: pass
@@ -72,7 +72,7 @@ try:
     from google.appengine.ext import db
     import google.appengine.api.memcache as mc
     from google.appengine.api.datastore_errors import Timeout, TransactionFailedError
-    from cache import get, set, delete
+    from .cache import get, set, delete
     logging.debug("using BigTable based Persist")
 
     ## JSONindb class
@@ -96,7 +96,7 @@ try:
             if 'lib' in self.plugname: self.plugname = calledfrom(sys._getframe(1))
             try: del self.fn
             except: pass 
-            self.fn = unicode(filename.strip()) # filename to save to
+            self.fn = str(filename.strip()) # filename to save to
             self.logname = os.sep.join(self.fn.split(os.sep)[-1:])
             self.countername = self.fn + "_" + "counter"
             self.mcounter = mc.get(self.countername) or mc.set(self.countername, "1")
@@ -119,7 +119,7 @@ try:
                 if tmp != None:
                     logging.warn("*%s* - loaded %s" % (self.cachetype, self.fn))
                     self.data = tmp
-                    if type(self.data) == types.DictType: self.data = LazyDict(self.data)
+                    if type(self.data) == dict: self.data = LazyDict(self.data)
                     return self.data
             if self.jsontxt == "": self.cachetype = "cache" ; self.jsontxt = mc.get(self.fn)
             if self.jsontxt == None: 
@@ -128,10 +128,10 @@ try:
                 try:
                     try: self.obj = JSONindb.get_by_key_name(self.fn)
                     except Timeout: self.obj = JSONindb.get_by_key_name(self.fn)
-                except Exception, ex:
+                except Exception as ex:
                     # bw compat sucks
                     try: self.obj = JSONindb.get_by_key_name(self.fn)
-                    except Exception, ex:
+                    except Exception as ex:
                         handle_exception()
                         self.obj = None
                 if self.obj == None:
@@ -154,7 +154,7 @@ try:
             except: raise JSONParseError(self.fn)
             if not self.data: self.data = default
             self.size = len(self.jsontxt)
-            if type(self.data) == types.DictType: self.data = LazyDict(self.data)
+            if type(self.data) == dict: self.data = LazyDict(self.data)
             set(self.fn, self.data)
             logging.warn("*%s* - loaded %s (%s)" % (self.cachetype, self.fn, len(self.jsontxt)))
 
@@ -169,7 +169,7 @@ try:
             tmp = cpy(self.data)
             data = json.dumps(tmp)
             mc.set(self.fn, data)
-            if type(self.data) == types.DictType:
+            if type(self.data) == dict:
                 self.data = LazyDict(self.data)
             set(self.fn, self.data)
             return data
@@ -182,7 +182,7 @@ try:
                     if self.data: t.update(self.data)
                     self.data = LazyDict(t)
                     logging.warn("updated %s" % self.fn)
-                except AttributeError, ex: logging.warn(str(ex))
+                except AttributeError as ex: logging.warn(str(ex))
                 return self.data
 
         def checkmc(self):
@@ -219,7 +219,7 @@ try:
             key = db.run_in_transaction(self.obj.put)
             logging.debug("transaction returned %s" % key)
             mc.set(fn, bla)
-            if type(self.data) == types.DictType: self.data = LazyDict(self.data)
+            if type(self.data) == dict: self.data = LazyDict(self.data)
             set(fn, self.data)
             incr = mc.incr(self.countername)
             if incr:
@@ -283,7 +283,7 @@ except ImportError:
                 got = True
         if got == False:
             logging.debug("no memcached found - using own cache")
-        from cache import get, set, delete
+        from .cache import get, set, delete
 
     import fcntl
 
@@ -297,7 +297,7 @@ except ImportError:
             """ Persist constructor """
             if postfix: self.fn = str(filename.strip()) + str("-%s" % postfix)
             else: self.fn = str(filename.strip())
-            self.lock = thread.allocate_lock() # lock used when saving)
+            self.lock = _thread.allocate_lock() # lock used when saving)
             self.data = LazyDict(default=default) # attribute to hold the data
             try:
                 res = []
@@ -347,7 +347,7 @@ except ImportError:
                    self.ssize = len(self.jsontxt)
                    cachetype = "file"
                    if got: mc.set(self.fn, self.jsontxt)
-            except IOError, ex:
+            except IOError as ex:
                 if not 'No such file' in str(ex):
                     logging.error('failed to read %s: %s' % (self.fn, str(ex)))
                     raise
@@ -356,18 +356,18 @@ except ImportError:
                     self.jsontxt = json.dumps(default)
             try:
                 if self.jsontxt:
-                    logging.debug(u"loading: %s" % type(self.jsontxt))
+                    logging.debug("loading: %s" % type(self.jsontxt))
                     try: self.data = json.loads(str(self.jsontxt))
-                    except Exception, ex: logging.error("couldn't parse %s" % self.jsontxt) ; self.data = None ; self.dontsave = True
+                    except Exception as ex: logging.error("couldn't parse %s" % self.jsontxt) ; self.data = None ; self.dontsave = True
                 if not self.data: self.data = LazyDict()
-                elif type(self.data) == types.DictType:
+                elif type(self.data) == dict:
                     logging.debug("converting dict to LazyDict")
                     d = LazyDict()
                     d.update(self.data)
                     self.data = d
                 set(self.fn, self.data)
                 logging.debug("loaded %s - %s" % (self.logname, cachetype))
-            except Exception, ex:
+            except Exception as ex:
                 logging.error('ERROR: %s' % self.fn)
                 raise
 
@@ -433,7 +433,7 @@ except ImportError:
                 set(fn, self.data)
                 if got: mc.set(fn, jsontxt)
                 logging.info('%s saved' % self.logname)
-            except IOError, ex: logging.error("not saving %s: %s" % (self.fn, str(ex))) ; raise
+            except IOError as ex: logging.error("not saving %s: %s" % (self.fn, str(ex))) ; raise
             except: raise
             finally: pass
 
@@ -494,7 +494,7 @@ class PersistCollection(object):
             try:
                 os.mkdir(pp)
                 logging.warn("creating %s dir" % pp)
-            except OSError, ex:
+            except OSError as ex:
                 if 'Errno 13' in str(ex) or 'Errno 2' in str(ex): continue
                 logging.warn("can't make %s - %s" % (pp,str(ex))) ; continue
                 
@@ -511,7 +511,7 @@ class PersistCollection(object):
 
     def search(self, field, target):
         res = []
-        for obj in self.objects().values():
+        for obj in list(self.objects().values()):
             try: item = getattr(obj.data, field)
             except AttributeError: handle_exception() ; continue
             if not item: continue
@@ -519,7 +519,7 @@ class PersistCollection(object):
         return res
             
     def objects(self, filter=[], path=None):
-        if type(filter) != types.ListType: filter = [filter, ] 
+        if type(filter) != list: filter = [filter, ] 
         res = {}
         target = path or self.path
         for f in self.filenames(filter, target):

@@ -44,8 +44,8 @@ cfg = PlugPersist("irccat", {
     "enable": False,
     })
 
-import SocketServer
-from SocketServer import ThreadingMixIn, StreamRequestHandler
+import socketserver
+from socketserver import ThreadingMixIn, StreamRequestHandler
 
 shared_data = {}
 
@@ -75,7 +75,7 @@ class IrcCatListener(ThreadingMixIn, StreamRequestHandler):
         finalDest = []
         for d in dest:
             finalDest.append(d)
-            if d in cfg.data["aliases"].keys():
+            if d in list(cfg.data["aliases"].keys()):
                 for alias in cfg.data["aliases"][d]:
                     finalDest.append(alias)
         return finalDest, message
@@ -99,8 +99,8 @@ def init_threaded():
     if not cfg.data.aliases: cfg.data.aliases = {}
     cfg.save()
     try:
-        server = SocketServer.TCPServer((cfg.data["host"], int(cfg.data["port"])), IrcCatListener)
-    except Exception, ex: logging.error(str(ex)) ; return
+        server = socketserver.TCPServer((cfg.data["host"], int(cfg.data["port"])), IrcCatListener)
+    except Exception as ex: logging.error(str(ex)) ; return
     logging.warn("starting irccat server on %s:%s" % (cfg.data["host"], cfg.data["port"]))
     start_new_thread(server.serve_forever, ())
 
@@ -127,7 +127,7 @@ examples.add("irccat_add_alias", "add an alias to the current channel from the s
 
 def handle_irccat_list_aliases(bot, ievent):
     """ List all aliases defined for the current channel """
-    aliases = [dest for dest, chanlist in cfg.data["aliases"].iteritems() if ievent.channel in chanlist]
+    aliases = [dest for dest, chanlist in cfg.data["aliases"].items() if ievent.channel in chanlist]
 
     ievent.reply("%s is receiving irccat messages directed at: %s" % (ievent.channel, ", ".join(aliases)))
 cmnds.add("irccat_list_aliases", handle_irccat_list_aliases, ['OPER'])

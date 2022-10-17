@@ -38,7 +38,7 @@ examples.add('quote-add' , 'add a quote to the bot', 'quote-add blablabla')
 
 def handle_quote(bot, event):
     """ no arguments - get a quote. """
-    possible = quotes.data.keys()
+    possible = list(quotes.data.keys())
     possible.remove('index')
     if possible: nr = random.choice(possible) ; event.reply("#%s %s" % (nr, quotes.data[nr]))
     else: event.reply("no quotes yet.")

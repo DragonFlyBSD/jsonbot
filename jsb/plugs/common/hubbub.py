@@ -34,8 +34,8 @@ feedparser = getfeedparser()
 
 import base64
 import logging
-import urllib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
 import uuid
 import os
 import time
@@ -45,7 +45,7 @@ import time
 def subscribe(url):
     """ subscribe to an hubbub feed. """
     subscribe_args = {
-        'hub.callback': urlparse.urljoin('https://jsonbot.appspot.com', '/hubbub'),
+        'hub.callback': urllib.parse.urljoin('https://jsonbot.appspot.com', '/hubbub'),
         'hub.mode': 'subscribe',
         'hub.topic': url,
         'hub.verify': 'async',
@@ -130,7 +130,7 @@ class HubbubItem(Persist):
             return []
         result = feedparser.parse(url, agent=useragent())
         logging.debug("hubbub - fetch - got result from %s" % url)
-        if result and result.has_key('bozo_exception'): logging.info('hubbub - %s bozo_exception: %s' % (url, result['bozo_exception']))
+        if result and 'bozo_exception' in result: logging.info('hubbub - %s bozo_exception: %s' % (url, result['bozo_exception']))
         try:
             status = result.status
             logging.info("hubbub - status is %s" % status)
@@ -150,9 +150,9 @@ class HubbubWatcher(PlugPersist):
     def __init__(self, filename):
         PlugPersist.__init__(self, filename)
         if not self.data: self.data = {}
-        if not self.data.has_key('names'): self.data['names'] = []
-        if not self.data.has_key('urls'): self.data['urls'] = {}
-        if not self.data.has_key('feeds'): self.data['feeds'] = {}
+        if 'names' not in self.data: self.data['names'] = []
+        if 'urls' not in self.data: self.data['urls'] = {}
+        if 'feeds' not in self.data: self.data['feeds'] = {}
         self.feeds = {}
 
     def add(self, name, url, owner):
@@ -220,7 +220,7 @@ class HubbubWatcher(PlugPersist):
                     bot = fleet.makebot(type, botname)
                 if not bot:
                     bot = fleet.makebot('xmpp', botname)
-            except NoSuchBotType, ex: logging.warn("hubbub - %s" % str(ex)) ; return
+            except NoSuchBotType as ex: logging.warn("hubbub - %s" % str(ex)) ; return
             if not bot: logging.error("hubbub - can't find %s bot in fleet" % type) ; return
             res2 = entries
             if not res2: logging.info("no updates for %s (%s) feed available" % (item.data.name, channel)) ; return
@@ -229,13 +229,13 @@ class HubbubWatcher(PlugPersist):
                 for i in res2:
                     response = self.makeresponse(name, [i, ], channel)
                     try: bot.say(channel, response)
-                    except Exception, ex: handle_exception()
+                    except Exception as ex: handle_exception()
             else:
                 sep =  item.markup.get(jsonstring([name, channel]), 'separator')
                 if sep: response = self.makeresponse(name, res2, channel, sep=sep)
                 else: response = self.makeresponse(name, res2, channel)
                 bot.say(channel, response)
-        except Exception, ex: handle_exception()
+        except Exception as ex: handle_exception()
 
     def incoming(self, data):
         """ process incoming hubbub data. """
@@ -267,7 +267,7 @@ class HubbubWatcher(PlugPersist):
                     logging.debug('hubbub - %s is not in the format (botname, bottype, channel)' % item.data.url)
                     continue
                 counter += 1
-        except Exception, ex: handle_exception(txt=url)
+        except Exception as ex: handle_exception(txt=url)
         return True
 
     def getall(self):
@@ -293,7 +293,7 @@ class HubbubWatcher(PlugPersist):
             tmp = {}
             if not item.itemslists.data[jsonstring([name, target])]: return []
             for i in item.itemslists.data[jsonstring([name, target])]:
-                try: tmp[i] = unicode(j[i])
+                try: tmp[i] = str(j[i])
                 except KeyError: continue
             res.append(tmp)
         return res
@@ -302,7 +302,7 @@ class HubbubWatcher(PlugPersist):
     def makeresponse(self, name, res, channel, sep=" .. "):
         """ loop over result to make a response. """
         item = self.byname(name)
-        result = u"[%s] - " % name 
+        result = "[%s] - " % name 
         try: itemslist = item.itemslists.data[jsonstring([name, channel])]
         except KeyError: 
             item = self.byname(name)
@@ -312,29 +312,29 @@ class HubbubWatcher(PlugPersist):
                 item.itemslists.save()
         for j in res:
             if item.markup.get(jsonstring([name, channel]), 'skipmerge') and 'Merge branch' in j['title']: continue
-            resultstr = u""
+            resultstr = ""
             for i in item.itemslists.data[jsonstring([name, channel])]:
                 try:
                     ii = getattr(j, i)
                     if not ii: continue
-                    ii = unicode(ii)
+                    ii = str(ii)
                     if ii.startswith('http://'):
                         if item.markup.get(jsonstring([name, channel]), 'tinyurl'):
                             try:
                                 tinyurl = get_tinyurl(ii)
                                 logging.debug('rss - tinyurl is: %s' % str(tinyurl))
-                                if not tinyurl: resultstr += u"%s - " % ii
-                                else: resultstr += u"%s - " % tinyurl[0]
-                            except Exception, ex:
+                                if not tinyurl: resultstr += "%s - " % ii
+                                else: resultstr += "%s - " % tinyurl[0]
+                            except Exception as ex:
                                 handle_exception()
-                                resultstr += u"%s - " % item
-                        else: resultstr += u"%s - " % ii
-                    else: resultstr += u"%s - " % ii.strip()
-                except (KeyError, AttributeError), ex:
+                                resultstr += "%s - " % item
+                        else: resultstr += "%s - " % ii
+                    else: resultstr += "%s - " % ii.strip()
+                except (KeyError, AttributeError) as ex:
                     logging.info('hubbub - %s - %s' % (name, str(ex)))
                     continue
             resultstr = resultstr[:-3]
-            if resultstr: result += u"%s %s " % (resultstr, sep)
+            if resultstr: result += "%s %s " % (resultstr, sep)
         return result[:-(len(sep)+2)]
 
     def stopwatch(self, name):
@@ -479,7 +479,7 @@ def handle_hubbubsubscribe(bot, event):
         url = item.data.url
         if not url: event.reply('please provide a url for %s feed' % name) ; return
         if not url.startswith('http://'): event.reply('%s doesnt start with "http://"' % url)
-        if not watcher.data['urls'].has_key(name): watcher.add(name, url, event.channel)
+        if name not in watcher.data['urls']: watcher.add(name, url, event.channel)
         if not watcher.byname(name): watcher.add(name, url, event.channel)
         response = subscribe(url)
         event.reply("subscription send: %s - %s" % (url, response.status))
@@ -504,11 +504,11 @@ examples.add('hb-clone', 'clone feeds into new channel', 'hb-clone #dunkbots')
 def handle_hubbubcloneurl(bot, event):
     """ arguments: <url> - clone urls from http://host/feeds. """
     if not event.rest: event.missing('<url>') ; return
-    import urllib2
+    import urllib.request, urllib.error, urllib.parse
     try:
         feeds = watcher.cloneurl(event.rest, event.auth)
         event.reply('cloned the following feeds: ', feeds)
-    except urllib2.HTTPError, ex: event.reply("hubbub - clone - %s" % str(ex))
+    except urllib.error.HTTPError as ex: event.reply("hubbub - clone - %s" % str(ex))
 
 cmnds.add('hb-cloneurl', handle_hubbubcloneurl, 'OPER')
 examples.add('hb-cloneurl', 'clone feeds from remote url', 'hb-cloneurl http://jsonbot.org/feeds')
@@ -543,7 +543,7 @@ def handle_hubbubwatch(bot, ievent):
         got = True
         item.save()
         try: watcher.watch(name)
-        except Exception, ex: ievent.reply(str(ex)) ; return
+        except Exception as ex: ievent.reply(str(ex)) ; return
     if got: ievent.reply('watcher started')
     else: ievent.reply('already watching %s' % name)
 
@@ -572,7 +572,7 @@ def handle_hubbubstart(bot, ievent):
             logging.debug("feed running in %s: %s" % (ievent.title, wave.data.feeds))
             if wave.data.loud:
                 try: ievent.set_title("JSONBOT - %s - #%s" % (' - '.join(wave.data.feeds), str(wave.data.nrcloned)))
-                except Exception, ex: handle_exception()
+                except Exception as ex: handle_exception()
     if started: ievent.reply('started: ', started)
     else: ievent.reply("sorry can't start: ", cantstart)
 
@@ -845,7 +845,7 @@ def handle_hubbubget(bot, ievent):
     item = watcher.byname(name)
     if item == None: ievent.reply("we don't have a %s item" % name) ; return
     try: result = watcher.fetchdata(name)
-    except Exception, ex: ievent.reply('%s error: %s' % (name, str(ex))) ; return
+    except Exception as ex: ievent.reply('%s error: %s' % (name, str(ex))) ; return
     if item.markup.get(jsonstring([name, channel]), 'reverse-order'): result = result[::-1]
     response = watcher.makeresponse(name, result, ievent.channel)
     if response: ievent.reply("results of %s: %s" % (name, response))
@@ -924,7 +924,7 @@ def handle_hubbubscan(bot, ievent):
     except IndexError: ievent.missing('<feedname>') ; return
     if not watcher.byname(name): ievent.reply('no %s feeds available' % name) ; return
     try: result = watcher.scan(name)
-    except Exception, ex: ievent.reply(str(ex)) ; return
+    except Exception as ex: ievent.reply(str(ex)) ; return
     if result == None: ievent.reply("can't get data for %s" % name) ; return
     res = []
     for i in result: res.append("%s=%s" % i)
@@ -943,7 +943,7 @@ def handle_hubbubfeeds(bot, ievent):
         result = watcher.getfeeds(channel, bot.cfg.name)
         if result: ievent.reply("feeds running: ", result)
         else: ievent.reply('no feeds running')
-    except Exception, ex: ievent.reply("ERROR: %s" % str(ex))
+    except Exception as ex: ievent.reply("ERROR: %s" % str(ex))
 
 cmnds.add('hb-feeds', handle_hubbubfeeds, ['USER', 'GUEST'])
 examples.add('hb-feeds', 'hb-feeds <name> .. show what feeds are running in a channel', '1) hb-feeds 2) hb-feeds #dunkbots')
