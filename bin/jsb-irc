@@ -5,9 +5,11 @@
 ## bootstrap
 
 import warnings
+
 warnings.simplefilter("ignore")
 
 import os, sys
+
 sys.path.insert(0, os.getcwd())
 
 ## options parser
@@ -16,12 +18,14 @@ from jsb.utils.opts import makeircconfig, makeircopts
 from jsb.lib.datadir import setdatadir, getdatadir
 
 opts = makeircopts()
-if opts.datadir: setdatadir(opts.datadir)
+if opts.datadir:
+    setdatadir(opts.datadir)
 
 ## print version
 
 from jsb.version import getversion
-print(getversion('IRC'))
+
+print(getversion("IRC"))
 
 
 ## jsb imports
@@ -61,8 +65,10 @@ if opts.owner:
 
 cfg = makeircconfig(opts)
 
-if opts.name: cfg.name = opts.name
-else: cfg.name = "default-irc"
+if opts.name:
+    cfg.name = opts.name
+else:
+    cfg.name = "default-irc"
 cfg.save()
 
 ## resume or start the bot
@@ -81,8 +87,8 @@ else:
     except NoOwnerSet as ex:
         print("owner is not set in %s - use the -o option" % str(ex))
         os._exit(1)
-    if opts.channel and not opts.channel in bot.state['joinedchannels']:
-        bot.state['joinedchannels'].append(opts.channel)
+    if opts.channel and not opts.channel in bot.state["joinedchannels"]:
+        bot.state["joinedchannels"].append(opts.channel)
         bot.state.save()
     start_new_thread(bot.boot, ())
 

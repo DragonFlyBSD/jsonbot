@@ -23,40 +23,49 @@ import logging
 
 changed = False
 
-idle = PlugPersist('idle.data')
+idle = PlugPersist("idle.data")
 if not idle.data:
     idle.data = {}
 
 ## save on shutdown
 
+
 def ticksave(bot, event):
     global idle
     global changed
-    if changed: idle.save() ; changed = False
+    if changed:
+        idle.save()
+        changed = False
+
 
 callbacks.add("TICK60", ticksave)
 
 ## callbacks
 
+
 def preidle(bot, event):
-    """ idle precondition aka check if it is not a command """
-    if not event.iscmnd() and event.inchan and not event.isoutput: return True
-        
+    """idle precondition aka check if it is not a command"""
+    if not event.iscmnd() and event.inchan and not event.isoutput:
+        return True
+
+
 def idlecb(bot, event):
-    """ idle PRIVMSG callback .. set time for channel and nick """
+    """idle PRIVMSG callback .. set time for channel and nick"""
     ttime = time.time()
     idle.data[event.userhost] = ttime
     idle.data[event.channel] = ttime
     idle.sync()
     global changed
     changed = True
-    
-callbacks.add('PRIVMSG', idlecb, preidle)
+
+
+callbacks.add("PRIVMSG", idlecb, preidle)
 
 ## idle command
 
+
 def handle_idle(bot, ievent):
-    """ arguments: [<nick>] .. show how idle an channel/user has been """
+    """arguments: [<nick>] .. show how idle an channel/user has been"""
     try:
         who = ievent.args[0]
     except IndexError:
@@ -77,13 +86,14 @@ def handle_idle(bot, ievent):
         return
     else:
         ievent.reply("%s is not idle" % who)
-        return   
+        return
+
 
 def handle_idle2(bot, ievent):
-    """ show how idle a channel has been """
+    """show how idle a channel has been"""
     chan = ievent.channel
     try:
-        elapsed = elapsedstring(time.time()-idle.data[chan])
+        elapsed = elapsedstring(time.time() - idle.data[chan])
     except KeyError:
         ievent.reply("nobody said anything on channel %s yet" % chan)
         return
@@ -92,5 +102,10 @@ def handle_idle2(bot, ievent):
     else:
         ievent.reply("channel %s is not idle" % chan)
 
-cmnds.add('idle', handle_idle, ['OPER', 'USER', 'GUEST'])
-examples.add('idle', 'show how idle the channel is or show how idle <nick> is', '1) idle 2) idle test')
+
+cmnds.add("idle", handle_idle, ["OPER", "USER", "GUEST"])
+examples.add(
+    "idle",
+    "show how idle the channel is or show how idle <nick> is",
+    "1) idle 2) idle test",
+)

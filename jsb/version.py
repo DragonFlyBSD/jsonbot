@@ -20,6 +20,7 @@ __version__ = version
 
 ## getversion function
 
+
 def getversion(txt=""):
-    """ return a version string. """
+    """return a version string."""
     return "JSONBOT %s RELEASE %s" % (version, txt)

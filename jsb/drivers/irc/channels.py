@@ -2,9 +2,9 @@
 #
 #
 
-""" 
-    channel related data. implemented with a persisted dict of dicts. 
-    
+"""
+    channel related data. implemented with a persisted dict of dicts.
+
     :example:
 
         key = channels[event.channel]['key']
@@ -15,13 +15,14 @@
 
 from jsb.utils.pdod import Pdod
 
+
 class Channels(Pdod):
 
-    """ 
-        channels class .. per channel data. 
+    """
+    channels class .. per channel data.
 
-        :param fname: filename to persist the data to
-        :type fname: string
+    :param fname: filename to persist the data to
+    :type fname: string
 
     """
 
@@ -32,28 +33,28 @@ class Channels(Pdod):
 
         # make sure attributes are initialised
         for j in list(self.data.values()):
-            if 'perms' not in j:
-                j['perms'] = []
-            if 'autovoice' not in j:
-                j['autovoice'] = 0
+            if "perms" not in j:
+                j["perms"] = []
+            if "autovoice" not in j:
+                j["autovoice"] = 0
 
     def __setitem__(self, a, b):
 
         # if item is not in dict initialise it to empty dict
         if a not in self.data:
-           self.data[a] = {}
+            self.data[a] = {}
 
         # assign data
-        self.data[a] = b 
+        self.data[a] = b
 
     def getchannels(self):
 
         """
-            return channels.
+        return channels.
 
         """
 
-        result = [] # list of channels found
+        result = []  # list of channels found
 
         # loop over channels
         for channel in list(self.data.keys()):
@@ -66,7 +67,7 @@ class Channels(Pdod):
     def getchannelswithkeys(self):
 
         """
-            return channels with keys.
+        return channels with keys.
 
         """
 
@@ -76,9 +77,9 @@ class Channels(Pdod):
         for channel in list(self.data.keys()):
             channel = channel.strip()
             try:
-                key = self.data[channel]['key']
-                if not channel + ' ' + key in result:
-                    result.append(channel + ' ' + key)
+                key = self.data[channel]["key"]
+                if not channel + " " + key in result:
+                    result.append(channel + " " + key)
             except KeyError:
                 if channel not in result:
                     result.append(channel)
@@ -87,16 +88,16 @@ class Channels(Pdod):
 
     def getkey(self, channel):
 
-        """ 
-            return key of channel if set.
+        """
+        return key of channel if set.
 
-            :param channel: channel to get key from
-            :type channel: string
+        :param channel: channel to get key from
+        :type channel: string
 
         """
 
         try:
-            key = self.data[channel]['key']
+            key = self.data[channel]["key"]
         except:
             key = None
 
@@ -104,16 +105,16 @@ class Channels(Pdod):
 
     def getnick(self, channel):
 
-        """ 
-            return bot nick of channel if set.
+        """
+        return bot nick of channel if set.
 
-            :param channel: channel to get key from
-            :type channel: string
+        :param channel: channel to get key from
+        :type channel: string
 
         """
 
         try:
-            nick = self.data[channel]['nick']
+            nick = self.data[channel]["nick"]
         except:
             nick = None
 

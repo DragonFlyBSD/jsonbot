@@ -32,6 +32,7 @@ beledig = []
 
 ## init function
 
+
 def init():
     global koffie
     global thee
@@ -45,232 +46,273 @@ def init():
     global sex
     global roken
     global beledig
-    for i in  koffietxt.split('\n'):
+    for i in koffietxt.split("\n"):
         if i:
             koffie.append(i.strip())
-    for i in theetxt.split('\n'):
+    for i in theetxt.split("\n"):
         if i:
             thee.append(i.strip())
-    for i in biertxt.split('\n'):
+    for i in biertxt.split("\n"):
         if i:
             bier.append(i.strip())
-    for i in wijntxt.split('\n'):
+    for i in wijntxt.split("\n"):
         if i:
             wijn.append(i.strip())
-    for i in fristxt.split('\n'):
+    for i in fristxt.split("\n"):
         if i:
             fris.append(i.strip())
-    for i in taarttxt.split('\n'):
+    for i in taarttxt.split("\n"):
         if i:
             taart.append(i.strip())
-    for i in koektxt.split('\n'):
+    for i in koektxt.split("\n"):
         if i:
             koek.append(i.strip())
-    for i in chipstxt.split('\n'):
+    for i in chipstxt.split("\n"):
         if i:
             chips.append(i.strip())
-    for i in soeptxt.split('\n'):
+    for i in soeptxt.split("\n"):
         if i:
             soep.append(i.strip())
-    for i in sextxt.split('\n'):
+    for i in sextxt.split("\n"):
         if i:
             sex.append(i.strip())
-    for i in rokentxt.split('\n'):
+    for i in rokentxt.split("\n"):
         if i:
             roken.append(i.strip())
-    for i in beledigtxt.split('\n'):
+    for i in beledigtxt.split("\n"):
         if i:
             beledig.append(i.strip())
     return 1
 
+
 ## functions
 
+
 def do(bot, ievent, txt):
-    if not bot.isgae and not bot.allowall: bot.action(ievent.channel, txt, event=ievent)
-    else: bot.say(ievent.channel, txt, event=ievent)
+    if not bot.isgae and not bot.allowall:
+        bot.action(ievent.channel, txt, event=ievent)
+    else:
+        bot.say(ievent.channel, txt, event=ievent)
+
 
 ## koffie command
 
+
 def handle_koffie(bot, ievent):
-    """ arguments: [<nick>] - get/give a coffee """
-    rand = random.randint(0,len(koffie)-1)
+    """arguments: [<nick>] - get/give a coffee"""
+    rand = random.randint(0, len(koffie) - 1)
     try:
         input = ievent.args[0]
-        nick = '%s' % input
+        nick = "%s" % input
     except:
-        if len('%s') >= 0: nick = ievent.nick
+        if len("%s") >= 0:
+            nick = ievent.nick
     do(bot, ievent, koffie[rand] + " " + nick)
 
-cmnds.add('koffie', handle_koffie, 'USER')
-examples.add('koffie', 'get a koffie quote', 'koffie')
+
+cmnds.add("koffie", handle_koffie, "USER")
+examples.add("koffie", "get a koffie quote", "koffie")
 
 ## thee command
 
+
 def handle_thee(bot, ievent):
-    """ arguments: [<nick>] - get/give a thee """
-    rand = random.randint(0,len(thee)-1)
+    """arguments: [<nick>] - get/give a thee"""
+    rand = random.randint(0, len(thee) - 1)
     try:
         input = ievent.args[0]
-        nick = '%s' % input
+        nick = "%s" % input
     except:
-        if len('%s') >= 0: nick = ievent.nick
+        if len("%s") >= 0:
+            nick = ievent.nick
     do(bot, ievent, thee[rand] + " " + nick)
 
-cmnds.add('thee', handle_thee, 'USER')
-examples.add('thee', 'get an thee', 'thee')
+
+cmnds.add("thee", handle_thee, "USER")
+examples.add("thee", "get an thee", "thee")
 
 ## bier command
 
+
 def handle_bier(bot, ievent):
-    """ arguments: [<nick>] - get a beer  """
-    rand = random.randint(0,len(bier)-1)
+    """arguments: [<nick>] - get a beer"""
+    rand = random.randint(0, len(bier) - 1)
     try:
         input = ievent.args[0]
-        nick = '%s' % input
+        nick = "%s" % input
     except:
-        if len('%s') >= 0: nick = ievent.nick
+        if len("%s") >= 0:
+            nick = ievent.nick
     do(bot, ievent, bier[rand] + " " + nick)
 
-cmnds.add('bier', handle_bier, 'USER')
-examples.add('bier', 'get a bier', 'bier')
+
+cmnds.add("bier", handle_bier, "USER")
+examples.add("bier", "get a bier", "bier")
 
 ## wijn command
 
+
 def handle_wijn(bot, ievent):
-    """ arguments: [<nick>] - get a wine  """
-    rand = random.randint(0,len(wijn)-1)
+    """arguments: [<nick>] - get a wine"""
+    rand = random.randint(0, len(wijn) - 1)
     try:
-        input = ievent.args[0]   
-        nick = '%s' % input
+        input = ievent.args[0]
+        nick = "%s" % input
     except:
-        if len('%s') >= 0: nick = ievent.nick
+        if len("%s") >= 0:
+            nick = ievent.nick
     do(bot, ievent, wijn[rand] + " " + nick)
 
-cmnds.add('wijn', handle_wijn, 'USER')
-examples.add('wijn', 'get a wijn', 'wijn')
+
+cmnds.add("wijn", handle_wijn, "USER")
+examples.add("wijn", "get a wijn", "wijn")
 
 ## fris command
 
+
 def handle_fris(bot, ievent):
-    """ arguments: [<nick>] - get a fris  """
-    rand = random.randint(0,len(fris)-1)
+    """arguments: [<nick>] - get a fris"""
+    rand = random.randint(0, len(fris) - 1)
     try:
         input = ievent.args[0]
-        nick = '%s' % input
+        nick = "%s" % input
     except:
-        if len('%s') >= 0: nick = ievent.nick
+        if len("%s") >= 0:
+            nick = ievent.nick
     do(bot, ievent, fris[rand] + " " + nick)
 
-cmnds.add('fris', handle_fris, 'USER')
-examples.add('fris', 'get a fris', 'fris')
+
+cmnds.add("fris", handle_fris, "USER")
+examples.add("fris", "get a fris", "fris")
 
 ## taart command
 
+
 def handle_taart(bot, ievent):
-    """ arguments: [<nick>] - get a taart  """
-    rand = random.randint(0,len(taart)-1)
+    """arguments: [<nick>] - get a taart"""
+    rand = random.randint(0, len(taart) - 1)
     try:
         input = ievent.args[0]
-        nick = '%s' % input
+        nick = "%s" % input
     except:
-        if len('%s') >= 0: nick = ievent.nick
+        if len("%s") >= 0:
+            nick = ievent.nick
     do(bot, ievent, taart[rand] + " " + nick)
 
-cmnds.add('taart', handle_taart, 'USER')
-examples.add('taart', 'get a taart', 'taart')
+
+cmnds.add("taart", handle_taart, "USER")
+examples.add("taart", "get a taart", "taart")
 
 ## koek command
 
+
 def handle_koek(bot, ievent):
-    """ arguments: [<nick>] - get a koek  """
-    rand = random.randint(0,len(koek)-1)
+    """arguments: [<nick>] - get a koek"""
+    rand = random.randint(0, len(koek) - 1)
     try:
         input = ievent.args[0]
-        nick = '%s' % input
+        nick = "%s" % input
     except:
-        if len('%s') >= 0: nick = ievent.nick
+        if len("%s") >= 0:
+            nick = ievent.nick
     do(bot, ievent, koek[rand] + " " + nick)
 
-cmnds.add('koek', handle_koek, 'USER')
-examples.add('koek', 'get a koek', 'koek')
 
-cmnds.add('koekje', handle_koek, 'USER')
-examples.add('koekje', 'get a koekje', 'koekje')
+cmnds.add("koek", handle_koek, "USER")
+examples.add("koek", "get a koek", "koek")
+
+cmnds.add("koekje", handle_koek, "USER")
+examples.add("koekje", "get a koekje", "koekje")
 
 ## chips command
 
+
 def handle_chips(bot, ievent):
-    """ arguments: [<nick>] - get a chips  """
-    rand = random.randint(0,len(chips)-1)
+    """arguments: [<nick>] - get a chips"""
+    rand = random.randint(0, len(chips) - 1)
     try:
         input = ievent.args[0]
-        nick = '%s' % input
+        nick = "%s" % input
     except:
-        if len('%s') >= 0: nick = ievent.nick
+        if len("%s") >= 0:
+            nick = ievent.nick
     do(bot, ievent, chips[rand] + " " + nick)
 
-cmnds.add('chips', handle_chips, 'USER')
-examples.add('chips', 'get a chips', 'chips')
+
+cmnds.add("chips", handle_chips, "USER")
+examples.add("chips", "get a chips", "chips")
 
 ## soep command
 
+
 def handle_soep(bot, ievent):
-    """ arguments: [<nick>] - get a soep  """
-    rand = random.randint(0,len(soep)-1)
+    """arguments: [<nick>] - get a soep"""
+    rand = random.randint(0, len(soep) - 1)
     try:
         input = ievent.args[0]
-        nick = '%s' % input
+        nick = "%s" % input
     except:
-        if len('%s') >= 0: nick = ievent.nick
+        if len("%s") >= 0:
+            nick = ievent.nick
     do(bot, ievent, soep[rand] + " " + nick)
 
-cmnds.add('soep', handle_soep, 'USER')
-examples.add('soep', 'get a soep', 'soep')
+
+cmnds.add("soep", handle_soep, "USER")
+examples.add("soep", "get a soep", "soep")
 
 ## sex command
 
+
 def handle_sex(bot, ievent):
-    """ arguments: [<nick>] - get a sex  """
-    rand = random.randint(0,len(sex)-1)
+    """arguments: [<nick>] - get a sex"""
+    rand = random.randint(0, len(sex) - 1)
     try:
         input = ievent.args[0]
-        nick = '%s' % input
+        nick = "%s" % input
     except:
-        if len('%s') >= 0: nick = ievent.nick
+        if len("%s") >= 0:
+            nick = ievent.nick
     do(bot, ievent, sex[rand] + " " + nick)
 
-cmnds.add('sex', handle_sex, 'USER')
-examples.add('sex', 'get a sex', 'sex')
+
+cmnds.add("sex", handle_sex, "USER")
+examples.add("sex", "get a sex", "sex")
 
 ## roken command
 
+
 def handle_roken(bot, ievent):
-    """ arguments: [<nick>] - get a roken  """
-    rand = random.randint(0,len(roken)-1)
+    """arguments: [<nick>] - get a roken"""
+    rand = random.randint(0, len(roken) - 1)
     try:
         input = ievent.args[0]
-        nick = '%s' % input
+        nick = "%s" % input
     except:
-        if len('%s') >= 0: nick = ievent.nick
+        if len("%s") >= 0:
+            nick = ievent.nick
     do(bot, ievent, roken[rand] + " " + nick)
 
-cmnds.add('roken', handle_roken, 'USER')
-examples.add('roken', 'get a roken', 'roken')
+
+cmnds.add("roken", handle_roken, "USER")
+examples.add("roken", "get a roken", "roken")
 
 ## beledig command
 
+
 def handle_beledig(bot, ievent):
-    """ arguments: [<nick>] - get/give an belediging  """
-    rand = random.randint(0,len(beledig)-1)
+    """arguments: [<nick>] - get/give an belediging"""
+    rand = random.randint(0, len(beledig) - 1)
     try:
         input = ievent.args[0]
-        nick = '%s' % input
+        nick = "%s" % input
     except:
-        if len('%s') >= 0: nick = ievent.nick
+        if len("%s") >= 0:
+            nick = ievent.nick
     do(bot, ievent, beledig[rand] + " " + nick)
 
-cmnds.add('beledig', handle_beledig, 'USER')
-examples.add('beledig', 'get/give an belediging ', 'beledig')
+
+cmnds.add("beledig", handle_beledig, "USER")
+examples.add("beledig", "get/give an belediging ", "beledig")
 
 ## text definitions
 
@@ -301,9 +343,9 @@ schenkt een kopje mocha in voor
 
 theetxt = """ maak het gerust zelf,
 schenkt een kopje groene thee in voor
-ja lekker heh, 
-schenkt een kopje mintthee in voor 
-schenkt een kopje brandnetelthee in voor 
+ja lekker heh,
+schenkt een kopje mintthee in voor
+schenkt een kopje brandnetelthee in voor
 schenkt een kopje bosvruchtenthee in voor
 schenkt een kopje citroenthee in voor
 schenkt een kopje rooibosthee in voor
@@ -322,7 +364,7 @@ geeft een flesje grolsch aan
 pak het gerust zelf,
 geeft een flesje hoegaarden aan
 geeft een flesje grimbergen aan
-reikt een flesje dommelsch aan voor 
+reikt een flesje dommelsch aan voor
 reikt een flesje brand aan voor
 schenkt een glas duvel in voor
 schenkt een glas chouffe in voor
@@ -339,7 +381,7 @@ geeft een glas champagne aan
 pak het gerust zelf maar,
 morst rode wijn over je witte shirt, oops... sorry,
 ja lekker,
-witte, rode of rose, 
+witte, rode of rose,
 geeft een glas droge witte wijn aan
 geeft een glas zoete witte wijn aan
 trekt de kurk van een fles witte wijn, zuipt hem helemaal leeg *hips* en proost,
@@ -508,7 +550,7 @@ schijt in de mond van
 vist in het aquarium van
 pakt een koekenpan en slaat daarmee
 hackt
-stampt zo hard tusse de noten dat je je kindergeld kwijt bent, 
+stampt zo hard tusse de noten dat je je kindergeld kwijt bent,
 moont
 castreert
 verloot

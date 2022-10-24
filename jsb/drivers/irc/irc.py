@@ -2,7 +2,7 @@
 #
 #
 
-""" 
+"""
     an Irc object handles the connection to the irc server .. receiving,
     sending, connect and reconnect code.
 
@@ -49,14 +49,15 @@ outlocked = lockdec(outlock)
 
 ## exceptions
 
+
 class Irc(BotBase):
 
-    """ the irc class, provides interface to irc related stuff. """
+    """the irc class, provides interface to irc related stuff."""
 
     def __init__(self, cfg=None, users=None, plugs=None, *args, **kwargs):
         BotBase.__init__(self, cfg, users, plugs, *args, **kwargs)
-        #BotBase.setstate(self)
-        self.type = 'irc'
+        # BotBase.setstate(self)
+        self.type = "irc"
         self.fsock = None
         self.oldsock = None
         self.sock = None
@@ -65,36 +66,48 @@ class Irc(BotBase):
         self.nickchanged = False
         self.noauto433 = False
         if self.state:
-            if 'alternick' not in self.state: self.state['alternick'] = self.cfg['alternick']
-            if 'no-op' not in self.state: self.state['no-op'] = []
+            if "alternick" not in self.state:
+                self.state["alternick"] = self.cfg["alternick"]
+            if "no-op" not in self.state:
+                self.state["no-op"] = []
         self.nicks401 = []
         self.cfg.port = self.cfg.port or 6667
         self.connecttime = 0
-        self.encoding = 'utf-8'
+        self.encoding = "utf-8"
         self.blocking = 1
         self.lastoutput = 0
         self.splitted = []
-        if not self.cfg.server: self.cfg.server = self.cfg.host or "localhost"
+        if not self.cfg.server:
+            self.cfg.server = self.cfg.host or "localhost"
         assert self.cfg.port
         assert self.cfg.server
 
     def _raw(self, txt):
-        """ send raw text to the server. """
+        """send raw text to the server."""
         if not txt or self.stopped or not self.sock:
             logging.debug("%s - bot is stopped .. not sending." % self.cfg.name)
             return 0
         try:
             self.lastoutput = time.time()
             itxt = toenc(txt, self.encoding)
-            if not self.sock: logging.debug("%s - socket disappeared - not sending." % self.cfg.name) ; return
-            if not txt.startswith("PONG"): logging.warn("> %s (%s)" % (itxt, self.cfg.name))
-            else: logging.info("> %s (%s)" % (itxt, self.cfg.name))             
-            if 'ssl' in self.cfg and self.cfg['ssl']: self.sock.write(itxt + '\n')
-            else: self.sock.send(itxt[:500] + b'\n')
-        except Exception as ex: logging.error("%s - can't send: %s" % (self.cfg.name, traceback.format_exc()))
+            if not self.sock:
+                logging.debug("%s - socket disappeared - not sending." % self.cfg.name)
+                return
+            if not txt.startswith("PONG"):
+                logging.warn("> %s (%s)" % (itxt, self.cfg.name))
+            else:
+                logging.info("> %s (%s)" % (itxt, self.cfg.name))
+            if "ssl" in self.cfg and self.cfg["ssl"]:
+                self.sock.write(itxt + "\n")
+            else:
+                self.sock.send(itxt[:500] + b"\n")
+        except Exception as ex:
+            logging.error(
+                "%s - can't send: %s" % (self.cfg.name, traceback.format_exc())
+            )
 
     def _connect(self):
-        """ connect to server/port using nick. """
+        """connect to server/port using nick."""
         self.stopped = False
         self.connecting = True
         self.connectok.clear()
@@ -106,27 +119,30 @@ class Irc(BotBase):
         assert self.cfg.server
         assert self.cfg.port
         server = self.bind()
-        logging.warn('connecting to %s - %s - %s (%s)' % (server, self.cfg.server, self.cfg.port, self.cfg.name))
+        logging.warn(
+            "connecting to %s - %s - %s (%s)"
+            % (server, self.cfg.server, self.cfg.port, self.cfg.name)
+        )
         self.oldsock.settimeout(30)
-        self.oldsock.connect((server, int(str(self.cfg.port))))	
+        self.oldsock.connect((server, int(str(self.cfg.port))))
         self.blocking = 1
         self.oldsock.setblocking(self.blocking)
-        logging.warn('connected! (%s)' % self.cfg.name)
+        logging.warn("connected! (%s)" % self.cfg.name)
         self.connected = True
         self.fsock = self.oldsock.makefile("r")
-        self.fsock._sock.setblocking(self.blocking)
+        os.set_blocking(self.fsock.fileno(), self.blocking)
         if self.blocking:
-            socktimeout = self.cfg['socktimeout']
+            socktimeout = self.cfg["socktimeout"]
             if not socktimeout:
                 socktimeout = 301.0
             else:
                 socktimeout = float(socktimeout)
             self.oldsock.settimeout(socktimeout)
-            self.fsock._sock.settimeout(socktimeout)
-        if 'ssl' in self.cfg and self.cfg['ssl']:
-            logging.warn('ssl enabled (%s)' % self.cfg.name)
-            self.sock = socket.ssl(self.oldsock) 
-        else: self.sock = self.oldsock
+        if "ssl" in self.cfg and self.cfg["ssl"]:
+            logging.warn("ssl enabled (%s)" % self.cfg.name)
+            self.sock = socket.ssl(self.oldsock)
+        else:
+            self.sock = self.oldsock
         try:
             self.outputlock.release()
         except _thread.error:
@@ -136,7 +152,7 @@ class Irc(BotBase):
 
     def bind(self):
         server = self.cfg.server
-        elite = self.cfg['bindhost'] or getmainconfig()['bindhost']
+        elite = self.cfg["bindhost"] or getmainconfig()["bindhost"]
         if elite:
             logging.warn("trying to bind to %s" % elite)
             try:
@@ -144,59 +160,77 @@ class Irc(BotBase):
             except socket.gaierror:
                 logging.debug("%s - can't bind to %s" % (self.cfg.name, elite))
                 if not server:
-                    try: socket.inet_pton(socket.AF_INET6, self.cfg.server)
-                    except socket.error: pass
-                    else: server = self.cfg.server
-                if not server:  
-                    try: socket.inet_pton(socket.AF_INET, self.cfg.server)
-                    except socket.error: pass
-                    else: server = self.cfg.server
+                    try:
+                        socket.inet_pton(socket.AF_INET6, self.cfg.server)
+                    except socket.error:
+                        pass
+                    else:
+                        server = self.cfg.server
+                if not server:
+                    try:
+                        socket.inet_pton(socket.AF_INET, self.cfg.server)
+                    except socket.error:
+                        pass
+                    else:
+                        server = self.cfg.server
                 if not server:
                     ips = []
                     try:
                         for item in socket.getaddrinfo(self.cfg.server, None):
-                            if item[0] in [socket.AF_INET, socket.AF_INET6] and item[1] == socket.SOCK_STREAM:
+                            if (
+                                item[0] in [socket.AF_INET, socket.AF_INET6]
+                                and item[1] == socket.SOCK_STREAM
+                            ):
                                 ip = item[4][0]
-                                if ip not in ips: ips.append(ip)
-                    except socket.error: pass
-                    else: server = random.choice(ips)
+                                if ip not in ips:
+                                    ips.append(ip)
+                    except socket.error:
+                        pass
+                    else:
+                        server = random.choice(ips)
         return server
 
     def _readloop(self):
-        """ loop on the socketfile. """
+        """loop on the socketfile."""
         self.stopreadloop = False
         self.stopped = False
         doreconnect = True
         timeout = 1
-        logging.debug('%s - starting readloop' % self.cfg.name)
+        logging.debug("%s - starting readloop" % self.cfg.name)
         prevtxt = ""
         while not self.stopped and not self.stopreadloop and self.sock and self.fsock:
             try:
                 time.sleep(0.01)
-                if 'ssl' in self.cfg and self.cfg['ssl']: intxt = inputmorphs.do(self.sock.read()).split('\n')
-                else: intxt = inputmorphs.do(self.fsock.readline()).split('\n')
+                if "ssl" in self.cfg and self.cfg["ssl"]:
+                    intxt = inputmorphs.do(self.sock.read()).split("\n")
+                else:
+                    intxt = inputmorphs.do(self.fsock.readline()).split("\n")
                 if self.stopreadloop or self.stopped:
                     doreconnect = 0
                     break
-                if intxt == ["",]:
+                if intxt == [
+                    "",
+                ]:
                     logging.error("remote disconnected")
                     doreconnect = 1
                     break
                 if prevtxt:
                     intxt[0] = prevtxt + intxt[0]
                     prevtxt = ""
-                if intxt[-1] != '':
+                if intxt[-1] != "":
                     prevtxt = intxt[-1]
                     intxt = intxt[:-1]
                 for r in intxt:
-                    if not r: continue
+                    if not r:
+                        continue
                     try:
-                        r = strippedtxt(r.rstrip(), ["\001", "\002", "\003"]) 
+                        r = strippedtxt(r.rstrip(), ["\001", "\002", "\003"])
                         rr = str(fromenc(r.rstrip(), self.encoding))
                     except UnicodeDecodeError:
                         logging.warn("decode error - ignoring (%s)" % self.cfg.name)
                         continue
-                    if not rr: continue
+                    if not rr:
+                        continue
                     res = rr
                     try:
                         ievent = IrcEvent().parse(self, res)
@@ -204,12 +238,17 @@ class Irc(BotBase):
                         handle_exception()
                         continue
                     try:
-                        if int(ievent.cmnd) > 400: logging.error("< %s (%s)" % (res, self.cfg.name))
-                        elif int(ievent.cmnd) >= 300: logging.info("< %s (%s)" % (res, self.cfg.name))
+                        if int(ievent.cmnd) > 400:
+                            logging.error("< %s (%s)" % (res, self.cfg.name))
+                        elif int(ievent.cmnd) >= 300:
+                            logging.info("< %s (%s)" % (res, self.cfg.name))
                     except ValueError:
-                        if not res.startswith("PING") and not res.startswith("NOTICE"): logging.warn("< %s (%s)" % (res, self.cfg.name))
-                        else: logging.info("< %s (%s)" % (res, self.cfg.name))
-                    if ievent: self.handle_ievent(ievent)
+                        if not res.startswith("PING") and not res.startswith("NOTICE"):
+                            logging.warn("< %s (%s)" % (res, self.cfg.name))
+                        else:
+                            logging.info("< %s (%s)" % (res, self.cfg.name))
+                    if ievent:
+                        self.handle_ievent(ievent)
                     timeout = 1
             except UnicodeError:
                 handle_exception()
@@ -217,11 +256,12 @@ class Irc(BotBase):
             except socket.timeout as ex:
                 logging.warn("socket timeout (%s)" % self.cfg.name)
                 self.error = str(ex)
-                if self.stopped or self.stopreadloop: break
+                if self.stopped or self.stopreadloop:
+                    break
                 timeout += 1
                 if timeout > 2:
                     doreconnect = 1
-                    logging.warn('no pong received (%s)' % self.cfg.name)
+                    logging.warn("no pong received (%s)" % self.cfg.name)
                     break
                 pingsend = self.ping()
                 if not pingsend:
@@ -230,15 +270,16 @@ class Irc(BotBase):
                 continue
             except socket.sslerror as ex:
                 self.error = str(ex)
-                if self.stopped or self.stopreadloop: break
-                if not 'timed out' in str(ex):
+                if self.stopped or self.stopreadloop:
+                    break
+                if not "timed out" in str(ex):
                     handle_exception()
                     doreconnect = 1
                     break
                 timeout += 1
                 if timeout > 2:
                     doreconnect = 1
-                    logging.warn('no pong received (%s)' % self.cfg.name)
+                    logging.warn("no pong received (%s)" % self.cfg.name)
                     break
                 logging.warn("socket timeout (%s)" % self.cfg.name)
                 pingsend = self.ping()
@@ -248,23 +289,27 @@ class Irc(BotBase):
                 continue
             except IOError as ex:
                 self.error = str(ex)
-                if self.blocking and 'temporarily' in str(ex):
+                if self.blocking and "temporarily" in str(ex):
                     logging.warn("iorror: %s (%s)" % (self.error, self.cfg.name))
                     time.sleep(1)
                     continue
                 if not self.stopped:
-                    logging.error('connecting error: %s (%s)' % (str(ex), self.cfg.name))
+                    logging.error(
+                        "connecting error: %s (%s)" % (str(ex), self.cfg.name)
+                    )
                     handle_exception()
                     doreconnect = 1
                 break
             except socket.error as ex:
                 self.error = str(ex)
-                if self.blocking and 'temporarily' in str(ex):
+                if self.blocking and "temporarily" in str(ex):
                     logging.warn("ioerror: %s (%s)" % (self.error, self.cfg.name))
                     time.sleep(0.5)
                     continue
                 if not self.stopped:
-                    logging.error('connecting error: %s (%s)' % (str(ex), self.cfg.name))
+                    logging.error(
+                        "connecting error: %s (%s)" % (str(ex), self.cfg.name)
+                    )
                     doreconnect = 1
                 break
             except Exception as ex:
@@ -274,7 +319,7 @@ class Irc(BotBase):
                 logging.error("%s - error in readloop: %s" % (self.cfg.name, str(ex)))
                 doreconnect = 1
                 break
-        logging.debug('%s - readloop stopped - %s' % (self.cfg.name, self.error))
+        logging.debug("%s - readloop stopped - %s" % (self.cfg.name, self.error))
         self.connectok.clear()
         self.connected = False
         if doreconnect and not self.stopped:
@@ -282,13 +327,16 @@ class Irc(BotBase):
             self.reconnect()
 
     def logon(self):
-        """ log on to the network. """
+        """log on to the network."""
         time.sleep(2)
         if self.cfg.password:
-            logging.debug('%s - sending password' % self.cfg.name)
+            logging.debug("%s - sending password" % self.cfg.name)
             self._raw("PASS %s" % self.cfg.password)
-        logging.warn('registering with %s using nick %s (%s)' % (self.cfg.server, self.cfg.nick, self.cfg.name))
-        logging.warn('%s - this may take a while' % self.cfg.name)
+        logging.warn(
+            "registering with %s using nick %s (%s)"
+            % (self.cfg.server, self.cfg.nick, self.cfg.name)
+        )
+        logging.warn("%s - this may take a while" % self.cfg.name)
         username = self.cfg.username or "jsb"
         realname = self.cfg.realname or "jsonbot"
         time.sleep(1)
@@ -297,10 +345,12 @@ class Irc(BotBase):
         self._raw("USER %s localhost %s :%s" % (username, self.cfg.server, realname))
 
     def _onconnect(self):
-        """ overload this to run after connect. """
+        """overload this to run after connect."""
         on = self.cfg.onconnect
         logging.debug("onconnect is %s" % on)
-        if on: time.sleep(2) ; self._raw(on)
+        if on:
+            time.sleep(2)
+            self._raw(on)
         m = self.cfg.servermodes
         if m:
             time.sleep(2)
@@ -308,9 +358,9 @@ class Irc(BotBase):
             self._raw("MODE %s %s" % (self.cfg.nick, m))
 
     def _resume(self, data, botname, reto=None):
-        """ resume to server/port using nick. """
+        """resume to server/port using nick."""
         try:
-            if data['ssl']:
+            if data["ssl"]:
                 self.exit()
                 time.sleep(3)
                 self.start()
@@ -319,7 +369,7 @@ class Irc(BotBase):
             pass
         self.stopped = False
         try:
-            fd = int(data['fd'])
+            fd = int(data["fd"])
         except (KeyError, TypeError, ValueError):
             fd = None
             logging.error("%s - can't determine file descriptor" % self.cfg.name)
@@ -327,44 +377,53 @@ class Irc(BotBase):
             return 0
         logging.warn("resume - file descriptor is %s (%s)" % (fd, data.name))
         # create socket
-        if self.cfg.ipv6: self.oldsock = socket.fromfd(fd , socket.AF_INET6, socket.SOCK_STREAM)
-        else: self.oldsock = socket.fromfd(fd, socket.AF_INET, socket.SOCK_STREAM)
+        if self.cfg.ipv6:
+            self.oldsock = socket.fromfd(fd, socket.AF_INET6, socket.SOCK_STREAM)
+        else:
+            self.oldsock = socket.fromfd(fd, socket.AF_INET, socket.SOCK_STREAM)
         assert self.oldsock
         self.oldsock.settimeout(30)
         self.fsock = self.oldsock.makefile("r")
         self.oldsock.setblocking(self.blocking)
         if self.blocking:
-            socktimeout = self.cfg['socktimeout']
-            if not socktimeout: socktimeout = 301.0
-            else: socktimeout = float(socktimeout)
+            socktimeout = self.cfg["socktimeout"]
+            if not socktimeout:
+                socktimeout = 301.0
+            else:
+                socktimeout = float(socktimeout)
             self.oldsock.settimeout(socktimeout)
         self.sock = self.oldsock
         self.nickchanged = 0
         self.connecting = False
         time.sleep(2)
-        self._raw('PING :RESUME %s' % str(time.time()))
+        self._raw("PING :RESUME %s" % str(time.time()))
         self.dostart(self.cfg.name, self.type)
         self.connectok.set()
         self.connected = True
         self.reconnectcount = 0
-        if reto: self.say(reto, 'rebooting done')
+        if reto:
+            self.say(reto, "rebooting done")
         logging.warn("rebooting done (%s)" % self.cfg.name)
         return True
 
-    def outnocb(self, printto, what, how='msg', *args, **kwargs):
+    def outnocb(self, printto, what, how="msg", *args, **kwargs):
         what = fix_format(what)
         what = self.normalize(what)
-        if 'socket' in repr(printto) and self.sock:
+        if "socket" in repr(printto) and self.sock:
             printto.send(str(what) + "\n")
             return True
-        if not printto: self._raw(what)
-        elif how == 'notice': self.notice(printto, what)
-        elif how == 'ctcp': self.ctcp(printto, what)
-        else: self.privmsg(printto, what)
+        if not printto:
+            self._raw(what)
+        elif how == "notice":
+            self.notice(printto, what)
+        elif how == "ctcp":
+            self.ctcp(printto, what)
+        else:
+            self.privmsg(printto, what)
 
     def broadcast(self, txt):
-        """ broadcast txt to all joined channels. """
-        for i in self.state['joinedchannels']:
+        """broadcast txt to all joined channels."""
+        for i in self.state["joinedchannels"]:
             self.say(i, txt, speed=1)
 
     def normalize(self, what):
@@ -390,13 +449,14 @@ class Irc(BotBase):
         return txt
 
     def save(self):
-        """ save state data. """
-        if self.state: self.state.save()
+        """save state data."""
+        if self.state:
+            self.state.save()
 
     def connect(self, reconnect=True):
-        """ 
-            connect to server/port using nick .. connect can timeout so catch
-            exception .. reconnect if enabled.
+        """
+        connect to server/port using nick .. connect can timeout so catch
+        exception .. reconnect if enabled.
         """
         res = self._connect()
         logging.info("%s - starting logon" % self.cfg.name)
@@ -410,164 +470,199 @@ class Irc(BotBase):
         return res
 
     def shutdown(self):
-        """ shutdown the bot. """
-        logging.warn('shutdown (%s)' % self.cfg.name)
+        """shutdown the bot."""
+        logging.warn("shutdown (%s)" % self.cfg.name)
         self.stopoutputloop = 1
-        #self.close()
+        # self.close()
         self.connecting = False
         self.connected = False
         self.connectok.clear()
 
     def close(self):
-        """ close the connection. """
+        """close the connection."""
         try:
-            if 'ssl' in self.cfg and self.cfg['ssl']: self.oldsock.shutdown(2)
-            else: self.sock.shutdown(2)
+            if "ssl" in self.cfg and self.cfg["ssl"]:
+                self.oldsock.shutdown(2)
+            else:
+                self.sock.shutdown(2)
         except:
             pass
         try:
-            if 'ssl' in self.cfg and self.cfg['ssl']: self.oldsock.close()
-            else: self.sock.close()
+            if "ssl" in self.cfg and self.cfg["ssl"]:
+                self.oldsock.close()
+            else:
+                self.sock.close()
             self.fsock.close()
         except:
             pass
 
     def handle_pong(self, ievent):
-        """ set pongcheck on received pong. """
-        logging.debug('%s - received server pong' % self.cfg.name)
+        """set pongcheck on received pong."""
+        logging.debug("%s - received server pong" % self.cfg.name)
         self.pongcheck = 1
 
     def sendraw(self, txt):
-        """ send raw text to the server. """
-        if self.stopped: return
-        logging.debug('%s - sending %s' % (self.cfg.name, txt))
+        """send raw text to the server."""
+        if self.stopped:
+            return
+        logging.debug("%s - sending %s" % (self.cfg.name, txt))
         self._raw(txt)
 
     def fakein(self, txt):
-        """ do a fake ircevent. """
-        if not txt: return
-        logging.debug('%s - fakein - %s' % (self.cfg.name, txt))
+        """do a fake ircevent."""
+        if not txt:
+            return
+        logging.debug("%s - fakein - %s" % (self.cfg.name, txt))
         self.handle_ievent(IrcEvent().parse(self, txt))
 
     def donick(self, nick, setorig=False, save=False, whois=False):
-        """ change nick .. optionally set original nick and/or save to config.  """
-        if not nick: return
+        """change nick .. optionally set original nick and/or save to config."""
+        if not nick:
+            return
         self.noauto433 = True
         nick = nick[:16]
-        self._raw('NICK %s\n' % nick)
+        self._raw("NICK %s\n" % nick)
         self.noauto433 = False
 
     def join(self, channel, password=None):
-        """ join channel with optional password. """
-        if not channel: return
+        """join channel with optional password."""
+        if not channel:
+            return
         if password:
-            self._raw('JOIN %s %s' % (channel, password))
-        else: self._raw('JOIN %s' % channel)
+            self._raw("JOIN %s %s" % (channel, password))
+        else:
+            self._raw("JOIN %s" % channel)
         if self.state:
             if channel not in self.state.data.joinedchannels:
                 self.state.data.joinedchannels.append(channel)
                 self.state.save()
 
     def part(self, channel):
-        """ leave channel. """
-        if not channel: return
-        self._raw('PART %s' % channel)
+        """leave channel."""
+        if not channel:
+            return
+        self._raw("PART %s" % channel)
         try:
-            self.state.data['joinedchannels'].remove(channel)
+            self.state.data["joinedchannels"].remove(channel)
             self.state.save()
         except (KeyError, ValueError) as ex:
-            logging.error("error removing %s from joinedchannels: %s" % (channel, str(ex)))
-        if self.cfg.channels and channel in self.cfg.channels: self.cfg.channels.remove(channel) ; self.cfg.save()
+            logging.error(
+                "error removing %s from joinedchannels: %s" % (channel, str(ex))
+            )
+        if self.cfg.channels and channel in self.cfg.channels:
+            self.cfg.channels.remove(channel)
+            self.cfg.save()
 
     def who(self, who):
-        """ send who query. """
-        if not who: return
-        self.putonqueue(4, None, 'WHO %s' % who.strip())
+        """send who query."""
+        if not who:
+            return
+        self.putonqueue(4, None, "WHO %s" % who.strip())
 
     def names(self, channel):
-        """ send names query. """
-        if not channel: return
-        self.putonqueue(4, None, 'NAMES %s' % channel)
+        """send names query."""
+        if not channel:
+            return
+        self.putonqueue(4, None, "NAMES %s" % channel)
 
     def whois(self, who):
-        """ send whois query. """
-        if not who: return
-        self.putonqueue(4, None, 'WHOIS %s' % who)
+        """send whois query."""
+        if not who:
+            return
+        self.putonqueue(4, None, "WHOIS %s" % who)
 
     def privmsg(self, printto, what):
-        """ send privmsg to irc server. """
-        if not printto or not what: return
-        self.send('PRIVMSG %s :%s' % (printto, what))
+        """send privmsg to irc server."""
+        if not printto or not what:
+            return
+        self.send("PRIVMSG %s :%s" % (printto, what))
 
-    #@outlocked
+    # @outlocked
     def send(self, txt):
-        """ send text to irc server. """
-        if not txt: return
-        if self.stopped: return
+        """send text to irc server."""
+        if not txt:
+            return
+        if self.stopped:
+            return
         try:
-            #lock_object(self)
+            # lock_object(self)
             now = time.time()
             txt = txt.rstrip()
             self._raw(txt)
-            if self.cfg.sleepsec: timetosleep = self.cfg.sleepsec - (now - self.lastoutput)
-            else: timetosleep = 4 - (now - self.lastoutput)
-            if timetosleep > 0 and not self.cfg.nolimiter and not (time.time() - self.connecttime < 5):
-                logging.debug('%s - flood protect' % self.cfg.name)
+            if self.cfg.sleepsec:
+                timetosleep = self.cfg.sleepsec - (now - self.lastoutput)
+            else:
+                timetosleep = 4 - (now - self.lastoutput)
+            if (
+                timetosleep > 0
+                and not self.cfg.nolimiter
+                and not (time.time() - self.connecttime < 5)
+            ):
+                logging.debug("%s - flood protect" % self.cfg.name)
                 time.sleep(timetosleep)
         except Exception as ex:
-            logging.error('%s - send error: %s' % (self.cfg.name, str(ex)))
+            logging.error("%s - send error: %s" % (self.cfg.name, str(ex)))
             handle_exception()
-        #finally: release_object(self)
-            
+        # finally: release_object(self)
+
     def voice(self, channel, who):
-        """ give voice. """
-        if not channel or not who: return
-        self.putonqueue(9, None, 'MODE %s +v %s' % (channel, who))
- 
+        """give voice."""
+        if not channel or not who:
+            return
+        self.putonqueue(9, None, "MODE %s +v %s" % (channel, who))
+
     def doop(self, channel, who):
-        """ give ops. """
-        if not channel or not who: return
-        self._raw('MODE %s +o %s' % (channel, who))
+        """give ops."""
+        if not channel or not who:
+            return
+        self._raw("MODE %s +o %s" % (channel, who))
 
     def delop(self, channel, who):
-        """ de-op user. """
-        if not channel or not who: return
-        self._raw('MODE %s -o %s' % (channel, who))
+        """de-op user."""
+        if not channel or not who:
+            return
+        self._raw("MODE %s -o %s" % (channel, who))
 
-    def quit(self, reason='http://jsonbot.googlecode.com'):
-        """ send quit message. """
-        logging.warn('sending quit - %s (%s)' % (reason, self.cfg.name))
-        self._raw('QUIT :%s' % reason)
+    def quit(self, reason="http://jsonbot.googlecode.com"):
+        """send quit message."""
+        logging.warn("sending quit - %s (%s)" % (reason, self.cfg.name))
+        self._raw("QUIT :%s" % reason)
 
     def notice(self, printto, what):
-        """ send notice. """
-        if not printto or not what: return
-        self.putonqueue(3, None, 'NOTICE %s :%s' % (printto, what))
- 
+        """send notice."""
+        if not printto or not what:
+            return
+        self.putonqueue(3, None, "NOTICE %s :%s" % (printto, what))
+
     def ctcp(self, printto, what):
-        """ send ctcp privmsg. """
-        if not printto or not what: return
+        """send ctcp privmsg."""
+        if not printto or not what:
+            return
         self.putonqueue(3, None, "PRIVMSG %s :\001%s\001" % (printto, what))
 
     def ctcpreply(self, printto, what):
-        """ send ctcp notice. """
-        if not printto or not what: return
+        """send ctcp notice."""
+        if not printto or not what:
+            return
         self.putonqueue(3, None, "NOTICE %s :\001%s\001" % (printto, what))
 
     def action(self, printto, what, event=None, *args, **kwargs):
-        """ do action. """
-        if not printto or not what: return
+        """do action."""
+        if not printto or not what:
+            return
         self.putonqueue(9, None, "PRIVMSG %s :\001ACTION %s\001" % (printto, what))
 
     def handle_ievent(self, ievent):
-        """ handle ircevent .. dispatch to 'handle_command' method. """ 
+        """handle ircevent .. dispatch to 'handle_command' method."""
         try:
-            if ievent.cmnd == 'JOIN' or ievent.msg:
+            if ievent.cmnd == "JOIN" or ievent.msg:
                 if ievent.nick in self.nicks401:
                     self.nicks401.remove(ievent.nick)
-                    logging.debug('%s - %s joined .. unignoring' % (self.cfg.name, ievent.nick))
+                    logging.debug(
+                        "%s - %s joined .. unignoring" % (self.cfg.name, ievent.nick)
+                    )
             ievent.bind(self)
-            method = getattr(self,'handle_' + ievent.cmnd.lower())
+            method = getattr(self, "handle_" + ievent.cmnd.lower())
             if method:
                 try:
                     method(ievent)
@@ -577,17 +672,17 @@ class Irc(BotBase):
             pass
 
     def handle_432(self, ievent):
-        """ erroneous nick. """
+        """erroneous nick."""
         self.handle_433(ievent)
 
     def handle_433(self, ievent):
-        """ handle nick already taken. """
+        """handle nick already taken."""
         if self.noauto433:
             return
         nick = ievent.arguments[1]
-        alternick = self.state['alternick']
+        alternick = self.state["alternick"]
         if alternick and not self.nickchanged:
-            logging.debug('%s - using alternick %s' % (self.cfg.name, alternick))
+            logging.debug("%s - using alternick %s" % (self.cfg.name, alternick))
             self.donick(alternick)
             self.nickchanged = 1
             return
@@ -595,16 +690,21 @@ class Irc(BotBase):
         self._raw("NICK %s" % randomnick)
         self.cfg.wantnick = self.cfg.nick
         self.cfg.nick = randomnick
-        logging.warn('ALERT: nick %s already in use/unavailable .. using randomnick %s (%s)' % (nick, randomnick, randomnick))
+        logging.warn(
+            "ALERT: nick %s already in use/unavailable .. using randomnick %s (%s)"
+            % (nick, randomnick, randomnick)
+        )
         self.nickchanged = 1
 
     def handle_ping(self, ievent):
-        """ send pong response. """
-        if not ievent.txt: logging.debug("no txt set") ; return
-        self._raw('PONG :%s' % ievent.txt)
+        """send pong response."""
+        if not ievent.txt:
+            logging.debug("no txt set")
+            return
+        self._raw("PONG :%s" % ievent.txt)
 
     def handle_001(self, ievent):
-        """ we are connected.  """
+        """we are connected."""
         time.sleep(1)
         self._onconnect()
         self.connectok.set()
@@ -612,64 +712,71 @@ class Irc(BotBase):
         self.whois(self.cfg.nick)
 
     def handle_privmsg(self, ievent):
-        """ check if msg is ctcp or not .. return 1 on handling. """
-        if ievent.txt and ievent.txt[0] == '\001':
+        """check if msg is ctcp or not .. return 1 on handling."""
+        if ievent.txt and ievent.txt[0] == "\001":
             self.handle_ctcp(ievent)
             return 1
 
     def handle_notice(self, ievent):
-        """ handle notice event .. check for version request. """
-        if ievent.txt and ievent.txt.find('VERSION') != -1:
+        """handle notice event .. check for version request."""
+        if ievent.txt and ievent.txt.find("VERSION") != -1:
             from jsb.version import getversion
-            self.say(ievent.nick, getversion(), None, 'notice')
+
+            self.say(ievent.nick, getversion(), None, "notice")
             return 1
 
     def handle_ctcp(self, ievent):
-        """ handle client to client request .. version and ping. """
-        if ievent.txt.find('VERSION') != -1:
+        """handle client to client request .. version and ping."""
+        if ievent.txt.find("VERSION") != -1:
             from jsb.version import getversion
-            self.ctcpreply(ievent.nick, 'VERSION %s' % getversion())
-        if ievent.txt.find('PING') != -1:
+
+            self.ctcpreply(ievent.nick, "VERSION %s" % getversion())
+        if ievent.txt.find("PING") != -1:
             try:
                 pingtime = ievent.txt.split()[1]
                 pingtijsb = ievent.txt.split()[2]
                 if pingtime:
-                    self.ctcpreply(ievent.nick, 'PING ' + pingtime + ' ' + pingtijsb)
+                    self.ctcpreply(ievent.nick, "PING " + pingtime + " " + pingtijsb)
             except IndexError:
                 pass
 
     def handle_error(self, ievent):
-        """ show error. """
+        """show error."""
         txt = ievent.txt
-        if 'Closing' in txt:
+        if "Closing" in txt:
             if "banned" in txt.lower() or "-lined" in txt.lower():
                 logging.error("WE ARE BANNED !! - %s - %s" % (self.cfg.server, txt))
                 self.exit()
-            else: logging.error("%s - %s" % (self.cfg.name, txt))
-        else: logging.error("%s - %s - %s" % (self.cfg.name.upper(), ", ".join(ievent.arguments[1:]), txt))
+            else:
+                logging.error("%s - %s" % (self.cfg.name, txt))
+        else:
+            logging.error(
+                "%s - %s - %s"
+                % (self.cfg.name.upper(), ", ".join(ievent.arguments[1:]), txt)
+            )
 
     def ping(self):
-        """ ping the irc server. """
-        logging.debug('%s - sending ping' % self.cfg.name)
+        """ping the irc server."""
+        logging.debug("%s - sending ping" % self.cfg.name)
         try:
-            self._raw('PING :%s' % self.cfg.server)
+            self._raw("PING :%s" % self.cfg.server)
             return 1
         except Exception as ex:
             logging.warn("can't send ping: %s (%s)" % (str(ex), self.cfg.name))
             return 0
 
     def handle_401(self, ievent):
-        """ handle 401 .. nick not available. """
+        """handle 401 .. nick not available."""
         pass
 
     def handle_700(self, ievent):
-        """ handle 700 .. encoding request of the server. """
+        """handle 700 .. encoding request of the server."""
         try:
             self.encoding = ievent.arguments[1]
-            logging.warn('700 encoding now is %s (%s)' % (self.encoding, self.cfg.name))
+            logging.warn("700 encoding now is %s (%s)" % (self.encoding, self.cfg.name))
         except:
             pass
 
     def handle_465(self, ievent):
-        """ we are banned.. exit the bot. """
+        """we are banned.. exit the bot."""
         self.exit()

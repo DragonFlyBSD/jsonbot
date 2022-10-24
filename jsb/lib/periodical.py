@@ -27,8 +27,8 @@ import logging
 
 ## locks
 
-plock    = _thread.allocate_lock()
-locked   = lockdec(plock)
+plock = _thread.allocate_lock()
+locked = lockdec(plock)
 
 ## defines
 
@@ -36,19 +36,23 @@ pidcount = 0
 
 ## JobError class
 
+
 class JobError(Exception):
 
-    """ job error exception. """
+    """job error exception."""
+
     pass
+
 
 ## Job class
 
+
 class Job(object):
 
-    """ job to be scheduled. """
+    """job to be scheduled."""
 
-    group = ''
-    pid   = -1
+    group = ""
+    pid = -1
 
     def __init__(self):
         global pidcount
@@ -56,21 +60,24 @@ class Job(object):
         self.pid = pidcount
 
     def id(self):
-        """ return job id. """
+        """return job id."""
         return self.pid
 
     def member(self, group):
-        """ check for group membership. """
+        """check for group membership."""
         return self.group == group
 
     def do(self):
-        """ try the callback. """
-        try: self.func(*self.args, **self.kw)
-        except Exception as ex: handle_exception()
+        """try the callback."""
+        try:
+            self.func(*self.args, **self.kw)
+        except Exception as ex:
+            handle_exception()
+
 
 class JobAt(Job):
 
-    """ job to run at a specific time/interval/repeat. """
+    """job to run at a specific time/interval/repeat."""
 
     def __init__(self, start, interval, repeat, func, *args, **kw):
         Job.__init__(self)
@@ -80,33 +87,44 @@ class JobAt(Job):
         self.repeat = repeat
         self.description = ""
         self.counts = 0
-        if type(start) in [int, float]: self.next = float(start)
+        if type(start) in [int, float]:
+            self.next = float(start)
         elif type(start) in [bytes, str]:
             d = strtotime(start)
-            if d and d > time.time(): self.next = d
-            else: raise JobError("invalid date/time")
+            if d and d > time.time():
+                self.next = d
+            else:
+                raise JobError("invalid date/time")
         if type(interval) in [int]:
             d = datetime.timedelta(days=interval)
             self.delta = d.seconds
-        else: self.delta = interval
+        else:
+            self.delta = interval
 
     def __repr__(self):
-        """ return a string representation of the JobAt object. """
-        return '<JobAt instance next=%s, interval=%s, repeat=%d, function=%s>' % (str(self.__next__), str(self.delta), self.repeat, str(self.func))
+        """return a string representation of the JobAt object."""
+        return "<JobAt instance next=%s, interval=%s, repeat=%d, function=%s>" % (
+            str(self.__next__),
+            str(self.delta),
+            self.repeat,
+            str(self.func),
+        )
 
     def check(self):
-        """ run check to see if job needs to be scheduled. """
+        """run check to see if job needs to be scheduled."""
         if self.__next__ <= time.time():
-            logging.info('running %s - %s' % (str(self.func), self.description))
+            logging.info("running %s - %s" % (str(self.func), self.description))
             self.func(*self.args, **self.kw)
             self.next += self.delta
             self.counts += 1
-            if self.repeat > 0 and self.counts >= self.repeat: return False
+            if self.repeat > 0 and self.counts >= self.repeat:
+                return False
         return True
+
 
 class JobInterval(Job):
 
-    """ job to be scheduled at certain interval. """
+    """job to be scheduled at certain interval."""
 
     def __init__(self, interval, repeat, func, *args, **kw):
         Job.__init__(self)
@@ -119,25 +137,37 @@ class JobInterval(Job):
         self.description = ""
         self.next = time.time() + self.interval
         self.group = None
-        logging.warn('scheduled next run of %s in %d seconds' % (str(self.func), self.interval))
+        logging.warn(
+            "scheduled next run of %s in %d seconds" % (str(self.func), self.interval)
+        )
 
     def __repr__(self):
-        return '<JobInterval instance next=%s, interval=%s, repeat=%d, group=%s, function=%s>' % (str(self.__next__), str(self.interval), self.repeat, self.group, str(self.func))
+        return (
+            "<JobInterval instance next=%s, interval=%s, repeat=%d, group=%s, function=%s>"
+            % (
+                str(self.__next__),
+                str(self.interval),
+                self.repeat,
+                self.group,
+                str(self.func),
+            )
+        )
 
     def check(self):
-        """ run check to see if job needs to be scheduled. """
+        """run check to see if job needs to be scheduled."""
         if self.__next__ <= time.time():
-            logging.info('running %s - %s' % (str(self.func), self.description))
+            logging.info("running %s - %s" % (str(self.func), self.description))
             self.next = time.time() + self.interval
             thr.start_new_thread(self.do, ())
             self.counts += 1
-            if self.repeat > 0 and self.counts >= self.repeat: return False
+            if self.repeat > 0 and self.counts >= self.repeat:
+                return False
         return True
 
 
 class Periodical(object):
 
-    """ periodical scheduler. """
+    """periodical scheduler."""
 
     def __init__(self):
         self.jobs = []
@@ -147,8 +177,8 @@ class Periodical(object):
     def size(self):
         return len(self.jobs)
 
-    def addjob(self, sleeptime, repeat, function, description="" , *args, **kw): 
-        """ add a periodical job. """
+    def addjob(self, sleeptime, repeat, function, description="", *args, **kw):
+        """add a periodical job."""
         job = JobInterval(sleeptime, repeat, function, *args, **kw)
         job.group = calledfrom(sys._getframe())
         job.description = str(description) or whichmodule()
@@ -156,52 +186,59 @@ class Periodical(object):
         return job.pid
 
     def changeinterval(self, pid, interval):
-        """ change interval of of peridical job. """
+        """change interval of of peridical job."""
         for i in periodical.jobs:
             if i.pid == pid:
                 i.interval = interval
                 i.next = time.time() + interval
 
     def looponce(self, bot, event):
-        """ loop over the jobs. """
+        """loop over the jobs."""
         for job in self.jobs:
             if job.__next__ <= time.time():
                 self.runjob(job)
 
     def runjob(self, job):
-        """ run a periodical job. """
-        if not job.check(): self.killjob(job.id())
-        else: self.running.append(job)
+        """run a periodical job."""
+        if not job.check():
+            self.killjob(job.id())
+        else:
+            self.running.append(job)
 
     def kill(self):
-        """ kill all jobs invoked by another module. """
+        """kill all jobs invoked by another module."""
         group = calledfrom(sys._getframe())
         self.killgroup(group)
 
     def killgroup(self, group):
-        """ kill all jobs with the same group. """
+        """kill all jobs with the same group."""
 
         def shoot():
-            """ knock down all jobs belonging to group. """
+            """knock down all jobs belonging to group."""
             deljobs = [job for job in self.jobs if job.member(group)]
             for job in deljobs:
                 self.jobs.remove(job)
-                try: self.running.remove(job)
-                except ValueError: pass
-            logging.warn('killed %d jobs for %s' % (len(deljobs), group))
+                try:
+                    self.running.remove(job)
+                except ValueError:
+                    pass
+            logging.warn("killed %d jobs for %s" % (len(deljobs), group))
             del deljobs
 
         return shoot()
 
     def killjob(self, jobId):
-        """ kill one job by its id. """
+        """kill one job by its id."""
+
         def shoot():
             deljobs = [x for x in self.jobs if x.id() == jobId]
             numjobs = len(deljobs)
             for job in deljobs:
                 self.jobs.remove(job)
-                try: self.running.remove(job)
-                except ValueError: pass
+                try:
+                    self.running.remove(job)
+                except ValueError:
+                    pass
             del deljobs
             return numjobs
 
@@ -209,7 +246,7 @@ class Periodical(object):
 
 
 def interval(sleeptime, repeat=0):
-    """ interval decorator. """
+    """interval decorator."""
     group = calledfrom(sys._getframe())
 
     def decorator(function):
@@ -220,14 +257,18 @@ def interval(sleeptime, repeat=0):
             job.group = group
             job.description = whichmodule()
             periodical.jobs.append(job)
-            logging.warn('new interval job %d with sleeptime %d' % (job.id(), sleeptime))
+            logging.warn(
+                "new interval job %d with sleeptime %d" % (job.id(), sleeptime)
+            )
+
         return wrapper
 
     return decorator
 
+
 def at(start, interval=1, repeat=1):
 
-    """ at decorator. """
+    """at decorator."""
     group = calledfrom(sys._getframe())
 
     def decorator(function):
@@ -244,8 +285,9 @@ def at(start, interval=1, repeat=1):
 
     return decorator
 
+
 def persecond(function):
-    """ per second decorator. """
+    """per second decorator."""
     minutely.__dict__ = function.__dict__
     group = calledfrom(sys._getframe())
 
@@ -254,12 +296,13 @@ def persecond(function):
         job.group = group
         job.description = whichmodule()
         periodical.jobs.append(job)
-        logging.debug('new interval job %d running per second' % job.id())
+        logging.debug("new interval job %d running per second" % job.id())
 
     return wrapper
 
+
 def minutely(function):
-    """ minute decorator. """
+    """minute decorator."""
     minutely.__dict__ = function.__dict__
     group = calledfrom(sys._getframe())
 
@@ -268,13 +311,14 @@ def minutely(function):
         job.group = group
         job.description = whichmodule()
         periodical.jobs.append(job)
-        logging.warn('new interval job %d running minutely' % job.id())
+        logging.warn("new interval job %d running minutely" % job.id())
 
     return wrapper
 
+
 def hourly(function):
-    """ hour decorator. """
-    logging.warn('@hourly(%s)' % str(function))
+    """hour decorator."""
+    logging.warn("@hourly(%s)" % str(function))
     hourly.__dict__ = function.__dict__
     group = calledfrom(sys._getframe())
 
@@ -282,29 +326,32 @@ def hourly(function):
         job = JobInterval(3600, 0, function, *args, **kw)
         job.group = group
         job.description = whichmodule()
-        logging.warn('new interval job %d running hourly' % job.id())
+        logging.warn("new interval job %d running hourly" % job.id())
         periodical.jobs.append(job)
 
     return wrapper
 
+
 def daily(function):
-    """ day decorator. """
-    logging.warn('@daily(%s)' % str(function))
+    """day decorator."""
+    logging.warn("@daily(%s)" % str(function))
     daily.__dict__ = function.__dict__
     group = calledfrom(sys._getframe())
 
     def wrapper(*args, **kw):
         job = JobInterval(86400, 0, function, *args, **kw)
-        job.group =  group
+        job.group = group
         job.description = whichmodule()
         periodical.jobs.append(job)
-        logging.warb('new interval job %d running daily' % job.id())
+        logging.warb("new interval job %d running daily" % job.id())
 
     return wrapper
+
 
 periodical = Periodical()
 
 callbacks.add("TICK", periodical.looponce)
+
 
 def size():
     return periodical.size()

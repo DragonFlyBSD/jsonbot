@@ -20,51 +20,76 @@ import logging
 
 ## PersistState classes
 
+
 class PersistState(Persist):
 
-    """ base persitent state class. """
+    """base persitent state class."""
 
     def __init__(self, filename):
         Persist.__init__(self, filename)
         self.types = dict((i, type(j)) for i, j in self.data.items())
 
     def __getitem__(self, key):
-        """ get state item. """
+        """get state item."""
         return self.data[key]
 
     def __setitem__(self, key, value):
-        """ set state item. """
+        """set state item."""
         self.data[key] = value
 
     def define(self, key, value):
-        """ define a state item. """
+        """define a state item."""
         if key not in self.data or type(value) != self.types[key]:
-            if type(value) == bytes: value = str(value)
-            if type(value) == int: value = int(value)
+            if type(value) == bytes:
+                value = str(value)
+            if type(value) == int:
+                value = int(value)
             self.data[key] = value
+
 
 class PlugState(PersistState):
 
-    """ state for plugins. """
+    """state for plugins."""
 
     def __init__(self, *args, **kwargs):
         self.plugname = calledfrom(sys._getframe())
-        logging.debug('persiststate - initialising %s' % self.plugname)
-        PersistState.__init__(self, getdatadir() + os.sep + 'state' + os.sep + 'plugs' + os.sep + self.plugname + os.sep + 'state')
+        logging.debug("persiststate - initialising %s" % self.plugname)
+        PersistState.__init__(
+            self,
+            getdatadir()
+            + os.sep
+            + "state"
+            + os.sep
+            + "plugs"
+            + os.sep
+            + self.plugname
+            + os.sep
+            + "state",
+        )
+
 
 class ObjectState(PersistState):
 
-    """ state for usage in constructors. """
+    """state for usage in constructors."""
 
     def __init__(self, *args, **kwargs):
-        PersistState.__init__(self, getdatadir() + os.sep + 'state' + os.sep + calledfrom(sys._getframe(1))+'.state')
+        PersistState.__init__(
+            self,
+            getdatadir()
+            + os.sep
+            + "state"
+            + os.sep
+            + calledfrom(sys._getframe(1))
+            + ".state",
+        )
+
 
 class UserState(PersistState):
 
-    """ state for users. """
+    """state for users."""
 
     def __init__(self, username, filename="state", *args, **kwargs):
         assert username
         username = stripname(username)
-        ddir = getdatadir() + os.sep + 'state' + os.sep + 'users' + os.sep + username
-        PersistState.__init__(self,  ddir + os.sep + filename)
+        ddir = getdatadir() + os.sep + "state" + os.sep + "users" + os.sep + username
+        PersistState.__init__(self, ddir + os.sep + filename)

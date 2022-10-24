@@ -27,8 +27,9 @@ locked = lockdec(parselock)
 
 ## ConvoreEvent
 
+
 class ConvoreEvent(EventBase):
-    """ Convore Event."""
+    """Convore Event."""
 
     def parse(self, bot, message, root):
         m = LazyDict(message)
@@ -37,12 +38,16 @@ class ConvoreEvent(EventBase):
         self.type = type
         self.cbtype = "CONVORE"
         self.bottype = bot.type
-        self.username = m.user['username']
-        self.userhost = "%s_%s" % ("CONVORE_USER", self.username) 
+        self.username = m.user["username"]
+        self.userhost = "%s_%s" % ("CONVORE_USER", self.username)
         self._id = m._id
-        self.userid = m.user['id']
-        try: self.channel = m.topic['id'] ; self.groupchat = True
-        except: self.channel = self.userid ; self.msg = True
+        self.userid = m.user["id"]
+        try:
+            self.channel = m.topic["id"]
+            self.groupchat = True
+        except:
+            self.channel = self.userid
+            self.msg = True
         self.auth = self.userhost
         self.txt = m.message
         self.nick = self.username

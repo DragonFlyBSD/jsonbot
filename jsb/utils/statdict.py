@@ -10,42 +10,48 @@ from jsb.utils.lazydict import LazyDict
 
 ## classes
 
+
 class StatDict(LazyDict):
 
-    """ dictionary to hold stats """
+    """dictionary to hold stats"""
 
     def set(self, item, value):
-        """ set item to value """
+        """set item to value"""
         self[item] = value
 
     def upitem(self, item, value=1):
-        """ increase item """
+        """increase item"""
         if item not in self:
             self[item] = value
             return
         self[item] += value
 
     def downitem(self, item, value=1):
-        """ decrease item """
+        """decrease item"""
         if item not in self:
             self[item] = value
             return
         self[item] -= value
 
     def top(self, start=1, limit=None):
-        """ return highest items """
+        """return highest items"""
         result = []
         for item, value in self.items():
-            if value >= start: result.append((item, value))
+            if value >= start:
+                result.append((item, value))
         result.sort(lambda b, a: cmp(a[1], b[1]))
-        if limit: result =  result[:limit]
+        if limit:
+            result = result[:limit]
         return result
 
     def down(self, end=100, limit=None):
-        """ return lowest items """
+        """return lowest items"""
         result = []
         for item, value in self.items():
-            if value <= end: result.append((item, value))
+            if value <= end:
+                result.append((item, value))
         result.sort(lambda a, b: cmp(a[1], b[1]))
-        if limit: return result[:limit]
-        else: return result
+        if limit:
+            return result[:limit]
+        else:
+            return result

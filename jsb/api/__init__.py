@@ -11,8 +11,8 @@ from jsb.lib.callbacks import api_callbacks
 import urllib.request, urllib.parse, urllib.error
 import logging
 
-class APIHooks(object):
 
+class APIHooks(object):
     def __init__(self):
         self.cbs = {}
 
@@ -26,20 +26,29 @@ class APIHooks(object):
 
     def dispatch(self, urlpath, bot, event):
         urlpath = urllib.parse.unquote_plus(urlpath.strip())
-        urlpath = urlpath.split('#')[0]
-        urlpath = urlpath.split('?')[0] 
+        urlpath = urlpath.split("#")[0]
+        urlpath = urlpath.split("?")[0]
         for path, cb in self.cbs.items():
-            if path == urlpath: cb(bot, event) ; return      
+            if path == urlpath:
+                cb(bot, event)
+                return
+
 
 get_hooks = APIHooks()
 post_hooks = APIHooks()
 
-def api_check(bot , event):
-    if event.apitype == "POST": post_hooks.dispatch(event.upath, bot, event)
-    elif event.apitype == "GET": get_hooks.dispatch(event.upath, bot, event)
-    else: logging.error("unknown api type %s" % event.apitype)
+
+def api_check(bot, event):
+    if event.apitype == "POST":
+        post_hooks.dispatch(event.upath, bot, event)
+    elif event.apitype == "GET":
+        get_hooks.dispatch(event.upath, bot, event)
+    else:
+        logging.error("unknown api type %s" % event.apitype)
+
 
 def api_ping(bot, event):
     event.reply("pong")
+
 
 get_hooks.register("ping", api_ping)

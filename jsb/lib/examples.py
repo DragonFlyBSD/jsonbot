@@ -10,42 +10,48 @@ import re
 
 ## Example class
 
+
 class Example(object):
 
-    """ an example. """
+    """an example."""
 
     def __init__(self, descr, ex, url=False):
         self.descr = descr
         self.example = ex
         self.url = url
 
+
 ## Collection of exanples
+
 
 class Examples(dict):
 
-    """ examples holds all the examples. """
+    """examples holds all the examples."""
 
     def add(self, name, descr, ex, url=False):
-        """ add description and example. """
+        """add description and example."""
         self[name.lower()] = Example(descr, ex, url)
 
     def size(self):
-        """ return size of examples dict. """
+        """return size of examples dict."""
         return len(list(self.keys()))
 
     def getexamples(self):
-        """ get all examples in list. """
+        """get all examples in list."""
         result = []
         for i in list(self.values()):
             ex = i.example.lower()
-            exampleslist = re.split('\d\)', ex)
+            exampleslist = re.split("\d\)", ex)
             for example in exampleslist:
-                if example: result.append(example.strip())
+                if example:
+                    result.append(example.strip())
         return result
+
 
 ## global examples object
 
 examples = Examples()
+
 
 def size():
     return examples.size()

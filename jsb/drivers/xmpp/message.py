@@ -2,7 +2,7 @@
 #
 #
 
-""" jabber message definition .. types can be normal, chat, groupchat, 
+""" jabber message definition .. types can be normal, chat, groupchat,
     headline or  error
 """
 
@@ -35,9 +35,10 @@ replylocked = lockdec(replylock)
 
 ## classes
 
+
 class Message(GozerEvent):
 
-    """ jabber message object. """
+    """jabber message object."""
 
     def __init__(self, nodedict={}):
         self.element = "message"
@@ -48,7 +49,7 @@ class Message(GozerEvent):
         self.type = "normal"
         self.speed = 8
         GozerEvent.__init__(self, nodedict)
-  
+
     def __copy__(self):
         return Message(self)
 
@@ -58,18 +59,20 @@ class Message(GozerEvent):
         return m
 
     def parse(self, bot=None):
-        """ set ircevent compat attributes. """
+        """set ircevent compat attributes."""
         self.bot = bot
         self.jidchange = False
-        try: self.resource = self.fromm.split('/')[1]
-        except IndexError: pass
-        self.channel = self['fromm'].split('/')[0]
+        try:
+            self.resource = self.fromm.split("/")[1]
+        except IndexError:
+            pass
+        self.channel = self["fromm"].split("/")[0]
         self.origchannel = self.channel
         self.nick = self.resource
         self.jid = self.fromm
         self.ruserhost = self.jid
         self.userhost = self.jid
-        self.stripped = self.jid.split('/')[0]
+        self.stripped = self.jid.split("/")[0]
         self.printto = self.channel
         for node in self.subelements:
             try:
@@ -78,7 +81,7 @@ class Message(GozerEvent):
             except (AttributeError, ValueError):
                 continue
         self.time = time.time()
-        if self.type == 'groupchat':
+        if self.type == "groupchat":
             self.groupchat = True
             self.auth = self.userhost
         else:
@@ -92,18 +95,22 @@ class Message(GozerEvent):
         return self
 
     def errorHandler(self):
-        """ dispatch errors to their handlers. """
+        """dispatch errors to their handlers."""
         try:
-            code = self.get('error').code
+            code = self.get("error").code
         except Exception as ex:
             handle_exception()
         try:
             method = getattr(self, "handle_%s" % code)
             if method:
-                logging.error('sxmpp.core - dispatching error to handler %s' % str(method))
+                logging.error(
+                    "sxmpp.core - dispatching error to handler %s" % str(method)
+                )
                 method(self)
-        except AttributeError as ex: logging.error('sxmpp.core - unhandled error %s' % code)
-        except: handle_exception()
+        except AttributeError as ex:
+            logging.error("sxmpp.core - unhandled error %s" % code)
+        except:
+            handle_exception()
 
     def normalize(self, what):
         return self.bot.normalize(what)

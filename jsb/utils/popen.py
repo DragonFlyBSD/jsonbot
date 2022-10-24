@@ -14,8 +14,10 @@ try:
     from subprocess import Popen, PIPE
     from .locking import lockdec
     import _thread, io, logging, types
+
     go = True
-except: go = False
+except:
+    go = False
 
 if go:
 
@@ -27,20 +29,18 @@ if go:
     ## exceptions
 
     class PopenWhitelistError(Exception):
-
         def __init__(self, item):
             Exception.__init__(self)
             self.item = item
-        
+
         def __str__(self):
             return self.item
 
     class PopenListError(Exception):
-
         def __init__(self, item):
             Exception.__init__(self)
             self.item = item
-        
+
         def __str__(self):
             return str(self.item)
 
@@ -48,42 +48,59 @@ if go:
 
     class GozerStringIO(io.StringIO):
 
-        """ provide readlines support on a StringIO object. """
+        """provide readlines support on a StringIO object."""
 
         def readlines(self):
-            """ read multiple lines. """
-            return self.read().split('\n')
+            """read multiple lines."""
+            return self.read().split("\n")
 
     ## GozerPopen4 class
 
     class GozerPopen4(Popen):
 
-        """ extend the builtin Popen class with a close method. """
+        """extend the builtin Popen class with a close method."""
 
         def __init__(self, args):
-            Popen.__init__(self, args, shell=False, stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
+            Popen.__init__(
+                self,
+                args,
+                shell=False,
+                stdin=PIPE,
+                stdout=PIPE,
+                stderr=PIPE,
+                close_fds=True,
+            )
             self.fromchild = self.stdout
-            self.tochild   = self.stdin
-            self.errors    = self.stderr
+            self.tochild = self.stdin
+            self.errors = self.stderr
 
         def close(self):
-            """ shutdown. """
+            """shutdown."""
             self.wait()
-            try: self.stdin.close()
-            except: pass
-            try: self.stdout.close()
-            except: pass
-            try: self.errors.close()
-            except: pass
+            try:
+                self.stdin.close()
+            except:
+                pass
+            try:
+                self.stdout.close()
+            except:
+                pass
+            try:
+                self.errors.close()
+            except:
+                pass
             return self.returncode
 
     ## gozerpopen function
 
     def gozerpopen(args, userargs=[]):
-        """ do the actual popen .. make sure the arguments are passed on as list. """
-        if type(args) != list: raise PopenListError(args)
-        if type(userargs) != list: raise PopenListError(args)
+        """do the actual popen .. make sure the arguments are passed on as list."""
+        if type(args) != list:
+            raise PopenListError(args)
+        if type(userargs) != list:
+            raise PopenListError(args)
         for i in userargs:
-            if i.startswith('-'): raise PopenWhitelistError(i)
+            if i.startswith("-"):
+                raise PopenWhitelistError(i)
         proces = GozerPopen4(args + userargs)
         return proces

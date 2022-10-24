@@ -28,25 +28,42 @@ import importlib
 ## paths
 
 sys.path.insert(0, os.getcwd())
-sys.path.insert(0, os.getcwd() + os.sep + '..')
+sys.path.insert(0, os.getcwd() + os.sep + "..")
 
 ## defines
 
 try:
     import waveapi
+
     ongae = True
     logging.warn("GAE detected")
-    plugin_packages = ['jsb.plugs.core', 'jsb.plugs.common', 'jsb.plugs.gae', 'jsb.plugs.wave', 'myplugs']
+    plugin_packages = [
+        "jsb.plugs.core",
+        "jsb.plugs.common",
+        "jsb.plugs.gae",
+        "jsb.plugs.wave",
+        "myplugs",
+    ]
 except ImportError:
     ongae = False
-    plugin_packages = ['jsb.plugs.core', 'jsb.plugs.common', 'jsb.plugs.socket', 'myplugs']
+    plugin_packages = [
+        "jsb.plugs.core",
+        "jsb.plugs.common",
+        "jsb.plugs.socket",
+        "myplugs",
+    ]
 
-default_plugins = ['jsb.plugs.core.admin', 'jsb.plugs.core.dispatch', 'jsb.plugs.core.plug', 'jsb.lib.periodical']
+default_plugins = [
+    "jsb.plugs.core.admin",
+    "jsb.plugs.core.dispatch",
+    "jsb.plugs.core.plug",
+    "jsb.lib.periodical",
+]
 
 logging.info("default plugins are %s" % str(default_plugins))
 
 loaded = False
-cmndtable = None 
+cmndtable = None
 pluginlist = None
 callbacktable = None
 retable = None
@@ -59,8 +76,10 @@ cpy = copy.deepcopy
 
 ## scandir function
 
+
 def scandir(d, dbenable=False):
     from jsb.lib.plugins import plugs
+
     changed = []
     try:
         changed = checktimestamps(d, dbenable)
@@ -68,51 +87,85 @@ def scandir(d, dbenable=False):
         if changed:
             logging.debug("files changed %s" % str(changed))
             for plugfile in changed:
-                if not dbenable and os.sep + 'db' in plugfile: logging.warn("db not enabled .. skipping %s" % plugfile) ; continue 
-                if ongae and 'socket' in plugfile: logging.warn("on GAE .. skipping %s" % plugfile) ; continue
-                if not ongae and ('gae' in plugfile or 'wave' in plugfile): logging.warn("not on GAE .. skipping %s" % plugfile) ; continue
+                if not dbenable and os.sep + "db" in plugfile:
+                    logging.warn("db not enabled .. skipping %s" % plugfile)
+                    continue
+                if ongae and "socket" in plugfile:
+                    logging.warn("on GAE .. skipping %s" % plugfile)
+                    continue
+                if not ongae and ("gae" in plugfile or "wave" in plugfile):
+                    logging.warn("not on GAE .. skipping %s" % plugfile)
+                    continue
         return changed
-    except Exception as ex: logging.error("boot - can't read %s dir." % d) ; handle_exception()
-    if changed: logging.debug("%s files changed -=- %s" % (len(changed), str(changed)))
+    except Exception as ex:
+        logging.error("boot - can't read %s dir." % d)
+        handle_exception()
+    if changed:
+        logging.debug("%s files changed -=- %s" % (len(changed), str(changed)))
     return changed
+
 
 ## boot function
 
-def boot(ddir=None, force=False, encoding="utf-8", umask=None, saveperms=True, fast=False, clear=False, loadall=False):
-    """ initialize the bot. """
+
+def boot(
+    ddir=None,
+    force=False,
+    encoding="utf-8",
+    umask=None,
+    saveperms=True,
+    fast=False,
+    clear=False,
+    loadall=False,
+):
+    """initialize the bot."""
     global plugin_packages
     if not ongae:
         try:
             if os.getuid() == 0:
                 print("don't run the bot as root")
                 os._exit(1)
-        except AttributeError: pass
+        except AttributeError:
+            pass
     logging.warn("starting!")
     from jsb.lib.datadir import getdatadir, setdatadir
-    if ddir: setdatadir(ddir)
-    origdir = ddir 
+
+    if ddir:
+        setdatadir(ddir)
+    origdir = ddir
     ddir = ddir or getdatadir()
-    if not ddir: logging.error("can't determine datadir to boot from") ; raise Exception("can't determine datadir")
-    if not ddir in sys.path: sys.path.append(ddir)
+    if not ddir:
+        logging.error("can't determine datadir to boot from")
+        raise Exception("can't determine datadir")
+    if not ddir in sys.path:
+        sys.path.append(ddir)
     makedirs(ddir)
-    if os.path.isdir("/var/run/jsb") and botuser() == "jsb": rundir = "/var/run/jsb"
-    else: rundir = ddir + os.sep + "run"
+    if os.path.isdir("/var/run/jsb") and botuser() == "jsb":
+        rundir = "/var/run/jsb"
+    else:
+        rundir = ddir + os.sep + "run"
     try:
-        k = open(rundir + os.sep + 'jsb.pid','w')
+        k = open(rundir + os.sep + "jsb.pid", "w")
         k.write(str(os.getpid()))
         k.close()
-    except IOError: pass
+    except IOError:
+        pass
     try:
         if not ongae:
             importlib.reload(sys)
             sys.setdefaultencoding(encoding)
-    except (AttributeError, IOError): pass
+    except (AttributeError, IOError):
+        pass
     if not ongae:
         try:
-            if not umask: checkpermissions(getdatadir(), 0o700) 
-            else: checkpermissions(getdatadir(), umask)  
-        except: handle_exception()
+            if not umask:
+                checkpermissions(getdatadir(), 0o700)
+            else:
+                checkpermissions(getdatadir(), umask)
+        except:
+            handle_exception()
     from jsb.lib.plugins import plugs
+
     global loaded
     global cmndtable
     global retable
@@ -123,70 +176,107 @@ def boot(ddir=None, force=False, encoding="utf-8", umask=None, saveperms=True, f
     global timestamps
     global plugwhitelist
     global plugblacklist
-    if not retable: retable = Persist(rundir + os.sep + 'retable')
-    if clear: retable.data = {}
-    if not cmndtable: cmndtable = Persist(rundir + os.sep + 'cmndtable')
-    if clear: cmndtable.data = {}
-    if not pluginlist: pluginlist = Persist(rundir + os.sep + 'pluginlist')
-    if clear: pluginlist.data = []
-    if not callbacktable: callbacktable = Persist(rundir + os.sep + 'callbacktable')
-    if clear: callbacktable.data = {}
-    if not shorttable: shorttable = Persist(rundir + os.sep + 'shorttable')
-    if clear: shorttable.data = {}
-    if not timestamps: timestamps = Persist(rundir + os.sep + 'timestamps')
-    #if clear: timestamps.data = {}
-    if not plugwhitelist: plugwhitelist = Persist(rundir + os.sep + 'plugwhitelist')
-    if not plugwhitelist.data: plugwhitelist.data = []
-    if not plugblacklist: plugblacklist = Persist(rundir + os.sep + 'plugblacklist')
-    if not plugblacklist.data: plugblacklist.data = []
-    if not cmndperms: cmndperms = Config('cmndperms', ddir=ddir)
+    if not retable:
+        retable = Persist(rundir + os.sep + "retable")
+    if clear:
+        retable.data = {}
+    if not cmndtable:
+        cmndtable = Persist(rundir + os.sep + "cmndtable")
+    if clear:
+        cmndtable.data = {}
+    if not pluginlist:
+        pluginlist = Persist(rundir + os.sep + "pluginlist")
+    if clear:
+        pluginlist.data = []
+    if not callbacktable:
+        callbacktable = Persist(rundir + os.sep + "callbacktable")
+    if clear:
+        callbacktable.data = {}
+    if not shorttable:
+        shorttable = Persist(rundir + os.sep + "shorttable")
+    if clear:
+        shorttable.data = {}
+    if not timestamps:
+        timestamps = Persist(rundir + os.sep + "timestamps")
+    # if clear: timestamps.data = {}
+    if not plugwhitelist:
+        plugwhitelist = Persist(rundir + os.sep + "plugwhitelist")
+    if not plugwhitelist.data:
+        plugwhitelist.data = []
+    if not plugblacklist:
+        plugblacklist = Persist(rundir + os.sep + "plugblacklist")
+    if not plugblacklist.data:
+        plugblacklist.data = []
+    if not cmndperms:
+        cmndperms = Config("cmndperms", ddir=ddir)
     changed = []
     gotlocal = False
     dosave = clear or False
     maincfg = getmainconfig(ddir=ddir)
     logging.warn("mainconfig used is %s" % maincfg.cfile)
-    if os.path.isdir('jsb'):
+    if os.path.isdir("jsb"):
         gotlocal = True
         packages = find_packages("jsb" + os.sep + "plugs")
-        if ongae: pluglist = [x for x in packages if not 'socket' in x and not 'db' in x]
-        else: pluglist = [x for x in packages if not 'gae' in x and not 'wave' in x and not 'db' in x]
+        if ongae:
+            pluglist = [x for x in packages if not "socket" in x and not "db" in x]
+        else:
+            pluglist = [
+                x
+                for x in packages
+                if not "gae" in x and not "wave" in x and not "db" in x
+            ]
         for p in pluglist:
-            if p not in plugin_packages: plugin_packages.append(p)
+            if p not in plugin_packages:
+                plugin_packages.append(p)
     for plug in default_plugins:
         plugs.reload(plug, showerror=True, force=True)
-    changed = scandir(getdatadir() + os.sep + 'myplugs', dbenable=maincfg.dbenable)
+    changed = scandir(getdatadir() + os.sep + "myplugs", dbenable=maincfg.dbenable)
     if changed:
         logging.debug("myplugs has changed -=- %s" % str(changed))
         for plugfile in changed:
-            try: plugs.reloadfile(plugfile, force=True)
-            except Exception as ex: handle_exception()
+            try:
+                plugs.reloadfile(plugfile, force=True)
+            except Exception as ex:
+                handle_exception()
         dosave = True
     configchanges = checkconfig()
     if configchanges:
         logging.info("there are configuration changes: %s" % str(configchanges))
         for f in configchanges:
-            if 'mainconfig' in f: force = True ; dosave = True
-    if os.path.isdir('jsb'):
+            if "mainconfig" in f:
+                force = True
+                dosave = True
+    if os.path.isdir("jsb"):
         corechanges = scandir("jsb" + os.sep + "plugs", dbenable=maincfg.dbenable)
         if corechanges:
             logging.debug("core changed -=- %s" % str(corechanges))
             for plugfile in corechanges:
-                if not maincfg.dbenable and "db" in plugfile: continue
-                try: plugs.reloadfile(plugfile, force=True)
-                except Exception as ex: handle_exception()
+                if not maincfg.dbenable and "db" in plugfile:
+                    continue
+                try:
+                    plugs.reloadfile(plugfile, force=True)
+                except Exception as ex:
+                    handle_exception()
             dosave = True
     if not ongae and maincfg.dbenable:
-        plugin_packages.append("jsb.plugs.db") 
+        plugin_packages.append("jsb.plugs.db")
         try:
             from jsb.db import getmaindb
             from jsb.db.tables import tablestxt
+
             db = getmaindb()
-            if db: db.define(tablestxt)
-        except Exception as ex: logging.warn("could not initialize database %s" % str(ex))
+            if db:
+                db.define(tablestxt)
+        except Exception as ex:
+            logging.warn("could not initialize database %s" % str(ex))
     else:
-        logging.warn("db not enabled, set dbenable = 1 in %s to enable" % getmainconfig().cfile)
-        try: plugin_packages.remove("jsb.plugs.db")
-        except ValueError: pass
+        logging.warn(
+            "db not enabled, set dbenable = 1 in %s to enable" % getmainconfig().cfile
+        )
+        try:
+            plugin_packages.remove("jsb.plugs.db")
+        except ValueError:
+            pass
     if force or dosave or not cmndtable.data or len(cmndtable.data) < 100:
         logging.debug("using target %s" % str(plugin_packages))
         plugs.loadall(plugin_packages, force=True)
@@ -196,10 +286,13 @@ def boot(ddir=None, force=False, encoding="utf-8", umask=None, saveperms=True, f
         savealiases()
     logging.warn("ready")
 
+
 ## filestamps stuff
 
+
 def checkconfig():
-    if ongae: return []
+    if ongae:
+        return []
     changed = []
     d = getdatadir() + os.sep + "config"
     for f in os.listdir(d):
@@ -208,88 +301,136 @@ def checkconfig():
             changed.extend(checktimestamps(d + os.sep + f))
             continue
         m = d + os.sep + f
-        if os.path.isdir(m): continue
-        if "__init__" in f: continue
+        if os.path.isdir(m):
+            continue
+        if "__init__" in f:
+            continue
         global timestamps
         try:
             t = os.path.getmtime(m)
-            if t > timestamps.data[m]: changed.append(m) ; timestamps.data[m] = t ; 
-        except KeyError: timestamps.data[m] = os.path.getmtime(m) ; changed.append(m)
-    if changed: timestamps.save()
-    return changed 
+            if t > timestamps.data[m]:
+                changed.append(m)
+                timestamps.data[m] = t
+        except KeyError:
+            timestamps.data[m] = os.path.getmtime(m)
+            changed.append(m)
+    if changed:
+        timestamps.save()
+    return changed
+
 
 def checktimestamps(d=None, dbenable=False):
-    if ongae: return []
+    if ongae:
+        return []
     changed = []
     for f in os.listdir(d):
         if os.path.isdir(d + os.sep + f):
-            if f.startswith("."): logging.warn("skipping %s" % f) ; continue
+            if f.startswith("."):
+                logging.warn("skipping %s" % f)
+                continue
             dname = d + os.sep + f
-            if not dbenable and 'db' in dname: continue
-            if ongae and 'socket' in dname: logging.info("on GAE .. skipping %s" % dname) ; continue
-            if not ongae and ('gae' in dname or 'wave' in dname): logging.info("not on GAE .. skipping %s" % dname) ; continue
+            if not dbenable and "db" in dname:
+                continue
+            if ongae and "socket" in dname:
+                logging.info("on GAE .. skipping %s" % dname)
+                continue
+            if not ongae and ("gae" in dname or "wave" in dname):
+                logging.info("not on GAE .. skipping %s" % dname)
+                continue
             splitted = dname.split(os.sep)
             target = []
             for s in splitted[::-1]:
                 target.append(s)
-                if 'jsb' in s: break
-                elif 'myplugs' in s: break
+                if "jsb" in s:
+                    break
+                elif "myplugs" in s:
+                    break
             package = ".".join(target[::-1])
-            if not "config" in dname and package not in plugin_packages: logging.warn("adding %s to plugin_packages" % package) ; plugin_packages.append(package)
+            if not "config" in dname and package not in plugin_packages:
+                logging.warn("adding %s to plugin_packages" % package)
+                plugin_packages.append(package)
             changed.extend(checktimestamps(d + os.sep + f))
-        if not f.endswith(".py"): continue 
+        if not f.endswith(".py"):
+            continue
         m = d + os.sep + f
         global timestamps
         try:
             t = os.path.getmtime(m)
-            if t > timestamps.data[m]: changed.append(m) ; timestamps.data[m] = t ; 
-        except KeyError: timestamps.data[m] = os.path.getmtime(m) ; changed.append(m)
-    if changed: timestamps.save()
-    return changed 
+            if t > timestamps.data[m]:
+                changed.append(m)
+                timestamps.data[m] = t
+        except KeyError:
+            timestamps.data[m] = os.path.getmtime(m)
+            changed.append(m)
+    if changed:
+        timestamps.save()
+    return changed
+
 
 def find_packages(d=None):
     packages = []
     for f in os.listdir(d):
         if os.path.isdir(d + os.sep + f):
-            if f.startswith("."): logging.warn("skipping %s" % f) ; continue
+            if f.startswith("."):
+                logging.warn("skipping %s" % f)
+                continue
             dname = d + os.sep + f
             splitted = dname.split(os.sep)
             target = []
             for s in splitted[::-1]:
                 target.append(s)
-                if 'jsb' in s: break
-                elif 'myplugs' in s: break
+                if "jsb" in s:
+                    break
+                elif "myplugs" in s:
+                    break
             package = ".".join(target[::-1])
-            if package not in plugin_packages: logging.info("adding %s to plugin_packages" % package) ; packages.append(package)
+            if package not in plugin_packages:
+                logging.info("adding %s to plugin_packages" % package)
+                packages.append(package)
             packages.extend(find_packages(d + os.sep + f))
     return packages
-    
+
+
 ## commands related commands
 
+
 def savecmndtable(modname=None, saveperms=True):
-    """ save command -> plugin list to db backend. """
+    """save command -> plugin list to db backend."""
     global cmndtable
-    if not cmndtable.data: cmndtable.data = {}
-    if modname: target = LazyDict(cmndtable.data)
-    else: target = LazyDict()
+    if not cmndtable.data:
+        cmndtable.data = {}
+    if modname:
+        target = LazyDict(cmndtable.data)
+    else:
+        target = LazyDict()
     global shorttable
-    if not shorttable.data: shorttable.data = {}
-    if modname: short = LazyDict(shorttable.data)
-    else: short = LazyDict()
+    if not shorttable.data:
+        shorttable.data = {}
+    if modname:
+        short = LazyDict(shorttable.data)
+    else:
+        short = LazyDict()
     global cmndperms
     from jsb.lib.commands import cmnds
+
     assert cmnds
     for cmndname, c in cmnds.items():
-        if modname and c.modname != modname or cmndname == "subs": continue
+        if modname and c.modname != modname or cmndname == "subs":
+            continue
         if cmndname and c:
-            target[cmndname] = c.modname  
+            target[cmndname] = c.modname
             cmndperms[cmndname] = c.perms
             try:
-                 s = cmndname.split("-")[1]
-                 if s not in target:
-                     if s not in short: short[s] = [cmndname, ]
-                     if cmndname not in short[s]: short[s].append(cmndname)
-            except (ValueError, IndexError): pass
+                s = cmndname.split("-")[1]
+                if s not in target:
+                    if s not in short:
+                        short[s] = [
+                            cmndname,
+                        ]
+                    if cmndname not in short[s]:
+                        short[s].append(cmndname)
+            except (ValueError, IndexError):
+                pass
     logging.warn("saving command table")
     assert cmndtable
     assert target
@@ -309,80 +450,122 @@ def savecmndtable(modname=None, saveperms=True):
         logging.warn("saving command perms")
         cmndperms.save()
 
+
 def removecmnds(modname):
-    """ remove commands belonging to modname form cmndtable. """
+    """remove commands belonging to modname form cmndtable."""
     global cmndtable
     assert cmndtable
     from jsb.lib.commands import cmnds
+
     assert cmnds
     for cmndname, c in cmnds.items():
-        if c.modname == modname: del cmndtable.data[cmndname]
+        if c.modname == modname:
+            del cmndtable.data[cmndname]
     cmndtable.save()
 
+
 def getcmndtable():
-    """ save command -> plugin list to db backend. """
+    """save command -> plugin list to db backend."""
     global cmndtable
-    if not cmndtable: boot()
+    if not cmndtable:
+        boot()
     return cmndtable.data
+
 
 ## callbacks related commands
 
+
 def savecallbacktable(modname=None):
-    """ save command -> plugin list to db backend. """
-    if modname: logging.warn("boot - module name is %s" % modname)
+    """save command -> plugin list to db backend."""
+    if modname:
+        logging.warn("boot - module name is %s" % modname)
     global callbacktable
     assert callbacktable
-    if not callbacktable.data: callbacktable.data = {}
-    if modname: target = LazyDict(callbacktable.data)
-    else: target = LazyDict()
-    from jsb.lib.callbacks import first_callbacks, callbacks, last_callbacks, remote_callbacks
+    if not callbacktable.data:
+        callbacktable.data = {}
+    if modname:
+        target = LazyDict(callbacktable.data)
+    else:
+        target = LazyDict()
+    from jsb.lib.callbacks import (
+        first_callbacks,
+        callbacks,
+        last_callbacks,
+        remote_callbacks,
+    )
+
     for cb in [first_callbacks, callbacks, last_callbacks, remote_callbacks]:
         for type, cbs in cb.cbs.items():
             for c in cbs:
-                if modname and c.modname != modname: continue
-                if type not in target: target[type] = []
-                if not c.modname in target[type]: target[type].append(c.modname)
+                if modname and c.modname != modname:
+                    continue
+                if type not in target:
+                    target[type] = []
+                if not c.modname in target[type]:
+                    target[type].append(c.modname)
     logging.warn("saving callback table")
     assert callbacktable
     assert target
     callbacktable.data = target
     callbacktable.save()
 
+
 def removecallbacks(modname):
-    """ remove callbacks belonging to modname form cmndtable. """
+    """remove callbacks belonging to modname form cmndtable."""
     global callbacktable
     assert callbacktable
-    from jsb.lib.callbacks import first_callbacks, callbacks, last_callbacks, remote_callbacks
+    from jsb.lib.callbacks import (
+        first_callbacks,
+        callbacks,
+        last_callbacks,
+        remote_callbacks,
+    )
+
     for cb in [first_callbacks, callbacks, last_callbacks, remote_callbacks]:
         for type, cbs in cb.cbs.items():
             for c in cbs:
-                if not c.modname == modname: continue
-                if type not in callbacktable.data: callbacktable.data[type] = []
-                if c.modname in callbacktable.data[type]: callbacktable.data[type].remove(c.modname)
+                if not c.modname == modname:
+                    continue
+                if type not in callbacktable.data:
+                    callbacktable.data[type] = []
+                if c.modname in callbacktable.data[type]:
+                    callbacktable.data[type].remove(c.modname)
     logging.warn("saving callback table")
     assert callbacktable
     callbacktable.save()
 
+
 def getcallbacktable():
-    """ save command -> plugin list to db backend. """
+    """save command -> plugin list to db backend."""
     global callbacktable
-    if not callbacktable: boot()
+    if not callbacktable:
+        boot()
     return callbacktable.data
+
 
 ## plugin list related commands
 
+
 def savepluginlist(modname=None):
-    """ save a list of available plugins to db backend. """
+    """save a list of available plugins to db backend."""
     global pluginlist
-    if not pluginlist.data: pluginlist.data = []
-    if modname: target = cpy(pluginlist.data)
-    else: target = []
+    if not pluginlist.data:
+        pluginlist.data = []
+    if modname:
+        target = cpy(pluginlist.data)
+    else:
+        target = []
     from jsb.lib.commands import cmnds
+
     assert cmnds
     for cmndname, c in cmnds.items():
-        if modname and c.modname != modname: continue
-        if c and not c.plugname: logging.info("boot - not adding %s to pluginlist" % cmndname) ; continue
-        if c and c.plugname not in target and c.enable: target.append(c.plugname)
+        if modname and c.modname != modname:
+            continue
+        if c and not c.plugname:
+            logging.info("boot - not adding %s to pluginlist" % cmndname)
+            continue
+        if c and c.plugname not in target and c.enable:
+            target.append(c.plugname)
     assert target
     target.sort()
     logging.warn("saving plugin list")
@@ -390,69 +573,107 @@ def savepluginlist(modname=None):
     pluginlist.data = target
     pluginlist.save()
 
+
 def remove_plugin(modname):
     removecmnds(modname)
     removecallbacks(modname)
     global pluginlist
-    try: pluginlist.data.remove(modname.split(".")[-1]) ; pluginlist.save()
-    except: pass
+    try:
+        pluginlist.data.remove(modname.split(".")[-1])
+        pluginlist.save()
+    except:
+        pass
+
 
 def clear_tables():
     global cmndtable
     global callbacktable
     global pluginlist
-    cmndtable.data = {} ; cmndtable.save()
-    callbacktable.data = {} ; callbacktable.save()
-    pluginlist.data = [] ; pluginlist.save()
+    cmndtable.data = {}
+    cmndtable.save()
+    callbacktable.data = {}
+    callbacktable.save()
+    pluginlist.data = []
+    pluginlist.save()
+
 
 def getpluginlist():
-    """ get the plugin list. """
+    """get the plugin list."""
     global pluginlist
-    if not pluginlist: boot()
+    if not pluginlist:
+        boot()
     l = plugwhitelist.data or pluginlist.data
     result = []
     denied = []
     for plug in plugblacklist.data:
         denied.append(plug.split(".")[-1])
     for plug in l:
-        if plug not in denied: result.append(plug)
+        if plug not in denied:
+            result.append(plug)
     return result
+
 
 ## update_mod command
 
+
 def update_mod(modname):
-    """ update the tables with new module. """
+    """update the tables with new module."""
     savecallbacktable(modname)
     savecmndtable(modname, saveperms=False)
     savepluginlist(modname)
+
 
 def whatcommands(plug):
     tbl = getcmndtable()
     result = []
     for cmnd, mod in tbl.items():
-        if not mod: continue
+        if not mod:
+            continue
         if plug in mod:
             result.append(cmnd)
     return result
 
+
 def getcmndperms():
     return cmndperms
 
+
 def plugenable(mod):
-    if plugwhitelist.data and not mod in plugwhitelist.data: plugwhitelist.data.append(mod) ; plugwhtelist.save() ; return
-    if mod in plugblacklist.data: plugblacklist.data.remove(mod) ; plugblacklist.save()
+    if plugwhitelist.data and not mod in plugwhitelist.data:
+        plugwhitelist.data.append(mod)
+        plugwhtelist.save()
+        return
+    if mod in plugblacklist.data:
+        plugblacklist.data.remove(mod)
+        plugblacklist.save()
+
 
 def plugdisable(mod):
-    if plugwhitelist.data and mod in plugwhitelist.data: plugwhitelist.data.remove(mod) ; plugwhtelist.save() ; return
-    if not mod in plugblacklist.data: plugblacklist.data.append(mod) ; plugblacklist.save()
+    if plugwhitelist.data and mod in plugwhitelist.data:
+        plugwhitelist.data.remove(mod)
+        plugwhtelist.save()
+        return
+    if not mod in plugblacklist.data:
+        plugblacklist.data.append(mod)
+        plugblacklist.save()
+
 
 def size():
     global cmndtable
     global pluginlist
     global callbacktable
     global cmndperms
-    global timestamps 
+    global timestamps
     global plugwhitelist
-    global plugblacklist 
-    return "cmndtable: %s - pluginlist: %s - callbacks: %s - timestamps: %s - whitelist: %s - blacklist: %s" % (cmndtable.size(), pluginlist.size(), callbacktable.size(), timestamps.size(), plugwhitelist.size(), plugblacklist.size())
-   
+    global plugblacklist
+    return (
+        "cmndtable: %s - pluginlist: %s - callbacks: %s - timestamps: %s - whitelist: %s - blacklist: %s"
+        % (
+            cmndtable.size(),
+            pluginlist.size(),
+            callbacktable.size(),
+            timestamps.size(),
+            plugwhitelist.size(),
+            plugblacklist.size(),
+        )
+    )

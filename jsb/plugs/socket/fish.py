@@ -2,7 +2,7 @@
 #
 #
 
-""" 
+"""
     Encrypts incoming and outgoing text using the FiSH encryption.
 
     Help on the fish command:
@@ -43,10 +43,12 @@ import pickle
 ## check for pycrypto dependancy
 
 try:
-  import Crypto.Cipher.Blowfish
-  import Crypto.Cipher.AES
+    import Crypto.Cipher.Blowfish
+    import Crypto.Cipher.AES
 except ImportError:
-  raise RequireError("PyCrypto is required for FiSH. Please install this library if you want to use this plug")
+    raise RequireError(
+        "PyCrypto is required for FiSH. Please install this library if you want to use this plug"
+    )
 
 ## defines
 
@@ -57,187 +59,236 @@ users = getusers()
 
 ## KeyStore class
 
+
 class KeyStore(Persist):
-  def __init__(self, keyname):
-    Persist.__init__(self, getdatadir() + os.sep + 'keys' + os.sep + 'fish' + os.sep + stripname(keyname))
+    def __init__(self, keyname):
+        Persist.__init__(
+            self,
+            getdatadir()
+            + os.sep
+            + "keys"
+            + os.sep
+            + "fish"
+            + os.sep
+            + stripname(keyname),
+        )
+
 
 ## make sure we get loaded
 
-def dummycb(bot, event): pass
+
+def dummycb(bot, event):
+    pass
+
+
 callbacks.add("START", dummycb)
 
 ## plugin
 
+
 def init():
-  """ Init """
-  if cfg.enable:
-    inputmorphs.add(fishin)
-    outputmorphs.add(fishout)
-    callbacks.add("NOTICE", dh1080_exchange)
-    cmnds.add("fish", handle_fish, "OPER")
-    examples.add("fish", "command that handles fish enrypting over IRC", "fish help")
-  else: logging.warn("fish plugin is not enabled - use fish-cfg enable 1")
+    """Init"""
+    if cfg.enable:
+        inputmorphs.add(fishin)
+        outputmorphs.add(fishout)
+        callbacks.add("NOTICE", dh1080_exchange)
+        cmnds.add("fish", handle_fish, "OPER")
+        examples.add(
+            "fish", "command that handles fish enrypting over IRC", "fish help"
+        )
+    else:
+        logging.warn("fish plugin is not enabled - use fish-cfg enable 1")
+
 
 ## fishin function
 
-def fishin(text,event = None):
-  if event and not (event.bottype == "irc" or event.bottype == "botbase"): return text
-  if text.startswith('+OK '):
-    target = None
-    if event and event.channel and event.channel.startswith("#"):
-      target = event.channel
-    elif event:
-      u  = users.getuser(event.userhost)
-      if u: target = u.data.name
 
-    if not target: return
+def fishin(text, event=None):
+    if event and not (event.bottype == "irc" or event.bottype == "botbase"):
+        return text
+    if text.startswith("+OK "):
+        target = None
+        if event and event.channel and event.channel.startswith("#"):
+            target = event.channel
+        elif event:
+            u = users.getuser(event.userhost)
+            if u:
+                target = u.data.name
 
-    key = KeyStore(stripname(target))
-    if not key.data.key:
-      logging.debug("FiSHin: No key found for target %s" % target)
-      return text
+        if not target:
+            return
 
-    try:
-      #logging.debug("FiSHin raw: key: %s Raw: %s (%s)" % (key.data.key, text, target))
-      text = decrypt(key.data.key, text)
-      logging.debug("FiSHin raw decrypt: :%s:" % text)
-      return text
-    except (MalformedError, UnicodeDecodeError):
-      return None 
+        key = KeyStore(stripname(target))
+        if not key.data.key:
+            logging.debug("FiSHin: No key found for target %s" % target)
+            return text
 
-  return text
+        try:
+            # logging.debug("FiSHin raw: key: %s Raw: %s (%s)" % (key.data.key, text, target))
+            text = decrypt(key.data.key, text)
+            logging.debug("FiSHin raw decrypt: :%s:" % text)
+            return text
+        except (MalformedError, UnicodeDecodeError):
+            return None
+
+    return text
+
 
 ## fishout function
 
+
 def fishout(text, event):
-  if event and not (event.bottype == "irc" or event.bottype == "botbase"): return text
-  target = None
-  if event and event.channel and event.channel.startswith("#"):
-    target = event.channel
+    if event and not (event.bottype == "irc" or event.bottype == "botbase"):
+        return text
+    target = None
+    if event and event.channel and event.channel.startswith("#"):
+        target = event.channel
+        if not target:
+            u = users.getuser(event.userhost)
+            if u:
+                target = u.data.name
+
     if not target:
-        u = users.getuser(event.userhost)
-        if u: target = u.data.name
-  
-  if not target: return
+        return
 
-  key = KeyStore(stripname(target))
-  if not key.data.key:
-    logging.debug("FiSHout: No key found for target %s" % target)
-    return text 
+    key = KeyStore(stripname(target))
+    if not key.data.key:
+        logging.debug("FiSHout: No key found for target %s" % target)
+        return text
 
-  cipher = encrypt(key.data.key, text)
-  return cipher
+    cipher = encrypt(key.data.key, text)
+    return cipher
+
 
 ## encrypt function
 
+
 def encrypt(key, text):
-  b = Blowfish(key)
-  return blowcrypt_pack(text, b)
+    b = Blowfish(key)
+    return blowcrypt_pack(text, b)
+
 
 ## decrypt function
 
+
 def decrypt(key, inp):
-  b = Blowfish(key)
-  return blowcrypt_unpack(inp, b)
+    b = Blowfish(key)
+    return blowcrypt_unpack(inp, b)
+
 
 ## dh1080_exchange function
 
+
 def dh1080_exchange(bot, ievent):
-  # Not a known user, so also no key.
-  u = users.getuser(ievent.userhost)
-  if u: target = u.data.name
-  else: return True
-  if ievent.txt.startswith("DH1080_INIT "):
-    logging.warn("FiSH: DH1080_INIT with %s" % target)
-    key = KeyStore(stripname(target))
+    # Not a known user, so also no key.
+    u = users.getuser(ievent.userhost)
+    if u:
+        target = u.data.name
+    else:
+        return True
+    if ievent.txt.startswith("DH1080_INIT "):
+        logging.warn("FiSH: DH1080_INIT with %s" % target)
+        key = KeyStore(stripname(target))
 
-    dh = DH1080Ctx()
-    if dh1080_unpack(ievent.txt, dh) != True:
-      logging.warn("FiSH Key exchange failed!")
-      return False
+        dh = DH1080Ctx()
+        if dh1080_unpack(ievent.txt, dh) != True:
+            logging.warn("FiSH Key exchange failed!")
+            return False
 
-    key.data.key = dh1080_secret(dh)
-    key.data.dh = pickle.dumps(dh)
-    key.save()
+        key.data.key = dh1080_secret(dh)
+        key.data.dh = pickle.dumps(dh)
+        key.save()
 
-    logging.debug("FiSH UserKey: %s Key: %s" % (ievent.txt[12:], key.data.key))
-    ievent.bot.notice(ievent.nick, dh1080_pack(dh))
+        logging.debug("FiSH UserKey: %s Key: %s" % (ievent.txt[12:], key.data.key))
+        ievent.bot.notice(ievent.nick, dh1080_pack(dh))
 
-    return False
+        return False
 
-  if ievent.txt.startswith("DH1080_FINISH "):
-    key = KeyStore(stripname(target))
+    if ievent.txt.startswith("DH1080_FINISH "):
+        key = KeyStore(stripname(target))
 
-    logging.warn("FiSH: DH1080_FINISH")
-    dh = pickle.loads(key.data.dh)
-    if dh1080_unpack(ievent.txt, dh) != True:
-      logging.warn("FiSH Key exchange failed!")
-      return False
+        logging.warn("FiSH: DH1080_FINISH")
+        dh = pickle.loads(key.data.dh)
+        if dh1080_unpack(ievent.txt, dh) != True:
+            logging.warn("FiSH Key exchange failed!")
+            return False
 
-    key.data.key = dh1080_secret(dh)
-    key.save()
-    
-    logging.debug("FiSH: Key set for %s to %s" % (target, key.data.key)) 
-    return False
+        key.data.key = dh1080_secret(dh)
+        key.save()
 
-  return True
+        logging.debug("FiSH: Key set for %s to %s" % (target, key.data.key))
+        return False
+
+    return True
+
 
 ## fish command
 
+
 def handle_fish(bot, event):
-  """ Handles the fish command """
-  args = event.rest.rsplit(" ")
-  if not args[0]: event.missing("<commands> [options,...]") ; return
+    """Handles the fish command"""
+    args = event.rest.rsplit(" ")
+    if not args[0]:
+        event.missing("<commands> [options,...]")
+        return
 
-  command = args[0]
-  if command == 'help':
-    event.reply("help                      -- shows this text")
-    event.reply("keyx <nick>               -- Exchanges key")
-    event.reply("key  <user|channel> <key> -- Set the key")
-    event.reply("del  <user|channel>       -- Removes the key")
-    return False
+    command = args[0]
+    if command == "help":
+        event.reply("help                      -- shows this text")
+        event.reply("keyx <nick>               -- Exchanges key")
+        event.reply("key  <user|channel> <key> -- Set the key")
+        event.reply("del  <user|channel>       -- Removes the key")
+        return False
 
-  if command == 'keyx':
-    if len(args) != 2: event.missing("keyx <nick>"); return
+    if command == "keyx":
+        if len(args) != 2:
+            event.missing("keyx <nick>")
+            return
 
-    userhost = getwho(bot, args[1])
-    if userhost == None: return
+        userhost = getwho(bot, args[1])
+        if userhost == None:
+            return
 
-    user = users.getuser(userhost)
-    if user == None:
-        event.reply("Unable to exchange key with an unknown user")
-        return 
+        user = users.getuser(userhost)
+        if user == None:
+            event.reply("Unable to exchange key with an unknown user")
+            return
 
-    target = user.data.name
-    if target == None: return
+        target = user.data.name
+        if target == None:
+            return
 
-    logging.warn("FiSH: Key exchange with  %s (%s)" % (args[1], target))
-    dh = DH1080Ctx()
-    bot.notice(args[1], dh1080_pack(dh))
+        logging.warn("FiSH: Key exchange with  %s (%s)" % (args[1], target))
+        dh = DH1080Ctx()
+        bot.notice(args[1], dh1080_pack(dh))
 
-    key = KeyStore(stripname(target))
-    key.data.dh = pickle.dumps(dh)
-    key.save()
-    
-  if command == 'key':
-    if len(args) != 3: event.missing("key <user|channel> <key>"); return
-    key = KeyStore(stripname(args[1]))
-    key.data.key = args[2]
-    key.save()
-    event.reply("Stored key for %s" % args[1])
+        key = KeyStore(stripname(target))
+        key.data.dh = pickle.dumps(dh)
+        key.save()
 
-  if command == 'del':
-    if len(args) != 2: event.missing("del <user|channel>"); return
-    key = KeyStore(stripname(args[1]))
+    if command == "key":
+        if len(args) != 3:
+            event.missing("key <user|channel> <key>")
+            return
+        key = KeyStore(stripname(args[1]))
+        key.data.key = args[2]
+        key.save()
+        event.reply("Stored key for %s" % args[1])
 
-    if not key.data.key: 
-      event.reply("No key found for %s" % args[1]); return
+    if command == "del":
+        if len(args) != 2:
+            event.missing("del <user|channel>")
+            return
+        key = KeyStore(stripname(args[1]))
 
-    key.data.key=""
-    key.data.dh=""
-    key.save()
-    event.reply("Deleted key %s" % args[1])
-  
+        if not key.data.key:
+            event.reply("No key found for %s" % args[1])
+            return
+
+        key.data.key = ""
+        key.data.dh = ""
+        key.save()
+        event.reply("Deleted key %s" % args[1])
 
 
 #### irccrypt module
@@ -247,11 +298,11 @@ def handle_fish(bot, event):
 ## implementation.
 ##
 ## Copyright (c) 2009, Bjorn Edstrom <be@bjrn.se>
-## 
+##
 ## Permission to use, copy, modify, and distribute this software for any
 ## purpose with or without fee is hereby granted, provided that the above
 ## copyright notice and this permission notice appear in all copies.
-## 
+##
 ## THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
 ## WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 ## MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
@@ -317,6 +368,7 @@ ___version__ = "0.1.1"
 import base64
 import hashlib
 from math import log
+
 try:
     import Crypto.Cipher.Blowfish
     import Crypto.Cipher.AES
@@ -332,6 +384,7 @@ import time
 ## Preliminaries.
 ##
 
+
 class MalformedError(Exception):
     pass
 
@@ -344,8 +397,8 @@ def sha256(s):
 def int2bytes(n):
     """Integer to variable length big endian."""
     if n == 0:
-        return '\x00'
-    b = ''
+        return "\x00"
+    b = ""
     while n:
         b = chr(n % 256) + b
         n /= 256
@@ -379,16 +432,16 @@ def padto(msg, length):
     If the length of msg is already a multiple of 'length', does nothing."""
     L = len(msg)
     if L % length:
-        msg += '\x00' * (length - L % length)
+        msg += "\x00" * (length - L % length)
     assert len(msg) % length == 0
     return msg
 
 
-def xorstring(a, b, blocksize): # Slow.
+def xorstring(a, b, blocksize):  # Slow.
     """xor string a and b, both of length blocksize."""
-    xored = ''
+    xored = ""
     for i in range(blocksize):
-        xored += chr(ord(a[i]) ^ ord(b[i]))  
+        xored += chr(ord(a[i]) ^ ord(b[i]))
     return xored
 
 
@@ -397,15 +450,15 @@ def cbc_encrypt(func, data, blocksize):
     'func' is a function that encrypts data in ECB mode. 'data' is the
     plaintext. 'blocksize' is the block size of the cipher."""
     assert len(data) % blocksize == 0
-    
+
     IV = urandom(blocksize)
     assert len(IV) == blocksize
-    
+
     ciphertext = IV
     for block_index in range(len(data) / blocksize):
         xored = xorstring(data, IV, blocksize)
         enc = func(xored)
-        
+
         ciphertext += enc
         IV = enc
         data = data[blocksize:]
@@ -417,56 +470,53 @@ def cbc_encrypt(func, data, blocksize):
 def cbc_decrypt(func, data, blocksize):
     """See cbc_encrypt."""
     assert len(data) % blocksize == 0
-    
+
     IV = data[0:blocksize]
     data = data[blocksize:]
 
-    plaintext = ''
+    plaintext = ""
     for block_index in range(len(data) / blocksize):
         temp = func(data[0:blocksize])
         temp2 = xorstring(temp, IV, blocksize)
         plaintext += temp2
         IV = data[0:blocksize]
         data = data[blocksize:]
-    
+
     assert len(plaintext) % blocksize == 0
     return plaintext
 
 
 class Blowfish:
-    
     def __init__(self, key=None):
         if key:
             self.blowfish = Crypto.Cipher.Blowfish.new(key)
 
     def decrypt(self, data):
         return self.blowfish.decrypt(data)
-    
+
     def encrypt(self, data):
         return self.blowfish.encrypt(data)
 
 
 class BlowfishCBC:
-    
     def __init__(self, key=None):
         if key:
             self.blowfish = Crypto.Cipher.Blowfish.new(key)
 
     def decrypt(self, data):
         return cbc_decrypt(self.blowfish.decrypt, data, 8)
-    
+
     def encrypt(self, data):
         return cbc_encrypt(self.blowfish.encrypt, data, 8)
 
 
 class AESCBC:
-    
     def __init__(self, key):
         self.aes = Crypto.Cipher.AES.new(key)
 
     def decrypt(self, data):
         return cbc_decrypt(self.aes.decrypt, data, 16)
-    
+
     def encrypt(self, data):
         return cbc_encrypt(self.aes.encrypt, data, 16)
 
@@ -479,14 +529,14 @@ class AESCBC:
 def blowcrypt_b64encode(s):
     """A non-standard base64-encode."""
     B64 = "./0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    res = ''
+    res = ""
     while s:
-        left, right = struct.unpack('>LL', s[:8])
+        left, right = struct.unpack(">LL", s[:8])
         for i in range(6):
-            res += B64[right & 0x3f]
+            res += B64[right & 0x3F]
             right >>= 6
         for i in range(6):
-            res += B64[left & 0x3f]
+            res += B64[left & 0x3F]
             left >>= 6
         s = s[8:]
     return res
@@ -495,28 +545,28 @@ def blowcrypt_b64encode(s):
 def blowcrypt_b64decode(s):
     """A non-standard base64-decode."""
     B64 = "./0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    res = ''
+    res = ""
     while s:
         left, right = 0, 0
         for i, p in enumerate(s[0:6]):
             right |= B64.index(p) << (i * 6)
         for i, p in enumerate(s[6:12]):
             left |= B64.index(p) << (i * 6)
-        res += struct.pack('>LL', left, right)
+        res += struct.pack(">LL", left, right)
         s = s[12:]
     return res
 
 
 def blowcrypt_pack(msg, cipher):
     """."""
-    return '+OK ' + blowcrypt_b64encode(cipher.encrypt(padto(msg, 8)))
+    return "+OK " + blowcrypt_b64encode(cipher.encrypt(padto(msg, 8)))
 
 
 def blowcrypt_unpack(msg, cipher):
     """."""
-    if not (msg.startswith('+OK ') or msg.startswith('mcps ')):
+    if not (msg.startswith("+OK ") or msg.startswith("mcps ")):
         raise ValueError
-    _, rest = msg.split(' ', 1)
+    _, rest = msg.split(" ", 1)
     if len(rest) < 12:
         raise MalformedError
 
@@ -531,27 +581,28 @@ def blowcrypt_unpack(msg, cipher):
         plain = cipher.decrypt(raw)
     except ValueError:
         raise MalformedError
-    
-    return plain.strip('\x00')
+
+    return plain.strip("\x00")
 
 
 ##
 ## Mircryption-CBC
 ##
 
+
 def mircryption_cbc_pack(msg, cipher):
     """."""
     padded = padto(msg, 8)
-    return '+OK *' + base64.b64encode(cipher.encrypt(padded))
+    return "+OK *" + base64.b64encode(cipher.encrypt(padded))
 
 
 def mircryption_cbc_unpack(msg, cipher):
     """."""
-    if not msg.startswith('+OK *') or msg.startswith('mcps *'):
+    if not msg.startswith("+OK *") or msg.startswith("mcps *"):
         raise ValueError
 
     try:
-        _, coded = msg.split('*', 1)
+        _, coded = msg.split("*", 1)
         raw = base64.b64decode(coded)
     except TypeError:
         raise MalformedError
@@ -574,16 +625,19 @@ def mircryption_cbc_unpack(msg, cipher):
 ##
 
 g_dh1080 = 2
-p_dh1080 = int('FBE1022E23D213E8ACFA9AE8B9DFAD'
-               'A3EA6B7AC7A7B7E95AB5EB2DF85892'
-               '1FEADE95E6AC7BE7DE6ADBAB8A783E'
-               '7AF7A7FA6A2B7BEB1E72EAE2B72F9F'
-               'A2BFB2A2EFBEFAC868BADB3E828FA8'
-               'BADFADA3E4CC1BE7E8AFE85E9698A7'
-               '83EB68FA07A77AB6AD7BEB618ACF9C'
-               'A2897EB28A6189EFA07AB99A8A7FA9'
-               'AE299EFA7BA66DEAFEFBEFBF0B7D8B', 16)
-q_dh1080 = (p_dh1080 - 1) / 2 
+p_dh1080 = int(
+    "FBE1022E23D213E8ACFA9AE8B9DFAD"
+    "A3EA6B7AC7A7B7E95AB5EB2DF85892"
+    "1FEADE95E6AC7BE7DE6ADBAB8A783E"
+    "7AF7A7FA6A2B7BEB1E72EAE2B72F9F"
+    "A2BFB2A2EFBEFAC868BADB3E828FA8"
+    "BADFADA3E4CC1BE7E8AFE85E9698A7"
+    "83EB68FA07A77AB6AD7BEB618ACF9C"
+    "A2897EB28A6189EFA07AB99A8A7FA9"
+    "AE299EFA7BA66DEAFEFBEFBF0B7D8B",
+    16,
+)
+q_dh1080 = (p_dh1080 - 1) / 2
 
 
 # XXX: It is probably possible to implement dh1080 base64 using Pythons own, by
@@ -593,7 +647,7 @@ q_dh1080 = (p_dh1080 - 1) / 2
 def dh1080_b64encode(s):
     """A non-standard base64-encode."""
     b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-    d = [0]*len(s)*2
+    d = [0] * len(s) * 2
 
     L = len(s) * 8
     m = 0x80
@@ -620,7 +674,7 @@ def dh1080_b64encode(s):
         d[k] = b64[t]
         k += 1
     d[k] = 0
-    res = ''
+    res = ""
     for q in d:
         if q == 0:
             break
@@ -631,14 +685,14 @@ def dh1080_b64encode(s):
 def dh1080_b64decode(s):
     """A non-standard base64-encode."""
     b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-    buf = [0]*256
+    buf = [0] * 256
     for i in range(64):
         buf[ord(b64[i])] = i
 
     L = len(s)
     if L < 2:
         raise ValueError
-    for i in reversed(list(range(L-1))):
+    for i in reversed(list(range(L - 1))):
         if buf[ord(s[i])] == 0:
             L -= 1
         else:
@@ -646,44 +700,44 @@ def dh1080_b64decode(s):
     if L < 2:
         raise ValueError
 
-    d = [0]*L
+    d = [0] * L
     i, k = 0, 0
     while True:
         i += 1
         if k + 1 < L:
-            d[i-1] = buf[ord(s[k])] << 2
-            d[i-1] %= 0x100
+            d[i - 1] = buf[ord(s[k])] << 2
+            d[i - 1] %= 0x100
         else:
             break
         k += 1
         if k < L:
-            d[i-1] |= buf[ord(s[k])] >> 4
+            d[i - 1] |= buf[ord(s[k])] >> 4
         else:
             break
         i += 1
         if k + 1 < L:
-            d[i-1] = buf[ord(s[k])] << 4
-            d[i-1] %= 0x100
+            d[i - 1] = buf[ord(s[k])] << 4
+            d[i - 1] %= 0x100
         else:
             break
         k += 1
         if k < L:
-            d[i-1] |= buf[ord(s[k])] >> 2
+            d[i - 1] |= buf[ord(s[k])] >> 2
         else:
             break
         i += 1
         if k + 1 < L:
-            d[i-1] = buf[ord(s[k])] << 6
-            d[i-1] %= 0x100
+            d[i - 1] = buf[ord(s[k])] << 6
+            d[i - 1] %= 0x100
         else:
             break
         k += 1
         if k < L:
-            d[i-1] |= buf[ord(s[k])] % 0x100
+            d[i - 1] |= buf[ord(s[k])] % 0x100
         else:
             break
         k += 1
-    return ''.join(map(chr, d[0:i-1]))
+    return "".join(map(chr, d[0 : i - 1]))
 
 
 def dh_validate_public(public, q, p):
@@ -693,18 +747,21 @@ def dh_validate_public(public, q, p):
 
 class DH1080Ctx:
     """DH1080 context."""
+
     def __init__(self):
         self.public = 0
         self.private = 0
         self.secret = 0
         self.state = 0
-        
+
         bits = 1080
         while True:
-            self.private = bytes2int(urandom(bits/8))
+            self.private = bytes2int(urandom(bits / 8))
             self.public = pow(g_dh1080, self.private, p_dh1080)
-            if 2 <= self.public <= p_dh1080 - 1 and \
-               dh_validate_public(self.public, q_dh1080, p_dh1080) == 1:
+            if (
+                2 <= self.public <= p_dh1080 - 1
+                and dh_validate_public(self.public, q_dh1080, p_dh1080) == 1
+            ):
                 break
 
 
@@ -724,34 +781,36 @@ def dh1080_unpack(msg, ctx):
     if not msg.startswith("DH1080_"):
         raise ValueError
 
-    invalidmsg = "Key does not validate per RFC 2631. This check is not " \
-                 "performed by any DH1080 implementation, so we use the key " \
-                 "anyway. See RFC 2785 for more details."
+    invalidmsg = (
+        "Key does not validate per RFC 2631. This check is not "
+        "performed by any DH1080 implementation, so we use the key "
+        "anyway. See RFC 2785 for more details."
+    )
 
     if ctx.state == 0:
         if not msg.startswith("DH1080_INIT "):
             raise MalformedError
         ctx.state = 1
         try:
-            cmd, public_raw = msg.split(' ', 1)
+            cmd, public_raw = msg.split(" ", 1)
             public = bytes2int(dh1080_b64decode(public_raw))
 
             if not 1 < public < p_dh1080:
                 raise MalformedError
-            
+
             if not dh_validate_public(public, q_dh1080, p_dh1080):
                 print(invalidmsg)
-                
+
             ctx.secret = pow(public, ctx.private, p_dh1080)
         except:
             raise MalformedError
-        
+
     elif ctx.state == 1:
         if not msg.startswith("DH1080_FINISH "):
             raise MalformedError
         ctx.state = 1
         try:
-            cmd, public_raw = msg.split(' ', 1)
+            cmd, public_raw = msg.split(" ", 1)
             public = bytes2int(dh1080_b64decode(public_raw))
 
             if not 1 < public < p_dh1080:
@@ -759,13 +818,13 @@ def dh1080_unpack(msg, ctx):
 
             if not dh_validate_public(public, q_dh1080, p_dh1080):
                 print(invalidmsg)
-            
+
             ctx.secret = pow(public, ctx.private, p_dh1080)
         except:
             raise MalformedError
 
     return True
-        
+
 
 def dh1080_secret(ctx):
     """."""
@@ -792,8 +851,9 @@ modp14 = """
       15728E5A 8AACAA68 FFFFFFFF FFFFFFFF
 """
 g = 2
-N = int(modp14.replace(' ', '').replace('\n', ''), 16)
+N = int(modp14.replace(" ", "").replace("\n", ""), 16)
 H = sha256
+
 
 class IRCSRPExchange:
     def __init__(self):
@@ -810,6 +870,7 @@ class IRCSRPExchange:
         self.M1 = 0
         self.M2 = 0
 
+
 class IRCSRPUsers:
     def __init__(self):
         # Store info about friends here, such as
@@ -819,7 +880,7 @@ class IRCSRPUsers:
         # Temporary storage for exchange. The dict key is derived from the
         # IRC message, not the username.
         self.others = {}
-        
+
     def get_details(self, username):
         s, v = self.db[username]
         return s, v
@@ -827,24 +888,25 @@ class IRCSRPUsers:
 
 class IRCSRPCtx:
     """Everyone has one of these."""
+
     def __init__(self, dave=False):
         self.cipher = None
         self.status = 0
-        self.username = ''
-        self.password = ''
-        self.sessionkey = ''
+        self.username = ""
+        self.password = ""
+        self.sessionkey = ""
         self.ex = IRCSRPExchange()
         self.isdave = dave
         if dave:
             self.users = IRCSRPUsers()
-            
+
     def set_key(self, key):
         assert len(key) == 32
         self.sessionkey = key
         self.cipher = AESCBC(key)
         if self.isdave:
-            padded = padto('\xffKEY' + key, 16)
-            return '+aes ' + base64.b64encode(self.cipher.encrypt(padded))
+            padded = padto("\xffKEY" + key, 16)
+            return "+aes " + base64.b64encode(self.cipher.encrypt(padded))
         return None
 
 
@@ -860,17 +922,17 @@ def ircsrp_pack(ctx, msg):
     """Encrypt message for channel."""
     times = struct.pack(">L", int(time.time()))
     infos = chr(len(ctx.username)) + ctx.username + times
-    padded = padto('M' + infos + msg, 16)
-    return '+aes ' + base64.b64encode(ctx.cipher.encrypt(padded))
+    padded = padto("M" + infos + msg, 16)
+    return "+aes " + base64.b64encode(ctx.cipher.encrypt(padded))
 
 
 def ircsrp_unpack(ctx, msg):
     """Decrypt message for channel."""
-    if not msg.startswith('+aes '):
+    if not msg.startswith("+aes "):
         raise ValueError
 
     try:
-        _, coded = msg.split(' ', 1)
+        _, coded = msg.split(" ", 1)
         raw = base64.b64decode(coded)
     except TypeError:
         raise MalformedError
@@ -887,7 +949,7 @@ def ircsrp_unpack(ctx, msg):
     plain = padded.strip("\x00")
 
     # New key?
-    if plain.startswith('\xffKEY'):
+    if plain.startswith("\xffKEY"):
         new = plain[4:]
         if not len(new) == 32:
             raise MalformedError
@@ -896,23 +958,23 @@ def ircsrp_unpack(ctx, msg):
         print("*** Session key changed to:", repr(new))
         return None
 
-    if not plain[0] == 'M':
+    if not plain[0] == "M":
         raise ValueError
 
     usernamelen = ord(plain[1])
-    username = plain[2:2+usernamelen]
-    timestampstr = plain[2+usernamelen:4+2+usernamelen]
+    username = plain[2 : 2 + usernamelen]
+    timestampstr = plain[2 + usernamelen : 4 + 2 + usernamelen]
     timestamp = struct.unpack(">L", timestampstr)[0]
 
     print("*** Sent by username:", username)
     print("*** Sent at time:", time.ctime(timestamp))
-        
-    return plain[4+2+usernamelen:]
+
+    return plain[4 + 2 + usernamelen :]
 
 
 def ircsrp_exchange(ctx, msg=None, sender=None):
     """The key exchange, for NOTICE handler. Parameters are:
-    
+
     :<sender>!user@host.com NOTICE :<msg>\r\n
     """
     b64 = lambda s: base64.b64encode(s)
@@ -920,57 +982,57 @@ def ircsrp_exchange(ctx, msg=None, sender=None):
     unb64 = lambda s: base64.b64decode(s)
     unb64i = lambda s: bytes2int(unb64(s))
 
-    cmd, arg = '', ''
+    cmd, arg = "", ""
     if msg:
-        cmd, arg = msg.split(' ', 1)
-        if not cmd.startswith('+srp'):
+        cmd, arg = msg.split(" ", 1)
+        if not cmd.startswith("+srp"):
             raise ValueError
-        cmd = cmd[5:].strip(' ')
-    
+        cmd = cmd[5:].strip(" ")
+
     # Alice initiates the exchange.
     if msg == None and sender == None and ctx.ex.status == 0:
-        
+
         ctx.ex.status = 1
-        
+
         return "+srpa0 " + ctx.username
 
     # Dave
-    if cmd == '0':
-        
+    if cmd == "0":
+
         ex = ctx.users.others[sender] = IRCSRPExchange()
 
         I = ex.I = arg
         s, v = ex.s, ex.v = ctx.users.get_details(I)
-        b = ex.b = randint(2, N-1)
-        B = ex.B = (3*v + pow(g, b, N)) % N
+        b = ex.b = randint(2, N - 1)
+        B = ex.B = (3 * v + pow(g, b, N)) % N
 
         return "+srpa1 " + b64(s + int2bytes(B))
 
     # Alice
-    if cmd == '1' and ctx.ex.status == 1:
+    if cmd == "1" and ctx.ex.status == 1:
 
         args = unb64(arg)
         s = ctx.ex.s = args[:32]
         B = ctx.ex.B = bytes2int(args[32:])
         if B % N == 0:
             raise ValueError
-        
-        a = ctx.ex.a = randint(2, N-1)
+
+        a = ctx.ex.a = randint(2, N - 1)
         A = ctx.ex.A = pow(g, a, N)
         x = ctx.ex.x = bytes2int(H(s + ctx.username + ctx.password))
-        
+
         u = ctx.ex.u = bytes2int(H(int2bytes(A) + int2bytes(B)))
-        S = ctx.ex.S = pow(B - 3*pow(g, x, N), (a + u*x) % N, N)
+        S = ctx.ex.S = pow(B - 3 * pow(g, x, N), (a + u * x) % N, N)
         K = ctx.ex.K = H(int2bytes(S))
         M1 = ctx.ex.M1 = H(int2bytes(A) + int2bytes(B) + int2bytes(S))
 
         ctx.ex.status = 2
-        
+
         return "+srpa2 " + b64(M1 + int2bytes(A))
 
     # Dave
-    if cmd == '2':
-        
+    if cmd == "2":
+
         if not sender in ctx.users.others:
             raise ValueError
         ex = ctx.users.others[sender]
@@ -993,11 +1055,11 @@ def ircsrp_exchange(ctx, msg=None, sender=None):
         aes = AESCBC(K)
 
         del ctx.users.others[sender]
-        
+
         return "+srpa3 " + b64(aes.encrypt(ctx.sessionkey + M2))
 
     # Alice
-    if cmd == '3' and ctx.ex.status == 2:
+    if cmd == "3" and ctx.ex.status == 2:
 
         cipher = unb64(arg)
         aes = AESCBC(ctx.ex.K)
@@ -1014,9 +1076,9 @@ def ircsrp_exchange(ctx, msg=None, sender=None):
         ctx.cipher = AESCBC(sessionkey)
 
         print("*** Session key is:", repr(sessionkey))
-        
+
         ctx.ex.status = 0
-        
+
         return True
 
     raise ValueError
