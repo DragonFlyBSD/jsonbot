@@ -4,6 +4,8 @@
 
 """ base class for all bots. """
 
+import traceback
+
 ## jsb imports
 
 from jsb.utils.exception import handle_exception
@@ -305,7 +307,7 @@ class BotBase(LazyDict):
                 self.started = False
                 if self.start(): break
             except Exception as ex:
-                logging.error(str(ex))
+                logging.error(traceback.format_exc())
                 logging.error("sleeping 15 seconds")
                 time.sleep(15)       
 

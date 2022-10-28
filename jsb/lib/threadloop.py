@@ -22,13 +22,15 @@ class ThreadLoop(object):
 
     """ implement startable/stoppable threads. """
 
-    def __init__(self, name="", queue=None):
+    def __init__(self, name="", queue_arg=None):
         self.name = name
         self.stopped = False
         self.running = False
         self.outs = []
-        try: self.queue = queue or queue.PriorityQueue()
-        except AttributeError: self.queue = queue or queue.Queue()
+        if queue_arg:
+            self.queue = queue_arg
+        else:
+            self.queue = queue.PriorityQueue()
         self.nowrunning = "none"
 
     def _loop(self):

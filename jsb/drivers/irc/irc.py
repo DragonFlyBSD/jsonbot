@@ -29,6 +29,7 @@ from .ircevent import IrcEvent
 
 ## basic imports
 
+import traceback
 import time
 import _thread
 import socket
@@ -89,8 +90,8 @@ class Irc(BotBase):
             if not txt.startswith("PONG"): logging.warn("> %s (%s)" % (itxt, self.cfg.name))
             else: logging.info("> %s (%s)" % (itxt, self.cfg.name))             
             if 'ssl' in self.cfg and self.cfg['ssl']: self.sock.write(itxt + '\n')
-            else: self.sock.send(itxt[:500] + '\n')
-        except Exception as ex: logging.error("%s - can't send: %s" % (self.cfg.name, str(ex)))
+            else: self.sock.send(itxt[:500] + b'\n')
+        except Exception as ex: logging.error("%s - can't send: %s" % (self.cfg.name, traceback.format_exc()))
 
     def _connect(self):
         """ connect to server/port using nick. """

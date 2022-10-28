@@ -24,7 +24,7 @@ import urllib.parse
 import socket
 import random
 import os
-import sgmllib
+#import sgmllib
 import _thread
 import types
 import http.client
@@ -318,12 +318,14 @@ def get_encoding(data):
 
 ## Stripper class
 
-class Stripper(sgmllib.SGMLParser):
+# class Stripper(sgmllib.SGMLParser):
+class Stripper:
 
     """ html stripper. """
 
     def __init__(self):
-        sgmllib.SGMLParser.__init__(self)
+        raise Exception('IMPLEMENT SGMLPARSER')
+        #sgmllib.SGMLParser.__init__(self)
 
     def strip(self, some_html):
         """ strip html. """

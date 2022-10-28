@@ -95,7 +95,7 @@ def start_new_thread(func, arglist, kwargs={}):
     else: name = kwargs['name']
     try:
         thread = Thr(None, target=func, name=name, args=arglist, kwargs=kwargs)
-        _thread.start()
+        thread.start()
         return thread
     except Exception as ex:
         if "can't start" in str(ex): logging.error("threads - thread space is exhausted - can't start thread %s" % name)
@@ -111,7 +111,7 @@ def start_bot_command(func, arglist, kwargs={}):
         name = getname(func)
         if not name: name = 'noname'
         thread = Botcommand(group=None, target=func, name=name, args=arglist, kwargs=kwargs)
-        _thread.start()
+        thread.start()
         return thread
     except:
         handle_exception()
