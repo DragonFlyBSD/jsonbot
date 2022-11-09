@@ -34,12 +34,9 @@ from jsb.lib.errors import NoSuchPlugin
 ## basic imports
 
 import time
-import threading
 import sys
-import re
 import os
 import copy
-import cgi
 import logging
 import functools
 

@@ -16,7 +16,6 @@ from jsb.lib.examples import examples
 
 ## basic imports
 
-import os
 
 ## alias-search command
 

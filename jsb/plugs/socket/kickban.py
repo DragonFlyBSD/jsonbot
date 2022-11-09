@@ -15,7 +15,6 @@ from jsb.lib.wait import waiter
 ## basic imports
 
 import queue
-import time
 import logging
 
 ## defines

@@ -14,7 +14,6 @@ from jsb.lib.examples import examples
 
 import getopt
 import re
-import time
 
 ## grep command
 

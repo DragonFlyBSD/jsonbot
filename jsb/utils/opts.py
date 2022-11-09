@@ -13,7 +13,6 @@ from jsb.utils.name import stripname
 ## basic imports
 
 import os
-import uuid
 import logging
 import optparse
 

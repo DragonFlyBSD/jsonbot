@@ -22,11 +22,9 @@ from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 ## basic imports
 
-import types
 import time
 import _thread
 import logging
-import re
 
 ## locks
 

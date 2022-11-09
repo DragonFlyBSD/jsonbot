@@ -36,10 +36,6 @@ from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 import logging
 import copy
-import time
-import types
-import hmac
-import hashlib
 
 ## defines
 

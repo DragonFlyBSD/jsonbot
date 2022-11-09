@@ -13,7 +13,8 @@ go = False
 try:
     from subprocess import Popen, PIPE
     from .locking import lockdec
-    import _thread, io, logging, types
+    import _thread
+    import io
 
     go = True
 except:

@@ -14,7 +14,6 @@ from jsb.lib.config import getmainconfig
 import os
 import os.path
 import logging
-import time
 
 mc = None
 

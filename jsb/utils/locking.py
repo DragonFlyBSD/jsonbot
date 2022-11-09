@@ -14,7 +14,6 @@ from jsb.lib.threads import getname
 ## generic imports
 
 import logging
-import sys
 import _thread
 
 ## Locked-class

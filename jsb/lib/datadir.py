@@ -10,12 +10,10 @@ from jsb.utils.source import getsource
 
 ## basic imports
 
-import re
 import os
 import shutil
 import logging
 import os.path
-import getpass
 
 ## the global datadir
 

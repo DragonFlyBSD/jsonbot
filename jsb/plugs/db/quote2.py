@@ -21,7 +21,6 @@ import random
 import re
 import time
 import _thread
-import os
 import logging
 
 ## main db

@@ -10,7 +10,6 @@ from jsb.lib.config import getmainconfig
 
 ## basic imports
 
-import os
 import binascii
 
 ## defines

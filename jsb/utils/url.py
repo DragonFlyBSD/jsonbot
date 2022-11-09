@@ -16,22 +16,14 @@ import logging
 import time
 import sys
 import re
-import traceback
-import queue
 import urllib.request, urllib.parse, urllib.error
 import urllib.request, urllib.error, urllib.parse
 import urllib.parse
-import socket
-import random
-import os
 
 # import sgmllib
 import _thread
-import types
 import http.client
-import io
 import html.entities
-import tempfile
 import cgi
 
 ## defines

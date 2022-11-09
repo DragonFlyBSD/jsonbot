@@ -35,7 +35,6 @@ from jsb.lib.persistconfig import PersistConfig
 
 ## basic imports
 
-from string import strip
 import os
 import logging
 import pickle

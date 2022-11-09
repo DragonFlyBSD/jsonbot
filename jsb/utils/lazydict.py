@@ -16,13 +16,10 @@ json = getjson()
 
 ## basic imports
 
-from xml.sax.saxutils import unescape
 import copy
 import logging
 import types
 import threading
-import os
-import re
 import types
 
 ## locks

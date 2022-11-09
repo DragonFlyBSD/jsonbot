@@ -136,7 +136,6 @@ from jsb.lib.datadir import getdatadir
 ## basic imports
 
 import getpass
-import time
 import logging
 
 ## start the bot

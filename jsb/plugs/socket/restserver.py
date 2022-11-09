@@ -18,7 +18,6 @@ from jsb.lib.examples import examples
 ## basic imports
 
 import socket
-import re
 import logging
 
 ## defines

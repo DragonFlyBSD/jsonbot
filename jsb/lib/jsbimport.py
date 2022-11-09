@@ -6,7 +6,6 @@
 
 ## basic imports
 
-import time
 import sys
 import imp
 import os

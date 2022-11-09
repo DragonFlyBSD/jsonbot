@@ -30,12 +30,9 @@ from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
 ## basic imports
 
 import socket
-import os
 import time
-import copy
 import logging
 import _thread
-import cgi
 import xml
 import re
 import hashlib

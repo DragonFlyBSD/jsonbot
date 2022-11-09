@@ -15,7 +15,6 @@ from jsb.lib.persist import PlugPersist
 ## basic imports
 
 import time
-import os
 
 ## Remind-class
 

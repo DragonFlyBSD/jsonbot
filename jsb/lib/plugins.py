@@ -25,13 +25,9 @@ from .boot import plugblacklist
 
 import os
 import logging
-import queue
 import copy
-import sys
 import _thread
-import types
 import time
-from collections import deque
 import importlib
 
 ## defines

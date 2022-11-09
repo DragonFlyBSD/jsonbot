@@ -19,7 +19,6 @@ from jsb.utils.pdod import Pdod
 ## basic imports
 
 import os
-import time
 import logging
 
 ## NSAuth class

@@ -23,7 +23,6 @@ import logging
 import copy
 import hmac
 import hashlib
-import cgi
 
 ## defines
 

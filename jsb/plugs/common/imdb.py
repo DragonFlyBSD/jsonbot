@@ -13,7 +13,6 @@ from jsb.imports import getjson
 
 ## basic imports
 
-import logging
 
 ## defines
 

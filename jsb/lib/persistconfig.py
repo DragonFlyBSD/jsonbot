@@ -29,10 +29,7 @@ from jsb.imports import getjson
 
 ## basic imports
 
-import sys
 import os
-import types
-import time
 import logging
 
 ## PersistConfigError exception

@@ -17,14 +17,10 @@ json = getjson()
 
 from stat import ST_UID, ST_MODE, S_IMODE
 import time
-import sys
 import re
-import getopt
-import types
 import os
 import os.path
 import random
-import queue
 import logging
 import io
 

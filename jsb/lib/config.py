@@ -24,12 +24,10 @@ json = getjson()
 
 import sys
 import os
-import types
 import _thread
 import logging
 import uuid
 import _thread
-import getpass
 import copy
 import time
 

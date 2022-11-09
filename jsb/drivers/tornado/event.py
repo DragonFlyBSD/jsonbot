@@ -23,9 +23,7 @@ import tornado
 
 ## basic imports
 
-import cgi
 import logging
-import re
 
 ## WebEvent class
 

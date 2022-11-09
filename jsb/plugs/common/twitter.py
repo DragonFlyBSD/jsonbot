@@ -31,7 +31,6 @@ from jsb.contrib import tweepy
 
 import os
 import urllib.request, urllib.error, urllib.parse
-import types
 import logging
 
 ## credentials

@@ -22,9 +22,6 @@ json = getjson()
 ## basic imports
 
 import logging
-import re
-import cgi
-import urllib.request, urllib.parse, urllib.error
 import time
 import copy
 import functools

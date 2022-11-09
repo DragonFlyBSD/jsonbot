@@ -20,7 +20,6 @@ from jsb.lib.persistconfig import PersistConfig
 
 ## basic imports
 
-import time
 import logging
 
 ## defines

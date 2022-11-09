@@ -20,7 +20,6 @@ json = getjson()
 ## basic imports
 
 import _thread
-import pickle
 import socket
 import logging
 

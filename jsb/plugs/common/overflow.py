@@ -27,9 +27,7 @@ json = getjson()
 
 ## basic imports
 
-import os
 import logging
-import uuid
 import time
 import io
 import gzip

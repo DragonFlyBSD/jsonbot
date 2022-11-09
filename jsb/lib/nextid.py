@@ -6,7 +6,6 @@
 
 ## basic imports
 
-import os
 
 ## Nextid class
 

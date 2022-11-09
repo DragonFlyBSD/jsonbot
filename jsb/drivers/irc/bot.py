@@ -34,14 +34,11 @@ from .ircevent import IrcEvent
 
 ## basic imports
 
-from collections import deque
 import re
 import socket
 import struct
 import queue
 import time
-import os
-import types
 import logging
 
 ## defines

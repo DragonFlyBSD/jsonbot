@@ -15,7 +15,6 @@ from jsb.utils.generic import istr
 
 import tarfile
 import os
-import types
 import io
 import bz2
 import gzip

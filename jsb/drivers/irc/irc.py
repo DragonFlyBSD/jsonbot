@@ -33,13 +33,9 @@ import traceback
 import time
 import _thread
 import socket
-import threading
 import os
-import queue
 import random
 import logging
-import types
-import re
 import select
 
 ## locks
@@ -767,7 +763,6 @@ class Irc(BotBase):
 
     def handle_401(self, ievent):
         """handle 401 .. nick not available."""
-        pass
 
     def handle_700(self, ievent):
         """handle 700 .. encoding request of the server."""

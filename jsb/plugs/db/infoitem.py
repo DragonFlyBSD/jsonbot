@@ -17,7 +17,6 @@ from jsb.lib.config import getmainconfig
 ## basic imports
 
 import _thread
-import os
 import time
 import logging
 

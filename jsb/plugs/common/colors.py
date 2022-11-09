@@ -16,7 +16,6 @@ from jsb.lib.boot import ongae
 
 ## basic imports
 
-import re
 import logging
 
 ## defines
@@ -126,7 +125,6 @@ def init():
 
 def bogus(bot, event):
     """bogus startup function to load the color morph on startup."""
-    pass
 
 
 first_callbacks.add("START", bogus)

@@ -33,8 +33,6 @@ import time
 import os
 import logging
 import _thread
-from os import path
-from datetime import datetime
 
 ## locks
 

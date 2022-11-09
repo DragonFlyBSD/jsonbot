@@ -16,7 +16,6 @@ from jsb.lib.boot import plugenable, plugdisable
 
 ## basic imports
 
-import os
 import logging
 
 ## plug-enable command

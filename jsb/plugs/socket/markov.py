@@ -35,11 +35,9 @@ from jsb.lib.threads import start_new_thread
 from jsb.utils.limlist import Limlist
 from jsb.lib.persist import PersistCollection, Persist
 from jsb.utils.exception import handle_exception
-from os.path import join as _j
 import time
 import re
 import random
-import types
 import logging
 import os
 

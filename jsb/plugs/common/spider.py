@@ -38,19 +38,8 @@ soup = getBeautifulSoup()
 
 ## basic imports
 
-from collections import deque
-import os
 import logging
-import re
-import sys
 import time
-import math
-import urllib.request, urllib.error, urllib.parse
-import urllib.parse
-import optparse
-from cgi import escape
-from traceback import format_exc
-from queue import Queue, Empty as QueueEmpty
 
 ## defines
 

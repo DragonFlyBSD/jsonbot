@@ -12,9 +12,7 @@ from jsb.lib.eventbase import EventBase
 
 ## basic imports
 
-import time
 import re
-import types
 import copy
 import logging
 

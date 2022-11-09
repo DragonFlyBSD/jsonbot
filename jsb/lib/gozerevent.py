@@ -18,7 +18,6 @@ from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 ## for exceptions
 
-import xml.parsers.expat
 
 ## xmpp imports
 

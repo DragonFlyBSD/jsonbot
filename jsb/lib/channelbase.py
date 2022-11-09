@@ -95,7 +95,6 @@ class ChannelBase(Persist):
         channel with it. Overload this.
 
         """
-        pass
 
     def gae_create(self):
         try:

@@ -14,7 +14,6 @@ from jsb.utils.pdol import Pdol
 
 ## basic imports
 
-import os
 
 ## functions
 

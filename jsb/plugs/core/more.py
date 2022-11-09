@@ -12,7 +12,6 @@ from jsb.lib.less import outcache
 
 ## basic imports
 
-import logging
 
 ## more command
 

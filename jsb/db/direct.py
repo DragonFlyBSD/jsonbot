@@ -19,7 +19,6 @@ from jsb.lib.datadir import getdatadir
 import _thread
 import os
 import time
-import types
 import logging
 
 ## locks

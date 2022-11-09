@@ -21,7 +21,6 @@ from jsb.lib.persiststate import UserState
 from xml.dom import minidom
 from urllib.parse import urlencode
 import logging
-import time
 
 ## weather command
 

@@ -26,10 +26,7 @@ from .aliases import getaliases, aliascheck
 
 import logging
 import sys
-import types
-import os
 import copy
-import time
 import re
 
 ## defines

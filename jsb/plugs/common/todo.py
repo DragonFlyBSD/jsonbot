@@ -25,9 +25,6 @@ from jsb.utils.lazydict import LazyDict
 
 import time
 import _thread
-import os
-from datetime import datetime, timedelta
-from time import localtime
 
 ## defines
 

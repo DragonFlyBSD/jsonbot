@@ -32,7 +32,6 @@ from jsb.plugs.common.tinyurl import get_tinyurl
 import re
 import urllib.parse
 import xmlrpc.client
-import socket
 import logging
 
 ## defines

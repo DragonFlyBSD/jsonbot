@@ -22,7 +22,6 @@ import datetime
 import sys
 import time
 import _thread
-import types
 import logging
 
 ## locks
@@ -41,7 +40,6 @@ class JobError(Exception):
 
     """job error exception."""
 
-    pass
 
 
 ## Job class

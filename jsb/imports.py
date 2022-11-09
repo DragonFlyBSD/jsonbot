@@ -38,7 +38,7 @@ def getwebapp2():
 
 def getjson():
     try:
-        import wave
+        pass
 
         # mod = _import("jsb.contrib.simplejson")
         mod = _import("json")

@@ -12,7 +12,6 @@ from jsb.lib.exit import globalshutdown
 
 ## basic imports
 
-import os
 import time
 
 ## mainloop function

@@ -11,8 +11,6 @@ from jsb.lib.examples import examples
 
 ## basic imports
 
-import os
-import string
 import random
 
 ## defines

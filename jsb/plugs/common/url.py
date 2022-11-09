@@ -15,7 +15,6 @@ from jsb.lib.persiststate import PlugState
 ## basic imports
 
 import re
-import os
 import logging
 
 ## defines

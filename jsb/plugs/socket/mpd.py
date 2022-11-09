@@ -68,7 +68,6 @@ cfg.define(
 class MPDError(Exception):
     """exception to raise."""
 
-    pass
 
 
 class MPDDict(dict):

@@ -14,17 +14,12 @@ from jsb.utils.lazydict import LazyDict
 from jsb.imports import getjson
 
 json = getjson()
-from urllib.error import HTTPError, URLError
-from http.client import InvalidURL
 from urllib.parse import urlparse
 import socket
 import asynchat
 import urllib.request, urllib.parse, urllib.error
 import sys
 import _thread
-import re
-import asyncore
-import time
 import logging
 
 ## defines

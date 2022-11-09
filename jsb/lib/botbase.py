@@ -67,16 +67,11 @@ except ImportError:
 import time
 import logging
 import copy
-import sys
-import getpass
 import os
 import _thread
-import types
 import threading
 import queue
 import re
-import urllib.request, urllib.parse, urllib.error
-from collections import deque
 
 ## defines
 
@@ -878,43 +873,33 @@ class BotBase(LazyDict):
 
     def join(self, channel, password, *args, **kwargs):
         """join a channel."""
-        pass
 
     def part(self, channel, *args, **kwargs):
         """leave a channel."""
-        pass
 
     def action(self, channel, txt, event=None, *args, **kwargs):
         """send action to channel."""
-        pass
 
     def doop(self, channel, who):
         """give nick ops."""
-        pass
 
     def invite(self, *args, **kwargs):
         """invite another user/bot."""
-        pass
 
     def donick(self, nick, *args, **kwargs):
         """do a nick change."""
-        pass
 
     def shutdown(self, *args, **kwargs):
         """shutdown the bot."""
-        pass
 
     def quit(self, reason="", *args, **kwargs):
         """close connection with the server."""
-        pass
 
     def connect(self, reconnect=False, *args, **kwargs):
         """connect to the server."""
-        pass
 
     def names(self, channel, *args, **kwargs):
         """request all names of a channel."""
-        pass
 
     def settopic(self, channel, txt):
         pass

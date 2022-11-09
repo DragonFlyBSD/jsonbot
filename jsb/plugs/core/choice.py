@@ -13,7 +13,6 @@ from jsb.lib.examples import examples
 ## basic imports
 
 import random
-import time
 
 ## choice command
 

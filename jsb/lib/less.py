@@ -19,7 +19,6 @@ except ImportError:
 
 ## basic imports
 
-import logging
 
 
 ## Less class

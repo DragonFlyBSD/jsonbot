@@ -14,7 +14,6 @@ from jsb.utils.exception import handle_exception
 
 import logging
 import copy
-import types
 import time
 import uuid
 

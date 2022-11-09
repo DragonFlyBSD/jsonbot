@@ -16,11 +16,9 @@ from socketserver import BaseServer, ThreadingMixIn
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import unquote_plus
 from asyncore import dispatcher
-from cgi import escape
 import time
 import sys
 import select
-import types
 import socket
 import logging
 

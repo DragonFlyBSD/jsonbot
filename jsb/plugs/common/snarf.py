@@ -29,7 +29,6 @@ from jsb.lib.plugins import plugs as plugins
 import urllib.request, urllib.parse, urllib.error
 import urllib.request, urllib.error, urllib.parse
 import urllib.parse
-import copy
 import re
 import socket
 

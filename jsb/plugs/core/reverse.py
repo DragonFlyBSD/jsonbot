@@ -15,8 +15,6 @@ from jsb.lib.examples import examples
 
 ## basic imports
 
-import types
-import time
 
 ## reverse command
 

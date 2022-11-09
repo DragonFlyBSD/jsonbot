@@ -10,7 +10,6 @@ from jsb.utils.trace import calledfrom
 
 ## basic imports
 
-import sys
 
 ## exceptions
 

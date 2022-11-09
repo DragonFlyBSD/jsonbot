@@ -19,16 +19,12 @@ from .event import ConsoleEvent
 
 ## basic imports
 
-import time
-import queue
 import logging
 import sys
 import code
 import os
 import readline
 import atexit
-import getpass
-import re
 import copy
 
 ## defines

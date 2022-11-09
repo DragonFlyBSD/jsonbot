@@ -22,16 +22,11 @@ from jsb.lib.floodcontrol import floodcontrol
 ## basic imports
 
 from collections import deque
-from xml.sax.saxutils import unescape
 import copy
 import logging
-import queue
-import types
-import socket
 import threading
 import time
 import _thread
-import urllib.request, urllib.parse, urllib.error
 import uuid
 
 ## defines

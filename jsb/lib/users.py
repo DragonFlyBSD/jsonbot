@@ -18,10 +18,7 @@ from .config import Config, getmainconfig
 
 ## basic imports
 
-import re
-import types
 import os
-import time
 import logging
 import copy
 

@@ -23,7 +23,6 @@ from jsb.db import getmaindb
 
 import time
 import _thread
-import os
 import logging
 
 ## locks

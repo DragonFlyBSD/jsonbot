@@ -39,7 +39,6 @@ import urllib.request, urllib.parse, urllib.error
 import urllib.parse
 import uuid
 import os
-import time
 
 ## subscribe function
 
@@ -116,7 +115,6 @@ def find_self_url(links):
 class NoSuchFeed(Exception):
     """there is no such feed in the feed database."""
 
-    pass
 
 
 ## HubbubItem class

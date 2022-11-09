@@ -10,7 +10,7 @@
 
 ## bootstrap
 
-from subprocess import Popen, PIPE
+from subprocess import Popen
 import os
 import sys
 import time

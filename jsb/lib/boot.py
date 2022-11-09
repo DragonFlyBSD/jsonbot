@@ -21,7 +21,6 @@ from jsb.memcached import startmcdaemon
 import logging
 import os
 import sys
-import types
 import copy
 import importlib
 

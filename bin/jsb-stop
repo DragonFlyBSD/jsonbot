@@ -21,7 +21,7 @@ print(getversion("STOP"))
 
 ## basic imports
 
-from subprocess import Popen, PIPE
+from subprocess import Popen
 import os
 import sys
 

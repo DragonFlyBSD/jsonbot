@@ -15,8 +15,6 @@ from jsb.utils.generic import waitforqueue
 
 ## basic imports
 
-import uuid
-import time
 
 ## feedback command
 

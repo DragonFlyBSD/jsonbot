@@ -13,9 +13,6 @@ from jsb.lib.persiststate import UserState
 
 ## basic imports
 
-import time
-import os
-import threading
 import _thread
 import copy
 

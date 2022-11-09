@@ -12,7 +12,6 @@ from jsb.lib.gozerevent import GozerEvent
 
 ## basic imports
 
-import logging
 import time
 
 ## Iq class

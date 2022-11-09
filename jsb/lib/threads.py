@@ -15,7 +15,6 @@ import re
 import time
 import _thread
 import logging
-import uuid
 
 ## defines
 

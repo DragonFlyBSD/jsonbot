@@ -13,7 +13,6 @@ from jsb.lib.gozerevent import GozerEvent
 ## basic imports
 
 import time
-import logging
 
 ## classes
 

@@ -18,26 +18,18 @@
 ## jsb imports
 
 from jsb.lib.persist import Persist, PlugPersist
-from jsb.utils.url import geturl2, striphtml, useragent
+from jsb.utils.url import geturl2, useragent
 from jsb.utils.exception import handle_exception
-from jsb.utils.generic import strippedtxt, fromenc, toenc, jsonstring, getwho, getnick
-from jsb.utils.rsslist import rsslist
+from jsb.utils.generic import fromenc, jsonstring, getnick
 from jsb.utils.lazydict import LazyDict
 from jsb.utils.statdict import StatDict
-from jsb.utils.timeutils import strtotime
-from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
-from jsb.utils.dol import Dol
 from jsb.utils.pdod import Pdod
 from jsb.utils.pdol import Pdol
-from jsb.lib.users import users
-from jsb.utils.id import getrssid
 from jsb.lib.tasks import taskmanager
 from jsb.lib.callbacks import callbacks
 from jsb.lib.fleet import getfleet
-from jsb.lib.threadloop import TimedLoop
 from jsb.lib.threads import start_new_thread
-from jsb.lib.errors import NoSuchBotType, FeedAlreadyExists, NameNotSet
 from jsb.lib.datadir import getdatadir
 from jsb.lib.channelbase import ChannelBase
 from jsb.imports import getfeedparser, getjson
@@ -46,7 +38,6 @@ from jsb.lib.boot import ongae
 ## google imports
 
 try:
-    import waveapi
     from google.appengine.api.memcache import get, set, delete
 except ImportError:
     from jsb.lib.cache import get, set, delete
@@ -67,12 +58,7 @@ except ImportError:
 
 import time
 import os
-import types
-import _thread
-import socket
-import xml
 import logging
-import datetime
 import hashlib
 import copy
 import re

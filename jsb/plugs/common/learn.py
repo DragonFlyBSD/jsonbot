@@ -14,7 +14,6 @@ from jsb.lib.persist import PlugPersist, GlobalPersist
 
 ## basic imports
 
-import logging
 
 ## learn command
 

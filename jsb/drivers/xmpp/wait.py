@@ -12,7 +12,6 @@ import jsb.lib.threads as thr
 
 ## basic imports
 
-import time
 import _thread
 import logging
 

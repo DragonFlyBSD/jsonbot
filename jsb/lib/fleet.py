@@ -27,11 +27,8 @@ json = getjson()
 
 ## basic imports
 
-import queue
 import os
-import types
 import time
-import glob
 import logging
 import threading
 import _thread

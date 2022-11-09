@@ -22,10 +22,7 @@ from jsb.plugs.common.tinyurl import get_tinyurl
 
 ## basic imports
 
-import logging
 import xmlrpc.client
-import re
-import time
 
 # import modules.activecollab
 

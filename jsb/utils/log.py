@@ -14,7 +14,6 @@ import logging
 import logging.handlers
 import os
 import os.path
-import getpass
 
 ## defines
 

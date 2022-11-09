@@ -14,7 +14,6 @@ from .threads import start_new_thread, getname
 import queue
 import time
 import logging
-from collections import deque
 
 ## ThreadLoop class
 
@@ -75,7 +74,6 @@ class ThreadLoop(object):
 
     def handle(self, *args, **kwargs):
         """overload this."""
-        pass
 
 
 ## RunnerLoop class

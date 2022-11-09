@@ -197,14 +197,8 @@ import tornado.websocket
 ## basic imports
 
 import sys
-import time
-import types
 import os
 import logging
-import urllib.parse
-import urllib.request, urllib.parse, urllib.error
-import socket
-import ssl
 import select
 
 bot = TornadoBot(botname="tornado-bot")

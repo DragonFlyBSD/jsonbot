@@ -40,22 +40,11 @@ from .errors import xmpperrors
 ## basic imports
 
 import time
-import urllib.request, urllib.parse, urllib.error
 import copy
 import time
 import queue
-import os
-import threading
 import _thread
-import types
-import xml
-import re
-import hashlib
 import logging
-import cgi
-import base64
-import random
-from hashlib import md5
 
 ## defines
 
@@ -318,7 +307,6 @@ class SXMPPBot(XMLStream, BotBase):
 
     def handle_iq(self, data):
         """iq handler .. overload this when needed."""
-        pass
 
     def handle_message(self, data):
         """message handler."""

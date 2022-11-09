@@ -17,9 +17,7 @@ from jsb.lib.aliases import setalias
 ## basic imports
 
 import _thread
-import pickle
 import time
-import os
 import logging
 
 ## defines

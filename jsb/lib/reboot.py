@@ -15,7 +15,6 @@ json = getjson()
 
 import os
 import sys
-import pickle
 import tempfile
 import logging
 import time

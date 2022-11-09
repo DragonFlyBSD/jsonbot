@@ -18,12 +18,10 @@ from jsb.lib.errors import URLNotEnabled
 
 ## basic imports
 
-import queue
 import time
 import _thread
 import random
 import logging
-import sys
 
 ## Runner class
 
@@ -171,7 +169,6 @@ class Runners(object):
 
     def start(self):
         """overload this if needed."""
-        pass
 
     def put(self, speed, *data):
         """put a job on a free runner."""

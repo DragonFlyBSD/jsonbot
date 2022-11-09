@@ -27,10 +27,8 @@ from jsb.lib.nextid import nextid
 
 import time
 import os
-import shutil
 import _thread
 import logging
-import types
 import copy
 
 ## defines

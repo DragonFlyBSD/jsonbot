@@ -13,8 +13,6 @@ from jsb.lib.errors import NoInput
 ## basic imports
 
 import getpass
-import logging
-import re
 
 ## ConsoleEvent class
 

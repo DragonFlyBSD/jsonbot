@@ -13,7 +13,6 @@ from jsb.lib.datadir import getdatadir
 
 ## basic imports
 
-import types
 import os
 import sys
 import logging

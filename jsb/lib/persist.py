@@ -34,10 +34,8 @@ import _thread
 import logging
 import os
 import os.path
-import types
 import copy
 import sys
-import time
 
 ## defines
 
