@@ -271,7 +271,7 @@ class Feed(Persist):
         """return data from cache or run fetchdata() to retrieve them."""
         url = self.data["url"]
         result = get(url, namespace="rss")
-        if result == None:
+        if result is None:
             result = self.fetchdata()
             set(url, result, namespace="rss")
             logging.debug("got result from %s" % strippassword(url))
@@ -356,7 +356,7 @@ class Feed(Persist):
     def updateseen(self, entries=None):
         got = False
         tobereturned = []
-        if entries == None:
+        if entries is None:
             entries = self.fetchdata()
         if entries:
             for res in entries[::-1]:
@@ -367,7 +367,7 @@ class Feed(Persist):
     def check(self, entries=None, save=True):
         got = False
         tobereturned = []
-        if entries == None:
+        if entries is None:
             entries = self.fetchdata()
         if entries:
             for res in entries[::-1]:
@@ -628,7 +628,7 @@ class Rssdict(PlugPersist):
     def getdata(self, name):
         """get data of rss feed."""
         rssitem = self.byname(name)
-        if rssitem == None:
+        if rssitem is None:
             raise RssNoSuchItem("no %s rss item found" % name)
         return rssitem.getdata()
 
@@ -636,7 +636,7 @@ class Rssdict(PlugPersist):
         """start a watcher thread"""
         logging.warn("starting %s rss feed watcher" % name)
         rssitem = self.byname(name)
-        if rssitem == None:
+        if rssitem is None:
             raise RssNoItem()
         rssitem.data.running = 1
         rssitem.data.stoprunning = 0
@@ -773,7 +773,7 @@ class Rsswatcher(Rssdict):
     def dowatch(self, name, sleeptime=1800):
         """start a watcher."""
         rssitem = self.byname(name)
-        if not rssitem == None:
+        if not rssitem is None:
             logging.error("no %s rss item available" % name)
             return
         while 1:
@@ -907,7 +907,7 @@ class Rsswatcher(Rssdict):
     def start(self, botname, bottype, name, channel):
         """start a rss feed (per user/channel)."""
         rssitem = self.byname(name)
-        if rssitem == None:
+        if rssitem is None:
             logging.warn("we don't have a %s rss object" % name)
             return False
         target = channel
@@ -1339,7 +1339,7 @@ def handle_rsswatch(bot, ievent):
     got = []
     for feed in target:
         rssitem = watcher.byname(feed)
-        if rssitem == None:
+        if rssitem is None:
             continue
         if name not in sleeptime.data:
             sleeptime.data[feed] = sleepsec
@@ -1413,7 +1413,7 @@ def handle_rssstop(bot, ievent):
             ievent.chan.data.feeds.remove(name)
         rssitem = watcher.byname(name)
         target = ievent.channel
-        if rssitem == None:
+        if rssitem is None:
             continue
         if not rssitem.data.running:
             continue
@@ -1474,7 +1474,7 @@ def handle_rsschannels(bot, ievent):
         ievent.missing("<feedname>")
         return
     rssitem = watcher.byname(name)
-    if rssitem == None:
+    if rssitem is None:
         ievent.reply("we don't have a %s rss object" % name)
         return
     if not rssitem.data.watchchannels:
@@ -1519,7 +1519,7 @@ def handle_rssaddchannel(bot, ievent):
                 ievent.missing("<feedname> [<botname>] [<bottype] [<channel>]")
                 return
     rssitem = watcher.byname(name)
-    if rssitem == None:
+    if rssitem is None:
         ievent.reply("we don't have a %s rss object" % name)
         return
     if not rssitem.data.running:
@@ -1788,7 +1788,7 @@ def handle_rssdelchannel(bot, ievent):
                 ievent.missing("<feedname> [<botname>] [<channel>]")
                 return
     rssitem = watcher.byname(name)
-    if rssitem == None:
+    if rssitem is None:
         ievent.reply("we don't have a %s rss object" % name)
         return
     if jsonstring([botname, type, channel]) in rssitem.data.watchchannels:
@@ -1882,7 +1882,7 @@ def handle_rsssetsleeptime(bot, ievent):
         ievent.reply("min is 60 seconds")
         return
     rssitem = watcher.byname(name)
-    if rssitem == None:
+    if rssitem is None:
         ievent.reply("we don't have a %s rss item" % name)
         return
     rssitem.data.sleeptime = sec
@@ -1920,7 +1920,7 @@ def handle_rssget(bot, ievent):
         return
     channel = ievent.channel
     rssitem = watcher.byname(name)
-    if rssitem == None:
+    if rssitem is None:
         ievent.reply("we don't have a %s rss item" % name)
         return
     try:
@@ -2084,7 +2084,7 @@ def handle_rssscan(bot, ievent):
     except Exception as ex:
         ievent.reply(str(ex))
         return
-    if result == None:
+    if result is None:
         ievent.reply("can't get data for %s" % name)
         return
     res = []

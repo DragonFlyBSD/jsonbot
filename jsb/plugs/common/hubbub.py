@@ -266,7 +266,7 @@ class HubbubWatcher(PlugPersist):
         """make feed ready for watching and mark it running."""
         logging.debug("trying %s hubbub feed" % name)
         item = self.byname(name)
-        if item == None:
+        if item is None:
             raise NoSuchFeed(name)
         if not item.data.running:
             item.data.running = 1
@@ -413,7 +413,7 @@ class HubbubWatcher(PlugPersist):
             itemslist = item.itemslists.data[jsonstring([name, channel])]
         except KeyError:
             item = self.byname(name)
-            if item == None:
+            if item is None:
                 return "no %s rss item" % name
             else:
                 item.itemslists.data[jsonstring([name, channel])] = ["title", "link"]
@@ -721,7 +721,7 @@ def handle_hubbubwatch(bot, ievent):
         ievent.missing("<feedname>")
         return
     item = watcher.byname(name)
-    if item == None:
+    if item is None:
         ievent.reply("we don't have a %s hubbub item" % name)
         return
     got = None
@@ -870,7 +870,7 @@ def handle_hubbubchannels(bot, ievent):
         ievent.missing("<feedname>")
         return
     item = watcher.byname(name)
-    if item == None:
+    if item is None:
         ievent.reply("we don't have a %s hubbub object" % name)
         return
     if not item.data.watchchannels:
@@ -920,7 +920,7 @@ def handle_hubbubaddchannel(bot, ievent):
                     ievent.missing("<name> [<botname>][<bottype>] <channel>")
                     return
     item = watcher.byname(name)
-    if item == None:
+    if item is None:
         ievent.reply("we don't have a %s hubbub object" % name)
         return
     if not item.data.running:
@@ -1162,7 +1162,7 @@ def handle_hubbubdelchannel(bot, ievent):
                 ievent.missing("<feedname> [<botname>] [<bottype>] [<channel>]")
                 return
     item = watcher.byname(name)
-    if item == None:
+    if item is None:
         ievent.reply("we don't have a %s object" % name)
         return
     if jsonstring([botname, type, channel]) in item.data.watchchannels:
@@ -1235,7 +1235,7 @@ def handle_hubbubget(bot, ievent):
         return
     channel = ievent.channel
     item = watcher.byname(name)
-    if item == None:
+    if item is None:
         ievent.reply("we don't have a %s item" % name)
         return
     try:
@@ -1373,7 +1373,7 @@ def handle_hubbubscan(bot, ievent):
     except Exception as ex:
         ievent.reply(str(ex))
         return
-    if result == None:
+    if result is None:
         ievent.reply("can't get data for %s" % name)
         return
     res = []

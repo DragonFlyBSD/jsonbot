@@ -246,16 +246,16 @@ def handle_fish(bot, event):
             return
 
         userhost = getwho(bot, args[1])
-        if userhost == None:
+        if userhost is None:
             return
 
         user = users.getuser(userhost)
-        if user == None:
+        if user is None:
             event.reply("Unable to exchange key with an unknown user")
             return
 
         target = user.data.name
-        if target == None:
+        if target is None:
             return
 
         logging.warn("FiSH: Key exchange with  %s (%s)" % (args[1], target))
@@ -990,7 +990,7 @@ def ircsrp_exchange(ctx, msg=None, sender=None):
         cmd = cmd[5:].strip(" ")
 
     # Alice initiates the exchange.
-    if msg == None and sender == None and ctx.ex.status == 0:
+    if msg is None and sender is None and ctx.ex.status == 0:
 
         ctx.ex.status = 1
 

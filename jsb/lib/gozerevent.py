@@ -36,7 +36,7 @@ class GozerEvent(EventBase):
     """dictionairy to store xml stanza attributes."""
 
     def __init__(self, input={}):
-        if input == None:
+        if input is None:
             EventBase.__init__(self)
         else:
             EventBase.__init__(self, input)

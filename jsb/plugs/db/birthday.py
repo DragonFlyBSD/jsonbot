@@ -149,7 +149,7 @@ def handle_checkbd(bot, ievent):
         return
     for i in bds:
         btime = strtotime(i[1])
-        if btime == None:
+        if btime is None:
             continue
         (day, month) = getdaymonth(btime)
         if month == nowmonth:
@@ -188,7 +188,7 @@ def handle_checkbd2(bot, ievent):
         return
     for i in bds:
         btime = strtotime(i[1])
-        if btime == None:
+        if btime is None:
             continue
         (day, month) = getdaymonth(btime)
         if month == bdmonths[monthnr]:
@@ -232,7 +232,7 @@ def handle_age(bot, ievent):
         ievent.reply("can't find birthday data for %s" % who)
         return
     btime = strtotime(birthday)
-    if btime == None:
+    if btime is None:
         ievent.reply("can't make a date out of %s" % birthday)
         return
     age = int(time.time()) - int(btime)

@@ -141,7 +141,7 @@ def handle_todo2(bot, ievent):
     ttime = strtotime(what)
     nr = 0
     todo = TodoList(name)
-    if not ttime == None:
+    if not ttime is None:
         ievent.reply("time detected " + time.ctime(ttime))
         nr = todo.add(what, ttime)
     else:
@@ -328,7 +328,7 @@ examples.add("todo-setprio", "set todo priority", "todo-setprio 2 5")
 def handle_todosettime(bot, ievent):
     """arguments: <itemnr> <timestring> - set time on todo item"""
     ttime = strtotime(ievent.rest)
-    if ttime == None:
+    if ttime is None:
         ievent.reply("can't detect time")
         return
     txt = striptime(ievent.rest)

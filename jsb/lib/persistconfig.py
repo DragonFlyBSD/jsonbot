@@ -247,7 +247,7 @@ class PersistConfig(Config):
         if not exposed and not key in self.hide:
             self.hide.append(key)
         if key not in self:
-            if name == None:
+            if name is None:
                 name = "%s-cfg-%s" % (self.plugname, str(key))
             self[key] = value
 

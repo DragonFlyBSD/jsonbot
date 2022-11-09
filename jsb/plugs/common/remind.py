@@ -38,7 +38,7 @@ class Remind(PlugPersist):
         """check if there is a remind for userhost"""
         try:
             reminds = self.data[userhost]
-            if reminds == None or reminds == []:
+            if reminds is None or reminds == []:
                 return False
         except KeyError:
             return False

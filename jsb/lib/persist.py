@@ -146,7 +146,7 @@ try:
             if self.jsontxt == "":
                 self.cachetype = "cache"
                 self.jsontxt = mc.get(self.fn)
-            if self.jsontxt == None:
+            if self.jsontxt is None:
                 self.cachetype = "db"
                 logging.debug("%s - loading from db" % self.fn)
                 try:
@@ -161,7 +161,7 @@ try:
                     except Exception as ex:
                         handle_exception()
                         self.obj = None
-                if self.obj == None:
+                if self.obj is None:
                     logging.warn("%s - no entry found, using default" % self.fn)
                     self.jsontext = json.dumps(default)
                     self.cachetype = "default"
@@ -179,7 +179,7 @@ try:
                     else:
                         self.mcounter = 1
             logging.debug("memcached counters for %s: %s" % (self.fn, self.mcounter))
-            if self.jsontxt == None:
+            if self.jsontxt is None:
                 self.jsontxt = json.dumps(default)
             logging.warn("%s - jsontxt is %s" % (self.fn, self.jsontxt))
             try:
@@ -258,7 +258,7 @@ try:
                 self.updatemc()
             fn = filename or self.fn
             bla = json.dumps(self.data)
-            if filename or self.obj == None:
+            if filename or self.obj is None:
                 self.obj = JSONindb(key_name=fn)
                 self.obj.content = bla
             else:
@@ -387,7 +387,7 @@ except ImportError:
             self.dontsave = False
             if init:
                 self.init(default)
-                if default == None:
+                if default is None:
                     default = LazyDict()
 
         def size(self):

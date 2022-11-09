@@ -310,7 +310,7 @@ def handle_todo2(bot, ievent):
     name = getusers().getname(ievent.userhost)
     ttime = strtotime(what)
     nr = 0
-    if not ttime == None:
+    if not ttime is None:
         ievent.reply("time detected " + time.ctime(ttime))
         what = striptime(what)
         alarms = plugs.get("jsb.plugs.common.alarm")
@@ -378,7 +378,7 @@ def handle_chantodo2(bot, ievent):
     what = ievent.rest
     ttime = strtotime(what)
     nr = 0
-    if not ttime == None:
+    if not ttime is None:
         ievent.reply("time detected " + time.ctime(ttime))
         result = "(%s) " % ievent.nick + striptime(what)
         alarms = plugs.get("jsb.plugs.common.alarm")
@@ -459,7 +459,7 @@ def handle_settodo(bot, ievent):
     what = "%s: %s" % (ievent.nick, what)
     ttime = strtotime(what)
     nr = 0
-    if not ttime == None:
+    if not ttime is None:
         ievent.reply("time detected " + time.ctime(ttime))
         what = striptime(what)
         karma = plugs.get("jsb.plugs.db.karma2")
@@ -616,7 +616,7 @@ def handle_todosettime(bot, ievent):
     """ todo-settime [<channel|name>] <itemnr> <timestring> .. set time \
         on todo item """
     ttime = strtotime(ievent.txt)
-    if ttime == None:
+    if ttime is None:
         ievent.reply("can't detect time")
         return
     txt = striptime(ievent.txt)
