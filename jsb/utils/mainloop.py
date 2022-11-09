@@ -4,17 +4,17 @@
 
 """ main loop used in jsb binairies. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.lib.eventhandler import mainhandler
 from jsb.lib.exit import globalshutdown
 
-## basic imports
+# basic imports
 
 import time
 
-## mainloop function
+# mainloop function
 
 
 def mainloop():

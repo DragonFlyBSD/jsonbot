@@ -10,11 +10,11 @@ from jsb.lib.eventbase import EventBase
 from jsb.utils.trace import whichmodule
 from jsb.lib.gozerevent import GozerEvent
 
-## basic imports
+# basic imports
 
 import time
 
-## classes
+# classes
 
 
 class Presence(GozerEvent):

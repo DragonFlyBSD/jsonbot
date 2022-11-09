@@ -12,6 +12,9 @@
 
 """
 
+import time
+import logging
+
 __version__ = "0.2"
 __copyright__ = "CopyRight (C) 2008-2011 by James Mills"
 __license__ = "MIT"
@@ -19,7 +22,7 @@ __author__ = "James Mills"
 __author_email__ = "James Mills, James dot Mills st dotred dot com dot au"
 __coauthor__ = "adapted for JSONBOT by Bart Thate <bthate@gmail.com>"
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.name import stripname
 from jsb.utils.exception import handle_exception
@@ -36,16 +39,14 @@ from jsb.imports import getBeautifulSoup
 
 soup = getBeautifulSoup()
 
-## basic imports
+# basic imports
 
-import logging
-import time
 
-## defines
+# defines
 
 running = []
 
-## Spider class
+# Spider class
 
 
 class Spider(ThreadLoop):

@@ -4,12 +4,12 @@
 
 """ send welcome message. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
-## welcome command
+# welcome command
 
 
 def handle_welcome(bot, event):

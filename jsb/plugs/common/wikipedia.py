@@ -4,7 +4,7 @@
 
 """ query wikipedia .. use countrycode to select a country specific wikipedia. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.url import geturl, striphtml
 from jsb.utils.generic import splittxt, handle_exception, fromenc
@@ -12,17 +12,17 @@ from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.utils.rsslist import rsslist
 
-## generic imports
+# generic imports
 
 from urllib.parse import quote
 import re
 import logging
 
-## defines
+# defines
 
 wikire = re.compile("start content(.*?)end content", re.M)
 
-## searchwiki function
+# searchwiki function
 
 
 def searchwiki(txt, lang="en"):
@@ -64,7 +64,7 @@ def searchwiki(txt, lang="en"):
     return (txt, url2)
 
 
-## getwikidata function
+# getwikidata function
 
 
 def getwikidata(url):
@@ -96,7 +96,7 @@ def getwikidata(url):
     return txt
 
 
-## wikipedia command
+# wikipedia command
 
 resultre1 = re.compile("(<li>.*?</li>)")
 resultre2 = re.compile("(<h2>.*?</h2>)")

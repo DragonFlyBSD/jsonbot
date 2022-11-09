@@ -18,7 +18,7 @@
 __author__ = "Pekka 'raspi' Järvinen - http://raspi.fi/"
 __license__ = "BSD"
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.lib.callbacks import callbacks
@@ -27,18 +27,18 @@ from jsb.lib.persist import PlugPersist
 from jsb.lib.examples import examples
 from jsb.plugs.common.tinyurl import get_tinyurl
 
-## basic import
+# basic import
 
 import re
 import urllib.parse
 import xmlrpc.client
 import logging
 
-## defines
+# defines
 
 cfg = PlugPersist("urlinfo", {})
 
-## sanitize function
+# sanitize function
 
 
 def sanitize(text):
@@ -75,7 +75,7 @@ def sanitize(text):
     return out
 
 
-## getUrls function
+# getUrls function
 
 
 def getUrls(text):
@@ -91,7 +91,7 @@ def getUrls(text):
     return urls
 
 
-## getUrlInfo function
+# getUrlInfo function
 
 
 def getUrlInfo(text):
@@ -135,7 +135,7 @@ def getUrlInfo(text):
     return out.strip()
 
 
-## callbacks
+# callbacks
 
 
 def catchHasUrls(bot, ievent):
@@ -160,7 +160,7 @@ callbacks.add("MESSAGE", catchUrls, catchHasUrls, threaded=True)
 callbacks.add("DISPATCH", catchUrls, catchHasUrls, threaded=True)
 callbacks.add("TORNADO", catchUrls, catchHasUrls, threaded=True)
 
-## urlinfo-enable command
+# urlinfo-enable command
 
 
 def handle_urlinfo_enable(bot, ievent):
@@ -173,7 +173,7 @@ def handle_urlinfo_enable(bot, ievent):
 cmnds.add("urlinfo-enable", handle_urlinfo_enable, ["OPER"])
 examples.add("urlinfo-enable", "enable urlinfo in the channel", "urlinfo-enable")
 
-## urlinfo-disable command
+# urlinfo-disable command
 
 
 def handle_urlinfo_disable(bot, ievent):
@@ -186,7 +186,7 @@ def handle_urlinfo_disable(bot, ievent):
 cmnds.add("urlinfo-disable", handle_urlinfo_disable, "OPER")
 examples.add("urlinfo-disable", "disable urlinfo in the channel", "urlinfo-disable")
 
-## urlinfo-list command
+# urlinfo-list command
 
 
 def handle_urlinfo_list(bot, ievent):

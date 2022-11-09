@@ -4,19 +4,19 @@
 
 """ locking functions """
 
-## jsb imports
+# jsb imports
 
 from .exception import handle_exception
 from .trace import whichmodule
 from .lockmanager import lockmanager, rlockmanager
 from jsb.lib.threads import getname
 
-## generic imports
+# generic imports
 
 import logging
 import _thread
 
-## Locked-class
+# Locked-class
 
 
 class Locked(object):
@@ -35,7 +35,7 @@ class Locked(object):
         return res
 
 
-## lockdec function
+# lockdec function
 
 
 def lockdec(lock):
@@ -65,7 +65,7 @@ def lockdec(lock):
     return locked
 
 
-## locked decorator
+# locked decorator
 
 
 def lock_object(object):

@@ -4,17 +4,17 @@
 
 """ tail bot results. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.generic import waitforqueue
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 import time
 
-## tail command
+# tail command
 
 
 def handle_tail(bot, ievent):

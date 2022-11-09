@@ -8,7 +8,7 @@
 
 """
 
-## jsb imports
+# jsb imports
 
 from .threads import start_new_thread, start_bot_command
 from jsb.utils.xmpp import stripped
@@ -22,18 +22,18 @@ from .boot import getcmndperms
 from .floodcontrol import floodcontrol
 from .aliases import getaliases, aliascheck
 
-## basic imports
+# basic imports
 
 import logging
 import sys
 import copy
 import re
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## Command class
+# Command class
 
 
 class Command(LazyDict):

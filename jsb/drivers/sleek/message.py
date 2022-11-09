@@ -6,7 +6,7 @@
     headline or  error
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.utils.trace import whichmodule
@@ -16,22 +16,22 @@ from jsb.lib.eventbase import EventBase
 from jsb.lib.errors import BotNotSetInEvent
 from jsb.lib.gozerevent import GozerEvent
 
-## xmpp import
+# xmpp import
 
 from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
 
-## basic imports
+# basic imports
 
 import time
 import _thread
 import logging
 
-## locks
+# locks
 
 replylock = _thread.allocate_lock()
 replylocked = lockdec(replylock)
 
-## classes
+# classes
 
 
 class Message(GozerEvent):

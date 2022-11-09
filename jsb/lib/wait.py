@@ -4,24 +4,24 @@
 
 """ wait for events. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.runner import waitrunner
 from jsb.utils.trace import whichmodule
 from jsb.utils.exception import handle_exception
 
-## basic imports
+# basic imports
 
 import logging
 import copy
 import time
 import uuid
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## Wait class
+# Wait class
 
 
 class Wait(object):
@@ -88,7 +88,7 @@ class Wait(object):
                 handle_exception()
 
 
-## Waiter class
+# Waiter class
 
 
 class Waiter(object):
@@ -148,6 +148,6 @@ class Waiter(object):
             self.delete(removed)
 
 
-## the global waiter object
+# the global waiter object
 
 waiter = Waiter()

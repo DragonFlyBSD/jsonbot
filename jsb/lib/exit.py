@@ -4,7 +4,7 @@
 
 """ jsb's finaliser """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.locking import globallocked
 from jsb.utils.exception import handle_exception
@@ -14,7 +14,7 @@ from jsb.lib.persist import cleanup
 from jsb.lib.boot import ongae
 from .runner import defaultrunner, cmndrunner, callbackrunner, waitrunner
 
-## basic imports
+# basic imports
 
 import atexit
 import os
@@ -22,7 +22,7 @@ import time
 import sys
 import logging
 
-## functions
+# functions
 
 
 @globallocked

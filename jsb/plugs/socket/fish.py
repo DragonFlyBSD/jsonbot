@@ -14,9 +14,16 @@
 
  """
 
+import time
+import struct
+from os import urandom
+from math import log
+import hashlib
+import base64
+
 __author__ = "Frank Spijkerman"
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
@@ -33,13 +40,13 @@ from jsb.lib.users import getusers
 from jsb.lib.errors import RequireError
 from jsb.lib.persistconfig import PersistConfig
 
-## basic imports
+# basic imports
 
 import os
 import logging
 import pickle
 
-## check for pycrypto dependancy
+# check for pycrypto dependancy
 
 try:
     import Crypto.Cipher.Blowfish
@@ -49,14 +56,14 @@ except ImportError:
         "PyCrypto is required for FiSH. Please install this library if you want to use this plug"
     )
 
-## defines
+# defines
 
 cfg = PersistConfig()
 cfg.define("enable", 0)
 
 users = getusers()
 
-## KeyStore class
+# KeyStore class
 
 
 class KeyStore(Persist):
@@ -73,7 +80,7 @@ class KeyStore(Persist):
         )
 
 
-## make sure we get loaded
+# make sure we get loaded
 
 
 def dummycb(bot, event):
@@ -82,7 +89,7 @@ def dummycb(bot, event):
 
 callbacks.add("START", dummycb)
 
-## plugin
+# plugin
 
 
 def init():
@@ -99,7 +106,7 @@ def init():
         logging.warn("fish plugin is not enabled - use fish-cfg enable 1")
 
 
-## fishin function
+# fishin function
 
 
 def fishin(text, event=None):
@@ -133,7 +140,7 @@ def fishin(text, event=None):
     return text
 
 
-## fishout function
+# fishout function
 
 
 def fishout(text, event):
@@ -159,7 +166,7 @@ def fishout(text, event):
     return cipher
 
 
-## encrypt function
+# encrypt function
 
 
 def encrypt(key, text):
@@ -167,7 +174,7 @@ def encrypt(key, text):
     return blowcrypt_pack(text, b)
 
 
-## decrypt function
+# decrypt function
 
 
 def decrypt(key, inp):
@@ -175,7 +182,7 @@ def decrypt(key, inp):
     return blowcrypt_unpack(inp, b)
 
 
-## dh1080_exchange function
+# dh1080_exchange function
 
 
 def dh1080_exchange(bot, ievent):
@@ -221,7 +228,7 @@ def dh1080_exchange(bot, ievent):
     return True
 
 
-## fish command
+# fish command
 
 
 def handle_fish(bot, event):
@@ -290,25 +297,25 @@ def handle_fish(bot, event):
         event.reply("Deleted key %s" % args[1])
 
 
-#### irccrypt module
+# irccrypt module
 
 ##
-## irccrypt.py - various cryptographic methods for IRC + IRCSRP reference
-## implementation.
+# irccrypt.py - various cryptographic methods for IRC + IRCSRP reference
+# implementation.
 ##
-## Copyright (c) 2009, Bjorn Edstrom <be@bjrn.se>
+# Copyright (c) 2009, Bjorn Edstrom <be@bjrn.se>
 ##
-## Permission to use, copy, modify, and distribute this software for any
-## purpose with or without fee is hereby granted, provided that the above
-## copyright notice and this permission notice appear in all copies.
+# Permission to use, copy, modify, and distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
 ##
-## THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-## WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-## MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-## ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-## WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-## ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-## OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ##
 
 """ Library for various common cryptographic methods used on IRC.
@@ -364,9 +371,6 @@ ___author__ = "Bjorn Edstrom <be@bjrn.se>"
 ___date__ = "2009-01-25"
 ___version__ = "0.1.1"
 
-import base64
-import hashlib
-from math import log
 
 try:
     import Crypto.Cipher.Blowfish
@@ -375,12 +379,9 @@ except ImportError:
     print("This module requires PyCrypto / The Python Cryptographic Toolkit.")
     print("Get it from http://www.dlitz.net/software/pycrypto/.")
     raise
-from os import urandom
-import struct
-import time
 
 ##
-## Preliminaries.
+# Preliminaries.
 ##
 
 
@@ -521,7 +522,7 @@ class AESCBC:
 
 
 ##
-## blowcrypt, Fish etc.
+# blowcrypt, Fish etc.
 ##
 
 # XXX: Unstable.
@@ -585,7 +586,7 @@ def blowcrypt_unpack(msg, cipher):
 
 
 ##
-## Mircryption-CBC
+# Mircryption-CBC
 ##
 
 
@@ -620,7 +621,7 @@ def mircryption_cbc_unpack(msg, cipher):
 
 
 ##
-## DH1080
+# DH1080
 ##
 
 g_dh1080 = 2
@@ -833,7 +834,7 @@ def dh1080_secret(ctx):
 
 
 ##
-## IRCSRP version 1
+# IRCSRP version 1
 ##
 
 modp14 = """
@@ -976,10 +977,18 @@ def ircsrp_exchange(ctx, msg=None, sender=None):
 
     :<sender>!user@host.com NOTICE :<msg>\r\n
     """
-    b64 = lambda s: base64.b64encode(s)
-    b64i = lambda i: b64(int2bytes(i))
-    unb64 = lambda s: base64.b64decode(s)
-    unb64i = lambda s: bytes2int(unb64(s))
+
+    def b64(s):
+        return base64.b64encode(s)
+
+    def b64i(i):
+        return b64(int2bytes(i))
+
+    def unb64(s):
+        return base64.b64decode(s)
+
+    def unb64i(s):
+        return bytes2int(unb64(s))
 
     cmd, arg = "", ""
     if msg:

@@ -11,7 +11,7 @@
 
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.pdod import Pdod
 
@@ -48,7 +48,6 @@ class Channels(Pdod):
         self.data[a] = b
 
     def getchannels(self):
-
         """
         return channels.
 
@@ -65,7 +64,6 @@ class Channels(Pdod):
         return result
 
     def getchannelswithkeys(self):
-
         """
         return channels with keys.
 
@@ -87,7 +85,6 @@ class Channels(Pdod):
         return result
 
     def getkey(self, channel):
-
         """
         return key of channel if set.
 
@@ -104,7 +101,6 @@ class Channels(Pdod):
         return key
 
     def getnick(self, channel):
-
         """
         return bot nick of channel if set.
 

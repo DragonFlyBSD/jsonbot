@@ -4,17 +4,17 @@
 
 """ send output to another user .. used in a pipeline. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.utils.generic import getwho, waitforqueue
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 import time
 
-## to command
+# to command
 
 
 def handle_to(bot, ievent):

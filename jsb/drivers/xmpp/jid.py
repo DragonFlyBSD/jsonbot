@@ -4,7 +4,7 @@
 
 """ JID related helpers. """
 
-## classes
+# classes
 
 
 class InvalidJID(BaseException):

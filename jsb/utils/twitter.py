@@ -4,21 +4,21 @@
 
 """ twitter related helper functions .. uses tweepy. """
 
-## tweepy imports
+# tweepy imports
 
 from jsb.contrib.tweepy.auth import OAuthHandler
 from jsb.contrib.tweepy.api import API
 from jsb.contrib.tweepy import oauth
 
-## basic imports
+# basic imports
 
 import logging
 
-## defines
+# defines
 
 go = True
 
-## twitterapi function
+# twitterapi function
 
 
 def twitterapi(CONSUMER_KEY, CONSUMER_SECRET, token=None, *args, **kwargs):
@@ -35,7 +35,7 @@ def twitterapi(CONSUMER_KEY, CONSUMER_SECRET, token=None, *args, **kwargs):
     return API(auth, *args, **kwargs)
 
 
-## twittertoken function
+# twittertoken function
 
 
 def twittertoken(CONSUMER_KEY, CONSUMER_SECRET, twitteruser, username):

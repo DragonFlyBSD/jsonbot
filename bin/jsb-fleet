@@ -4,50 +4,51 @@
 
 """ run multiple bot instances in 1 program. """
 
-## bootstrap
+# bootstrap
 
+import sys
+import os
+from jsb.utils.log import setloglevel
+from jsb.lib.fleet import getfleet
+import jsb
+from jsb.utils.exception import handle_exception
+from jsb.lib.threads import start_new_thread
+from jsb.lib.users import users_boot
+from jsb.utils.mainloop import mainloop
+from jsb.lib.exit import globalshutdown
+from jsb.lib.boot import boot
+from jsb.lib.datadir import makedirs
+from jsb.lib.partyline import partyline
+from jsb.version import getversion
+from jsb.lib.datadir import setdatadir, getdatadir
+from jsb.utils.opts import makefleetopts
+import signal
+import time
+import logging
 import warnings
 
 warnings.simplefilter("ignore")
 
-import os, sys, logging
 
 sys.path.insert(0, os.getcwd())
 
-## basic imports
+# basic imports
 
-import logging
-import time
-import signal
 
-## options parser
+# options parser
 
-from jsb.utils.opts import makefleetopts
 
 opts = makefleetopts()
 
-from jsb.lib.datadir import setdatadir, getdatadir
 
 if opts.datadir:
     setdatadir(opts.datadir)
 
-from jsb.version import getversion
 
 print(getversion("FLEET"))
 
-## jsb imports
+# jsb imports
 
-from jsb.lib.partyline import partyline
-from jsb.lib.datadir import makedirs
-from jsb.lib.boot import boot
-from jsb.lib.exit import globalshutdown
-from jsb.utils.mainloop import mainloop
-from jsb.lib.users import users_boot
-from jsb.lib.threads import start_new_thread
-from jsb.utils.exception import handle_exception
-import jsb
-
-from jsb.lib.fleet import getfleet
 
 fleet = getfleet(opts.datadir)
 if opts.all or opts.show:
@@ -62,6 +63,8 @@ if opts.all:
     os._exit(0)
 
 # provide sigterm support
+
+
 def dostop(a, b):
     """sig handler"""
     globalshutdown()
@@ -73,13 +76,12 @@ if not fleet.avail():
     logging.error("fleet - no bots found.")
     os._exit(1)
 
-## loglevel
+# loglevel
 
-from jsb.utils.log import setloglevel
 
 setloglevel(opts.loglevel or "warn", not opts.nocolors)
 
-## start the fleet
+# start the fleet
 
 boot(opts.datadir)
 

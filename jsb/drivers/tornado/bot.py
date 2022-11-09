@@ -4,8 +4,14 @@
 
 """ tornado web bot. """
 
-## jsb imports
+# jsb imports
 
+import tornado.web
+import tornado.ioloop
+import functools
+import copy
+import time
+import logging
 from jsb.lib.botbase import BotBase
 from jsb.lib.outputcache import add
 from jsb.utils.generic import toenc, fromenc, strippedtxt, stripcolor
@@ -19,23 +25,17 @@ from jsb.lib.eventbase import EventBase
 
 json = getjson()
 
-## basic imports
+# basic imports
 
-import logging
-import time
-import copy
-import functools
 
-## tornado import
+# tornado import
 
-import tornado.ioloop
-import tornado.web
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## WebBot class
+# WebBot class
 
 
 class TornadoBot(BotBase):

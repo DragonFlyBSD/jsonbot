@@ -15,22 +15,22 @@ google requirements on file names:
 
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.generic import toenc, fromenc
 from jsb.lib.errors import NameNotSet
 
-## basic imports
+# basic imports
 
 import string
 import os
 import re
 
-## defines
+# defines
 
 allowednamechars = string.ascii_letters + string.digits + "_+/$.-"
 
-## slugify function taken from django (not used now)
+# slugify function taken from django (not used now)
 
 
 def slugify(value):
@@ -45,7 +45,7 @@ def slugify(value):
     return re.sub("[-\s]+", "-", value)
 
 
-## stripname function
+# stripname function
 
 
 def stripname(namein, allowed=""):
@@ -69,7 +69,7 @@ def stripname(namein, allowed=""):
     return "".join(res)
 
 
-## testname function
+# testname function
 
 
 def testname(name):

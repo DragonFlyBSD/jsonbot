@@ -6,7 +6,7 @@
 
 __copyright__ = "this file is in the public domain"
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.config import getmainconfig
 from jsb.utils.locking import lockdec
@@ -14,19 +14,19 @@ from jsb.utils.generic import tolatin1
 from jsb.utils.exception import handle_exception
 from jsb.lib.datadir import getdatadir
 
-## basic imports
+# basic imports
 
 import _thread
 import os
 import time
 import logging
 
-## locks
+# locks
 
 dblock = _thread.allocate_lock()
 dblocked = lockdec(dblock)
 
-## Db class
+# Db class
 
 
 class Db(object):

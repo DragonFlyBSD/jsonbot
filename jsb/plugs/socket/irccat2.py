@@ -26,8 +26,10 @@ BHJTW - 28-02-2012 .. move to irccat2.py to use the normal irccat-cfg functions
 
 """
 
-## jsb imports
+# jsb imports
 
+from socketserver import ThreadingMixIn, StreamRequestHandler
+import socketserver
 from jsb.utils.exception import handle_exception
 from jsb.lib.threads import start_new_thread
 from jsb.lib.persist import PlugPersist
@@ -38,12 +40,12 @@ from jsb.lib.callbacks import callbacks
 from jsb.lib.persistconfig import PersistConfig
 from jsb.utils.generic import fromenc, toenc
 
-## basic imports
+# basic imports
 
 import logging
 import time
 
-## defines
+# defines
 
 cfg = PersistConfig()
 cfg.define("botnames", ["default-sxmpp", "default-irc"])
@@ -52,18 +54,16 @@ cfg.define("port", "54321")
 cfg.define("aliases", {})
 cfg.define("enable", False)
 
-## SocketServer imports
+# SocketServer imports
 
-import socketserver
-from socketserver import ThreadingMixIn, StreamRequestHandler
 
-## defines
+# defines
 
 shared_data = {}
 
 server = None
 
-## IrcCatListener class
+# IrcCatListener class
 
 
 class IrcCatListener(ThreadingMixIn, StreamRequestHandler):
@@ -151,7 +151,7 @@ def shutdown():
         time.sleep(2)
 
 
-## irccat2_add_alias command
+# irccat2_add_alias command
 
 
 def handle_irccat2_add_alias(bot, ievent):
@@ -180,7 +180,7 @@ examples.add(
     "irccat2_add_alias #firebreath",
 )
 
-## irccat2_list_aliases command
+# irccat2_list_aliases command
 
 
 def handle_irccat2_list_aliases(bot, ievent):
@@ -202,7 +202,7 @@ examples.add(
     "irccat2_list_aliases",
 )
 
-## irccat2_del_alias command
+# irccat2_del_alias command
 
 
 def handle_irccat2_del_alias(bot, ievent):
@@ -230,7 +230,7 @@ examples.add(
     "irccat2_del_alias #firebreath",
 )
 
-## irccat2_enable command
+# irccat2_enable command
 
 
 def handle_irccat2_enable(bot, event):
@@ -243,7 +243,7 @@ def handle_irccat2_enable(bot, event):
 cmnds.add("irccat2-enable", handle_irccat2_enable, "OPER")
 examples.add("irccat2-enable", "enable irccat2 server", "irccat2-enable")
 
-## irccat2_disable command
+# irccat2_disable command
 
 
 def handle_irccat2_disable(bot, event):

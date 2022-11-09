@@ -4,23 +4,23 @@
 
 """ Factory to produce instances of classes. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.lib.errors import NoSuchBotType, NoUserProvided
 
-## basic imports
+# basic imports
 
 import logging
 
-## Factory base class
+# Factory base class
 
 
 class Factory(object):
     pass
 
 
-## BotFactory class
+# BotFactory class
 
 
 class BotFactory(Factory):

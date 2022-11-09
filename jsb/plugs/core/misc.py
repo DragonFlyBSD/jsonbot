@@ -4,23 +4,23 @@
 
 """ misc commands. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.persiststate import UserState
 
-## basic imports
+# basic imports
 
 import _thread
 import copy
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## test command
+# test command
 
 
 def handle_test(bot, ievent):
@@ -34,7 +34,7 @@ def handle_test(bot, ievent):
 cmnds.add("test", handle_test, ["USER", "GUEST"])
 examples.add("test", "give test response", " test")
 
-## source command
+# source command
 
 
 def handle_source(bot, ievent):

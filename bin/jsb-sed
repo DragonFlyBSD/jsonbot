@@ -4,13 +4,13 @@
 
 """ rename the bot into another one. copy one dir above the bot dir. """
 
-## basic imports
+# basic imports
 
 import sys
 import os
 import shutil
 
-## arguments
+# arguments
 
 try:
     source = sys.argv[1]
@@ -21,7 +21,7 @@ except IndexError:
 
 print("STARTING")
 
-## gethighest function
+# gethighest function
 
 
 def gethighest(ddir, ffile):
@@ -42,7 +42,7 @@ def gethighest(ddir, ffile):
     return ffile
 
 
-## dosed function
+# dosed function
 
 
 def dosed(filename, sedstring):
@@ -67,7 +67,7 @@ def dosed(filename, sedstring):
         os.rename(tmp, filename)
 
 
-## bootstrap function
+# bootstrap function
 
 
 def doreplace(ddir, sedstring):
@@ -84,7 +84,7 @@ def doreplace(ddir, sedstring):
                 print("ERROR %s - %s" % (ddir + os.sep + f, str(ex)))
 
 
-## backup the old dir
+# backup the old dir
 
 # print "making backup"
 target = gethighest(os.getcwd(), source + ".sed")
@@ -92,7 +92,7 @@ target = gethighest(os.getcwd(), source + ".sed")
 #    print "MOVING %s TO %s" % (, backup)
 #    os.rename(target, backup)
 
-## copy the result to the target
+# copy the result to the target
 
 print("COPYING %s TO %s" % (source, target))
 
@@ -102,7 +102,7 @@ except OSError:
     print("can't copy %s to %s" % (source, target))
     os._exit(1)
 
-## start the thing
+# start the thing
 
 doreplace(target, sedstring)
 print("DONE")

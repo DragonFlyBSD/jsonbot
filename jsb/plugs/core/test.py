@@ -20,14 +20,14 @@ from jsb.utils.generic import waitforqueue, waitevents
 from jsb.lib.runner import cmndrunner, defaultrunner
 from jsb.lib.errors import NoSuchCommand
 
-## basic imports
+# basic imports
 
 import time
 import random
 import copy
 import logging
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
@@ -67,7 +67,7 @@ def dummy(a, b=None):
     return ""
 
 
-## dotest function
+# dotest function
 
 
 def dotest(bot, event, filter="", direct=False):
@@ -114,7 +114,7 @@ def dotest(bot, event, filter="", direct=False):
         event.reply("EXCEPTION: %s" % msg)
 
 
-## test-plugs command
+# test-plugs command
 
 
 def handle_testplugs(bot, event):
@@ -157,7 +157,7 @@ def handle_testplugs(bot, event):
 cmnds.add("test-plugs", handle_testplugs, ["TEST", "USER"], speed=3, threaded=True)
 examples.add("test-plugs", "test all plugins by running there examples", "test-plugs")
 
-## test-forcedconnection command
+# test-forcedconnection command
 
 
 def handle_forcedreconnect(bot, ievent):
@@ -170,7 +170,7 @@ def handle_forcedreconnect(bot, ievent):
 
 cmnds.add("test-forcedreconnect", handle_forcedreconnect, "TEST")
 
-## test-forcedexception command
+# test-forcedexception command
 
 
 def handle_forcedexception(bot, ievent):
@@ -203,7 +203,7 @@ examples.add(
     "test-forcedexceptionthreaded",
 )
 
-## test-wrongxml command
+# test-wrongxml command
 
 
 def handle_testwrongxml(bot, ievent):
@@ -217,7 +217,7 @@ def handle_testwrongxml(bot, ievent):
 
 cmnds.add("test-wrongxml", handle_testwrongxml, "TEST")
 
-## test-unicode command
+# test-unicode command
 
 
 def handle_testunicode(bot, ievent):
@@ -230,7 +230,7 @@ def handle_testunicode(bot, ievent):
 cmnds.add("test-unicode", handle_testunicode, "TEST")
 examples.add("test-unicode", "test if unicode output path is clear", "test-unicode")
 
-## test-docmnd command
+# test-docmnd command
 
 
 def handle_testdocmnd(bot, ievent):
@@ -248,7 +248,7 @@ def handle_testdocmnd(bot, ievent):
 cmnds.add("test-docmnd", handle_testdocmnd, "TEST")
 examples.add("test-docmnd", "test the bot.docmnd() method", "test-docmnd version")
 
-## test-say command
+# test-say command
 
 
 def handle_testsay(bot, ievent):
@@ -262,7 +262,7 @@ def handle_testsay(bot, ievent):
 cmnds.add("test-say", handle_testsay, "TEST")
 examples.add("test-say", "use bot.say()", "test-say")
 
-## test-options command
+# test-options command
 
 
 def handle_testoptions(bot, ievent):
@@ -273,7 +273,7 @@ def handle_testoptions(bot, ievent):
 cmnds.add("test-options", handle_testoptions, "TEST")
 examples.add("test-options", "test event options", "test-options")
 
-## test-deadline command
+# test-deadline command
 
 
 def handle_testdeadline(bot, ievent):
@@ -289,7 +289,7 @@ examples.add(
     "test-deadline",
 )
 
-## test-xhtml command
+# test-xhtml command
 
 
 def handle_testhtml(bot, ievent):
@@ -304,7 +304,7 @@ def handle_testhtml(bot, ievent):
 cmnds.add("test-html", handle_testhtml, "TEST")
 examples.add("test-html", "test html output", "1) test-html 2) test-html <h1><YOO</h1>")
 
-## test-uuid command
+# test-uuid command
 
 
 def handle_testuuid(bot, ievent):
@@ -317,7 +317,7 @@ def handle_testuuid(bot, ievent):
 cmnds.add("test-uuid", handle_testuuid, "TEST")
 examples.add("test-uuid", "show a uuid4.", "test-uuid")
 
-## test-threaded command
+# test-threaded command
 
 
 def handle_testthreaded(bot, ievent):
@@ -328,7 +328,7 @@ def handle_testthreaded(bot, ievent):
 cmnds.add("test-threaded", handle_testthreaded, "TEST", threaded=True)
 examples.add("test-threaded", "run a threaded command.", "test-threaded")
 
-## test-backend command
+# test-backend command
 
 
 def handle_testbackend(bot, ievent):
@@ -339,7 +339,7 @@ def handle_testbackend(bot, ievent):
 cmnds.add("test-backend", handle_testthreaded, "TEST", threaded="backend")
 examples.add("test-backend", "run a test command on the backend", "test-backend")
 
-## test-re command
+# test-re command
 
 
 def handle_testre(bot, event):

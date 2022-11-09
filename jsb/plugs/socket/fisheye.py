@@ -4,7 +4,7 @@
 
 """ fisheye plugin. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.lib.callbacks import callbacks
@@ -13,13 +13,13 @@ from jsb.lib.persist import PlugPersist
 from jsb.lib.examples import examples
 from jsb.plugs.common.tinyurl import get_tinyurl
 
-## basic imports
+# basic imports
 
 import logging
 import xmlrpc.client
 import re
 
-## defines
+# defines
 
 rpc_clients = {}
 
@@ -27,7 +27,7 @@ gitHashRule = re.compile(r".*\b([0-9a-f]{7,40})\b.*")
 
 cfg = PlugPersist("fisheye", {})
 
-## getRpcClient function
+# getRpcClient function
 
 
 def getRpcClient(project):
@@ -85,7 +85,7 @@ callbacks.add("MESSAGE", doLookup, containsHash, threaded=True)
 callbacks.add("DISPATCH", doLookup, containsHash, threaded=True)
 callbacks.add("TORNADO", doLookup, containsHash, threaded=True)
 
-## add_fisheye_project command
+# add_fisheye_project command
 
 
 def handle_add_fisheye_project(bot, ievent):
@@ -118,7 +118,7 @@ examples.add(
     "add_fisheye_project FireBreath http://code.firebreath.org myuser mypassword",
 )
 
-## fisheye_commit_loopup_enable command
+# fisheye_commit_loopup_enable command
 
 
 def handle_fisheye_commit_lookup_enable(bot, ievent):
@@ -146,7 +146,7 @@ examples.add(
     "fisheye_commit_lookup_enable",
 )
 
-## fisheye_commit_lookup_disable command
+# fisheye_commit_lookup_disable command
 
 
 def handle_fisheye_commit_lookup_disable(bot, ievent):

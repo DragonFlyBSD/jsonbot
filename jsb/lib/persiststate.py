@@ -4,20 +4,20 @@
 
 """ persistent state classes. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.name import stripname
 from jsb.utils.trace import calledfrom
 from .persist import Persist
 from jsb.lib.datadir import getdatadir
 
-## basic imports
+# basic imports
 
 import os
 import sys
 import logging
 
-## PersistState classes
+# PersistState classes
 
 
 class PersistState(Persist):

@@ -9,15 +9,15 @@
 
 """
 
-## gozerbot imports
+# gozerbot imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 
-## alias-search command
+# alias-search command
 
 
 def handle_aliassearch(bot, ievent):
@@ -45,7 +45,7 @@ def handle_aliassearch(bot, ievent):
 cmnds.add("alias-search", handle_aliassearch, "USER")
 examples.add("alias-search", "search aliases", " alias-search web")
 
-## alias command
+# alias command
 
 
 def handle_aliasset(bot, ievent):
@@ -75,7 +75,7 @@ def handle_aliasset(bot, ievent):
 cmnds.add("alias", handle_aliasset, "USER", allowqueue=False)
 examples.add("alias", "alias <alias> <command> .. define alias", "alias ll list")
 
-## alias-makeglobal command
+# alias-makeglobal command
 
 
 def handle_aliasmakeglobal(bot, ievent):
@@ -98,7 +98,7 @@ examples.add(
     "alias-makeglobal",
 )
 
-## alias-del command
+# alias-del command
 
 
 def handle_delalias(bot, ievent):
@@ -123,7 +123,7 @@ def handle_delalias(bot, ievent):
 cmnds.add("alias-del", handle_delalias, "USER")
 examples.add("alias-del", "alias-del <what> .. delete alias", "alias-del ll")
 
-## aliases command
+# aliases command
 
 
 def handle_aliasget(bot, ievent):

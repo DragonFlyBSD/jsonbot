@@ -8,7 +8,7 @@
 
 """
 
-## jsb imports
+# jsb imports
 
 from .threads import getname, start_new_thread
 from jsb.utils.locking import lockdec
@@ -16,7 +16,7 @@ from jsb.utils.exception import handle_exception
 from jsb.utils.trace import calledfrom, whichplugin, callstack
 from jsb.utils.dol import Dol
 
-## basic imports
+# basic imports
 
 import sys
 import copy
@@ -24,12 +24,12 @@ import _thread
 import logging
 import time
 
-## locks
+# locks
 
 lock = _thread.allocate_lock()
 locked = lockdec(lock)
 
-## Callback class
+# Callback class
 
 
 class Callback(object):
@@ -48,7 +48,7 @@ class Callback(object):
         self.enable = True
 
 
-## Callbacks class (holds multiple callbacks)
+# Callbacks class (holds multiple callbacks)
 
 
 class Callbacks(object):
@@ -137,7 +137,6 @@ class Callbacks(object):
         return result
 
     def check(self, bot, event):
-
         """check for callbacks to be fired."""
         self.reloadcheck(bot, event)
         type = event.cbtype or event.cmnd

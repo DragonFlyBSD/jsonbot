@@ -4,18 +4,18 @@
 
 """ class to implement start/stoppable threads. """
 
-## lib imports
+# lib imports
 
 from jsb.utils.exception import handle_exception
 from .threads import start_new_thread, getname
 
-## basic imports
+# basic imports
 
 import queue
 import time
 import logging
 
-## ThreadLoop class
+# ThreadLoop class
 
 
 class ThreadLoop(object):
@@ -76,7 +76,7 @@ class ThreadLoop(object):
         """overload this."""
 
 
-## RunnerLoop class
+# RunnerLoop class
 
 
 class RunnerLoop(ThreadLoop):

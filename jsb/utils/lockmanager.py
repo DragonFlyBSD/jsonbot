@@ -4,13 +4,13 @@
 
 """ manages locks """
 
-## basic imports
+# basic imports
 
 import _thread
 import threading
 import logging
 
-## LockManager class
+# LockManager class
 
 
 class LockManager(object):
@@ -65,7 +65,7 @@ class LockManager(object):
             pass
 
 
-## RLockManager class
+# RLockManager class
 
 
 class RLockManager(LockManager):

@@ -4,18 +4,18 @@
 
 """ log module. """
 
-## jsb import
+# jsb import
 
 from jsb.lib.datadir import getdatadir
 
-## basic imports
+# basic imports
 
 import logging
 import logging.handlers
 import os
 import os.path
 
-## defines
+# defines
 
 ERASE_LINE = "\033[2K"
 BOLD = "\033[1m"
@@ -64,7 +64,7 @@ def init(d):
     return LOGDIR
 
 
-## setloglevel function
+# setloglevel function
 
 
 def setloglevel(level_name="warn", colors=True, datadir=None):

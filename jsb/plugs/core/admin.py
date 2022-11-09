@@ -4,7 +4,7 @@
 
 """ admin related commands. these commands are mainly for maintaining the bot. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.eventhandler import mainhandler
 from jsb.lib.commands import cmnds
@@ -29,11 +29,11 @@ from jsb.lib.aliases import setalias
 from jsb.lib.fleet import getfleet
 from jsb.lib.plugins import plugs
 
-## basic imports
+# basic imports
 
 import logging
 
-## admin-save command
+# admin-save command
 
 
 def handle_adminsave(bot, ievent):
@@ -50,7 +50,7 @@ def handle_adminsave(bot, ievent):
 cmnds.add("admin-save", handle_adminsave, "OPER")
 examples.add("admin-save", "initialize the bot", "admin-boot")
 
-## admin-boot command
+# admin-boot command
 
 
 def handle_adminboot(bot, ievent):
@@ -66,7 +66,7 @@ def handle_adminboot(bot, ievent):
 cmnds.add("admin-boot", handle_adminboot, "OPER")
 examples.add("admin-boot", "initialize the bot", "admin-boot")
 
-## admin-bootthreaded command
+# admin-bootthreaded command
 
 
 def handle_adminbootthreaded(bot, ievent):
@@ -86,7 +86,7 @@ examples.add(
     "admin-bootthreaded",
 )
 
-## admin-bootbackend command
+# admin-bootbackend command
 
 
 def handle_adminbootbackend(bot, ievent):
@@ -104,7 +104,7 @@ examples.add(
     "admin-bootbackend", "initialize the bot on a backend", "admin-bootbackend"
 )
 
-## admin-commands command
+# admin-commands command
 
 
 def handle_admincommands(bot, ievent):
@@ -124,7 +124,7 @@ def handle_admincommands(bot, ievent):
 cmnds.add("admin-commands", handle_admincommands, "OPER")
 examples.add("admin-commands", "show runtime command table", "admin-commands")
 
-## admin-callbacks command
+# admin-callbacks command
 
 
 def handle_admincallbacks(bot, ievent):
@@ -142,7 +142,7 @@ def handle_admincallbacks(bot, ievent):
 cmnds.add("admin-callbacks", handle_admincallbacks, "OPER")
 examples.add("admin-callbacks", "show runtime callback table", "admin-callbacks")
 
-## admin-userhostcache command
+# admin-userhostcache command
 
 
 def handle_userhostscache(bot, ievent):
@@ -156,7 +156,7 @@ def handle_userhostscache(bot, ievent):
 cmnds.add("admin-userhostscache", handle_userhostscache, "OPER")
 examples.add("admin-userhostscache", "show userhostscache ", "admin-userhostscache")
 
-## admin-loadall command
+# admin-loadall command
 
 
 def handle_loadall(bot, ievent):
@@ -168,7 +168,7 @@ def handle_loadall(bot, ievent):
 cmnds.add("admin-loadall", handle_loadall, "OPER", threaded=True)
 examples.add("admin-loadall", "load all plugins", "admin-loadall")
 
-## admin-makebot command
+# admin-makebot command
 
 
 def handle_adminmakebot(bot, ievent):
@@ -189,7 +189,7 @@ def handle_adminmakebot(bot, ievent):
 cmnds.add("admin-makebot", handle_adminmakebot, "OPER")
 examples.add("admin-makebot", "create a bot", "admin-makebot cmndxmpp xmpp")
 
-## admin-stop command
+# admin-stop command
 
 
 def handle_adminstop(bot, ievent):
@@ -207,7 +207,7 @@ cmnds.add("admin-stop", handle_adminstop, "OPER")
 examples.add("admin-stop", "stop the bot.", "stop")
 setalias("qq", "admin-stop")
 
-## admin-upgrade command
+# admin-upgrade command
 
 
 def handle_adminupgrade(bot, event):
@@ -251,7 +251,7 @@ def handle_adminupgrade(bot, event):
 cmnds.add("admin-upgrade", handle_adminupgrade, "OPER", threaded=True)
 examples.add("admin-upgrade", "upgrade the GAE bot", "admin-upgrade")
 
-## admin-setstatus command
+# admin-setstatus command
 
 
 def handle_adminsetstatus(bot, event):
@@ -277,7 +277,7 @@ examples.add(
     "admin-setstatus available Yooo dudes !",
 )
 
-## admin-reloadconfig command
+# admin-reloadconfig command
 
 
 def handle_adminreloadconfig(bot, event):
@@ -293,7 +293,7 @@ def handle_adminreloadconfig(bot, event):
 cmnds.add("admin-reloadconfig", handle_adminreloadconfig, ["OPER"])
 examples.add("admin-reloadconfig", "reload mainconfig", "admin-reloadconfig")
 
-## admin-exceptions command
+# admin-exceptions command
 
 
 def handle_adminexceptions(bot, event):
@@ -308,7 +308,7 @@ def handle_adminexceptions(bot, event):
 cmnds.add("admin-exceptions", handle_adminexceptions, ["OPER"])
 examples.add("admin-exceptions", "show exceptions raised", "admin-exceptions")
 
-## admin-debugon
+# admin-debugon
 
 
 def handle_admindebugon(bot, event):
@@ -327,7 +327,7 @@ cmnds.add(
 )
 examples.add("admin-debugon", "enable debug on a channel.", "admin-debugon")
 
-## admin-debugoff
+# admin-debugoff
 
 
 def handle_admindebugoff(bot, event):
@@ -346,7 +346,7 @@ cmnds.add(
 )
 examples.add("admin-debugoff", "disable debug on a channel.", "admin-debugoff")
 
-## admin-mc command
+# admin-mc command
 
 
 def handle_adminmc(bot, event):
@@ -382,7 +382,7 @@ examples.add(
     "admin-mc", "bots interdace to memcached", "1) admin-mc stats 2) admin-mc flushall"
 )
 
-## admin-floodcontrol command
+# admin-floodcontrol command
 
 
 def handle_adminfloodcontrol(bot, event):
@@ -439,4 +439,4 @@ examples.add(
     "1) admin-floodcontrol dunker 20 2) admin-floodcontrol dunker 20 300 500",
 )
 
-#### BHJTW 6-03-2012
+# BHJTW 6-03-2012

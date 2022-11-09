@@ -2,19 +2,26 @@
 #
 #
 
+import sys
+import os
+from jsb.lib.boot import boot
+from jsb.lib.fleet import getfleet
+from jsb.lib.config import makedefaultconfig
+import logging
+from jsb.utils.log import setloglevel
+from jsb.lib.datadir import makedirs, getdatadir, setdatadir
+from optparse import OptionParser
+from jsb.version import getversion
+from jsb.utils.generic import isdebian, botuser
 import warnings
 
 warnings.simplefilter("ignore")
 
-## bootstrap
+# bootstrap
 
-import os, sys
 
 sys.path.insert(0, os.getcwd())
-from jsb.utils.generic import isdebian, botuser
-from jsb.version import getversion
 
-from optparse import OptionParser
 
 parser = OptionParser(usage="usage: %prog [options", version=getversion("INIT"))
 parser.add_option("-d", "--datadir", type="string", default=False, dest="datadir")
@@ -22,16 +29,13 @@ parser.add_option("-l", "--loglevel", type="string", default=False, dest="loglev
 opts, args = parser.parse_args()
 opts.args = args
 
-from jsb.lib.datadir import makedirs, getdatadir, setdatadir
 
 if opts.datadir:
     setdatadir(opts.datadir)
 
-from jsb.utils.log import setloglevel
 
 setloglevel(opts.loglevel or "error")
 
-import logging
 
 logging.warn(getversion("INIT"))
 
@@ -41,9 +45,6 @@ try:
 except Exception as ex:
     print(str(ex))
     os._exit(1)
-from jsb.lib.config import makedefaultconfig
-from jsb.lib.fleet import getfleet
-from jsb.lib.boot import boot
 
 fleet = getfleet()
 makedefaultconfig("irc", ddir)

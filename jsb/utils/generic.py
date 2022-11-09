@@ -4,8 +4,16 @@
 
 """ generic functions. """
 
-## lib imports
+# lib imports
 
+import io
+import logging
+import random
+import os.path
+import os
+import re
+import time
+from stat import ST_UID, ST_MODE, S_IMODE
 from .exception import handle_exception
 from .trace import calledfrom, whichmodule
 from .lazydict import LazyDict
@@ -13,25 +21,17 @@ from jsb.imports import getjson
 
 json = getjson()
 
-## generic imports
+# generic imports
 
-from stat import ST_UID, ST_MODE, S_IMODE
-import time
-import re
-import os
-import os.path
-import random
-import logging
-import io
 
-## istr class
+# istr class
 
 
 class istr(str):
     pass
 
 
-## fix_format function
+# fix_format function
 
 
 def fix_format(s):
@@ -45,7 +45,7 @@ def fix_format(s):
     return s
 
 
-## isdebian function
+# isdebian function
 
 
 def isdebian():
@@ -53,7 +53,7 @@ def isdebian():
     return os.path.isfile("/etc/debian_version")
 
 
-## isjsbuser function
+# isjsbuser function
 
 
 def botuser():
@@ -66,7 +66,7 @@ def botuser():
         return ""
 
 
-## checkpermission function
+# checkpermission function
 
 
 def checkpermissions(ddir, umode):
@@ -92,7 +92,7 @@ def checkpermissions(ddir, umode):
             handle_exception()
 
 
-## jsonstring function
+# jsonstring function
 
 
 def jsonstring(s):
@@ -102,7 +102,7 @@ def jsonstring(s):
     return json.dumps(s)
 
 
-## getwho function
+# getwho function
 
 
 def getwho(bot, who, channel=None):
@@ -126,7 +126,7 @@ def getnick(bot, userhost):
         pass
 
 
-## splitxt function
+# splitxt function
 
 
 def splittxt(what, l=375):
@@ -151,7 +151,7 @@ def splittxt(what, l=375):
     return txtlist
 
 
-## getrandomnick function
+# getrandomnick function
 
 
 def getrandomnick():
@@ -159,7 +159,7 @@ def getrandomnick():
     return "jsb-" + str(random.randint(0, 100))
 
 
-## decodeperchar function
+# decodeperchar function
 
 
 def decodeperchar(txt, encoding="utf-8", what=""):
@@ -185,7 +185,7 @@ def decodeperchar(txt, encoding="utf-8", what=""):
     return "".join(res)
 
 
-## toenc function
+# toenc function
 
 
 def toenc(what, encoding="utf-8"):
@@ -200,7 +200,7 @@ def toenc(what, encoding="utf-8"):
         raise
 
 
-## fromenc function
+# fromenc function
 
 
 def fromenc(txt, encoding="utf-8", what=""):
@@ -218,7 +218,7 @@ def fromenc(txt, encoding="utf-8", what=""):
         return decodeperchar(txt, encoding, what)
 
 
-## toascii function
+# toascii function
 
 
 def toascii(what):
@@ -226,7 +226,7 @@ def toascii(what):
     return what.encode("ascii", "replace")
 
 
-## tolatin1 function
+# tolatin1 function
 
 
 def tolatin1(what):
@@ -234,7 +234,7 @@ def tolatin1(what):
     return what.encode("latin-1", "replace")
 
 
-## strippedtxt function
+# strippedtxt function
 
 
 def strippedtxt(what, allowed=[]):
@@ -246,7 +246,7 @@ def strippedtxt(what, allowed=[]):
     return "".join(txt)
 
 
-## stripcolor function
+# stripcolor function
 
 REcolor = re.compile("\003\d\d(.*?)\003")
 
@@ -264,7 +264,7 @@ def stripcolor(txt):
     return txt
 
 
-## uniqlist function
+# uniqlist function
 
 
 def uniqlist(l):
@@ -276,7 +276,7 @@ def uniqlist(l):
     return result
 
 
-## jabberstrip function
+# jabberstrip function
 
 
 def jabberstrip(text, allowed=[]):
@@ -289,7 +289,7 @@ def jabberstrip(text, allowed=[]):
     return "".join(txt)
 
 
-## filesize function
+# filesize function
 
 
 def filesize(path):
@@ -297,7 +297,7 @@ def filesize(path):
     return os.stat(path)[6]
 
 
-## touch function
+# touch function
 
 
 def touch(fname):
@@ -306,7 +306,7 @@ def touch(fname):
     os.close(fd)
 
 
-## stringinlist function
+# stringinlist function
 
 
 def stringinlist(s, l):
@@ -317,7 +317,7 @@ def stringinlist(s, l):
     return False
 
 
-## stripped function
+# stripped function
 
 
 def stripped(userhost):
@@ -325,7 +325,7 @@ def stripped(userhost):
     return userhost.split("/")[0]
 
 
-## gethighest function
+# gethighest function
 
 
 def gethighest(ddir, ffile):
@@ -346,7 +346,7 @@ def gethighest(ddir, ffile):
     return ffile
 
 
-## waitevents function
+# waitevents function
 
 
 def waitevents(eventlist, millisec=5000):
@@ -362,7 +362,7 @@ def waitevents(eventlist, millisec=5000):
     return result
 
 
-## waitforqueue function
+# waitforqueue function
 
 
 def waitforqueue(queue, timeout=10000, maxitems=None, bot=None):
@@ -404,7 +404,7 @@ def waitforqueue(queue, timeout=10000, maxitems=None, bot=None):
     # time.sleep(0.2)
 
 
-## checkqueues function
+# checkqueues function
 
 
 def checkqueues(self, queues, resultlist):
@@ -416,7 +416,7 @@ def checkqueues(self, queues, resultlist):
     return False
 
 
-## sedstring function
+# sedstring function
 
 
 def sedstring(input, sedstring):
@@ -426,7 +426,7 @@ def sedstring(input, sedstring):
     return input.replace(fr, to)
 
 
-## sedfile function
+# sedfile function
 
 
 def sedfile(filename, sedstring):
@@ -444,7 +444,7 @@ def sedfile(filename, sedstring):
     return result
 
 
-## dosed function
+# dosed function
 
 
 def dosed(filename, sedstring):

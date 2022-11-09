@@ -4,7 +4,7 @@
 
 """ watch channels. channels events can be of remote origin. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.callbacks import (
@@ -21,20 +21,20 @@ from jsb.utils.locking import locked
 from jsb.utils.generic import stripcolor
 from jsb.lib.eventbase import EventBase
 
-## plugin imports
+# plugin imports
 
 from jsb.utils.format import formatevent
 
-## basic imports
+# basic imports
 
 import copy
 import logging
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## Watched class
+# Watched class
 
 
 class Watched(PlugPersist):
@@ -117,11 +117,11 @@ class Watched(PlugPersist):
         return res
 
 
-## watched object
+# watched object
 
 watched = Watched("channels")
 
-## functions
+# functions
 
 bots = {}
 
@@ -145,7 +145,7 @@ def writeout(botname, type, channel, txt, eventjson):
         watchbot.outnocb(channel, txt, event=event)
 
 
-## callbacks
+# callbacks
 
 
 def prewatchcallback(bot, event):
@@ -210,7 +210,7 @@ first_callbacks.add("WEB", watchcallback, prewatchcallback)
 first_callbacks.add("DISPATCH", watchcallback, prewatchcallback)
 first_callbacks.add("TORNADO", watchcallback, prewatchcallback)
 
-## watcher-start command
+# watcher-start command
 
 
 def handle_watcherstart(bot, event):
@@ -227,7 +227,7 @@ cmnds.add("watcher-start", handle_watcherstart, "OPER")
 cmnds.add("watch", handle_watcherstart, "USER")
 examples.add("watcher-start", "start watching a channel. ", "watcher-start <channel>")
 
-## watcher-reset command
+# watcher-reset command
 
 
 def handle_watcherreset(bot, event):
@@ -239,7 +239,7 @@ def handle_watcherreset(bot, event):
 cmnds.add("watcher-reset", handle_watcherreset, ["OPER", "USER", "GUEST"])
 examples.add("watcher-reset", "stop watching", "watcher-reset")
 
-## watcher-stop command
+# watcher-stop command
 
 
 def handle_watcherstop(bot, event):
@@ -262,7 +262,7 @@ def handle_watcherstop(bot, event):
 cmnds.add("watcher-stop", handle_watcherstop, ["OPER", "USER", "GUEST"])
 examples.add("watcher-stop", "stop watching a channel", "watcher-stop #dunkbots")
 
-## watcher-list command
+# watcher-list command
 
 
 def handle_watcherlist(bot, event):
@@ -281,7 +281,7 @@ def handle_watcherlist(bot, event):
 cmnds.add("watcher-list", handle_watcherlist, ["OPER", "USER", "GUEST"])
 examples.add("watcher-list", "show what channels we are watching", "watcher-list")
 
-## watcher-subscribers command
+# watcher-subscribers command
 
 
 def handle_watchersubscribers(bot, event):

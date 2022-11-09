@@ -27,7 +27,7 @@
 
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.fleet import getfleet
 from jsb.utils.exception import handle_exception
@@ -39,7 +39,7 @@ from jsb.contrib.rijndael import rijndael
 from jsb.lib.persistconfig import PersistConfig
 from jsb.lib.callbacks import first_callbacks
 
-## basic imports
+# basic imports
 
 import socket
 import re
@@ -71,7 +71,8 @@ cfg.define(
 )
 cfg.define("udpallowednicks", ["#dunkbots", "#jsb", "dunk_"])
 cfg.define("udppassword", "mekker", exposed=False)
-cfg.define("udpseed", "blablablablablaz", exposed=False)  # needs to be 16 chars wide
+# needs to be 16 chars wide
+cfg.define("udpseed", "blablablablablaz", exposed=False)
 cfg.define("udpstrip", 1)  # strip all chars < char(32)
 cfg.define("udpsleep", 0)  # sleep in sendloop .. can be used to delay pack
 cfg.define("udpdblog", 0)
@@ -82,7 +83,7 @@ cfg.define(
     ],
 )
 
-## functions
+# functions
 
 
 def _inmask(addr):
@@ -95,7 +96,7 @@ def _inmask(addr):
             return True
 
 
-## Udplistener class
+# Udplistener class
 
 
 class Udplistener(object):
@@ -249,7 +250,7 @@ class Udplistener(object):
                 i.log(printto, txt)
 
 
-## init
+# init
 
 # the udplistener object
 if cfg["udp"]:
@@ -270,7 +271,7 @@ def init():
     return 1
 
 
-## shutdown
+# shutdown
 
 
 def shutdown():
@@ -283,7 +284,7 @@ def shutdown():
     return 1
 
 
-## start
+# start
 
 
 def onSTART(bot, event):

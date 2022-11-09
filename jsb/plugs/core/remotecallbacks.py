@@ -4,7 +4,7 @@
 
 """ dispatch remote events. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.lazydict import LazyDict
 from jsb.utils.generic import fromenc
@@ -17,18 +17,18 @@ from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
 
-## basic imports
+# basic imports
 
 import logging
 import copy
 import hmac
 import hashlib
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## callback
+# callback
 
 
 def remotecb(bot, event):

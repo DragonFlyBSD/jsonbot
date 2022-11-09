@@ -4,7 +4,7 @@
 
 """ provide todo related commands """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.timeutils import strtotime, striptime, today
 from jsb.utils.locking import lockdec
@@ -19,22 +19,22 @@ from jsb.lib.config import getmainconfig
 from jsb.lib.plugins import plugs
 from jsb.db import getmaindb
 
-## basic imports
+# basic imports
 
 import time
 import _thread
 import logging
 
-## locks
+# locks
 
 todolock = _thread.allocate_lock()
 locked = lockdec(todolock)
 
-## defines
+# defines
 
 db = None
 
-## TodoItem class
+# TodoItem class
 
 
 class TodoItem:
@@ -53,7 +53,7 @@ class TodoItem:
         self.num = num
 
 
-## TodoDb class
+# TodoDb class
 
 
 class TodoDb(object):
@@ -261,7 +261,7 @@ class TodoDb(object):
         return result
 
 
-## defines
+# defines
 
 todo = TodoDb()
 
@@ -271,7 +271,7 @@ def size():
     return todo.size()
 
 
-## plugin init
+# plugin init
 
 
 def init():
@@ -330,7 +330,7 @@ examples.add(
     "1) todo 2) todo program the bot 3) todo 22:00 sleep",
 )
 
-## t-done command
+# t-done command
 
 
 def handle_tododone(bot, ievent):
@@ -360,7 +360,7 @@ def handle_tododone(bot, ievent):
 cmnds.add("t-done", handle_tododone, "USER")
 examples.add("t-done", "remove items from todo list", "1) t-done 1 2) t-done 3 5 8")
 
-## t-chan command
+# t-chan command
 
 
 def handle_chantodo(bot, ievent):
@@ -395,7 +395,7 @@ def handle_chantodo2(bot, ievent):
 cmnds.add("t-chan", handle_chantodo, "USER")
 examples.add("t-chan", "t-chan [<item>] .. add channel todo", "t-chan fix bla")
 
-## t-chandone command
+# t-chandone command
 
 
 def handle_todochandone(bot, ievent):
@@ -429,7 +429,7 @@ examples.add(
     "t-chandone 2",
 )
 
-## t-set command
+# t-set command
 
 
 def handle_settodo(bot, ievent):
@@ -475,7 +475,7 @@ def handle_settodo(bot, ievent):
 cmnds.add("t-set", handle_settodo, "USER")
 examples.add("t-set", "set todo item of <nick>", "t-set dunker bot proggen")
 
-## t-get command
+# t-get command
 
 
 def handle_gettodo(bot, ievent):
@@ -505,7 +505,7 @@ def handle_gettodo(bot, ievent):
 cmnds.add("t-get", handle_gettodo, ["USER", "WEB"])
 examples.add("t-get", "t-get <nick> .. get the todo list of <nick>", "t-get dunker")
 
-## t-time command
+# t-time command
 
 
 def handle_todotime(bot, ievent):
@@ -518,7 +518,7 @@ def handle_todotime(bot, ievent):
 cmnds.add("t-time", handle_todotime, "USER")
 examples.add("t-time", "todo-time .. show todo items with time fields", "t-time")
 
-## t-week command
+# t-week command
 
 
 def handle_todoweek(bot, ievent):
@@ -531,7 +531,7 @@ def handle_todoweek(bot, ievent):
 cmnds.add("t-week", handle_todoweek, "USER")
 examples.add("t-week", "t-week .. todo items for this week", "t-week")
 
-## t-today command
+# t-today command
 
 
 def handle_today(bot, ievent):
@@ -544,7 +544,7 @@ def handle_today(bot, ievent):
 cmnds.add("t-today", handle_today, "USER")
 examples.add("t-today", "todo-today .. todo items for today", "t-today")
 
-## t-tomorrow command
+# t-tomorrow command
 
 
 def handle_tomorrow(bot, ievent):
@@ -574,7 +574,7 @@ def handle_tomorrow(bot, ievent):
 cmnds.add("t-tomorrow", handle_tomorrow, "USER")
 examples.add("t-tomorrow", "t-tomorrow .. todo items for tomorrow", "t-tomorrow")
 
-## t-setprio command
+# t-setprio command
 
 
 def handle_setpriority(bot, ievent):
@@ -608,7 +608,7 @@ examples.add(
     "1) todo-setprio #dunkbots 2 5 2) todo-setprio owner 3 10 3) todo-setprio 2 10",
 )
 
-## t-settime command
+# t-settime command
 
 
 def handle_todosettime(bot, ievent):
@@ -647,7 +647,7 @@ examples.add(
     "1) todo-settime #dunkbots 2 13:00 2) todo-settime owner 3 2-2-2010 3) todo-settime 2 22:00",
 )
 
-## t-getprio command
+# t-getprio command
 
 
 def handle_getpriority(bot, ievent):

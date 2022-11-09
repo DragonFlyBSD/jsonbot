@@ -7,7 +7,7 @@
 __author__ = "Wijnand 'tehmaze' Modderman - http://tehmaze.com"
 __license__ = "BSD License"
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.utils.trace import calledfrom, whichmodule
@@ -16,7 +16,7 @@ from jsb.utils.timeutils import strtotime
 from jsb.lib.callbacks import callbacks
 import jsb.lib.threads as thr
 
-## basic imorts
+# basic imorts
 
 import datetime
 import sys
@@ -24,16 +24,16 @@ import time
 import _thread
 import logging
 
-## locks
+# locks
 
 plock = _thread.allocate_lock()
 locked = lockdec(plock)
 
-## defines
+# defines
 
 pidcount = 0
 
-## JobError class
+# JobError class
 
 
 class JobError(Exception):
@@ -41,8 +41,7 @@ class JobError(Exception):
     """job error exception."""
 
 
-
-## Job class
+# Job class
 
 
 class Job(object):
@@ -265,7 +264,6 @@ def interval(sleeptime, repeat=0):
 
 
 def at(start, interval=1, repeat=1):
-
     """at decorator."""
     group = calledfrom(sys._getframe())
 

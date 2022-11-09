@@ -4,7 +4,7 @@
 
 """ log channels to [hour:min] <nick> txt format, only logging to files is supported right now.  """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.callbacks import (
@@ -27,19 +27,19 @@ from jsb.utils.log import init
 from jsb.utils.statdict import StatDict
 from jsb.utils.timeutils import striptime, strtotime2
 
-## basic imports
+# basic imports
 
 import time
 import os
 import logging
 import _thread
 
-## locks
+# locks
 
 outlock = _thread.allocate_lock()
 outlocked = lockdec(outlock)
 
-## defines
+# defines
 
 cfg = PersistConfig()
 cfg.define("channels", [])
@@ -70,7 +70,7 @@ eventstolog = [
     "TORNADO",
 ]
 
-## logging part
+# logging part
 
 # BHJTW 21-02-2011 revamped to work with standard python logger
 
@@ -107,7 +107,7 @@ def timestr(dt):
     return dt.strftime(format_opt("timestamp_format"))
 
 
-## enablelogging function
+# enablelogging function
 
 
 def enablelogging(botname, channel):
@@ -141,7 +141,7 @@ def enablelogging(botname, channel):
     loggers[logname] = lastlogger
 
 
-## do tha actual logging
+# do tha actual logging
 
 
 @outlocked
@@ -188,7 +188,7 @@ def log_write(m):
 
 backends["log"] = log_write
 
-## log function
+# log function
 
 
 def log(bot, event):
@@ -198,7 +198,7 @@ def log(bot, event):
         write(m)
 
 
-## chatlog precondition
+# chatlog precondition
 
 
 def prechatlogcb(bot, ievent):
@@ -234,7 +234,7 @@ def prechatlogcb(bot, ievent):
     return False
 
 
-## chatlog callbacks
+# chatlog callbacks
 
 
 def chatlogcb(bot, ievent):
@@ -242,7 +242,7 @@ def chatlogcb(bot, ievent):
     log(bot, ievent)
 
 
-## plugin-start
+# plugin-start
 
 
 def init():
@@ -266,7 +266,7 @@ def init():
     return 1
 
 
-## plugin-stop
+# plugin-stop
 
 
 def shutdown():
@@ -278,7 +278,7 @@ def shutdown():
     return 1
 
 
-## chatlog-on command
+# chatlog-on command
 
 
 def handle_chatlogon(bot, ievent):
@@ -296,7 +296,7 @@ examples.add(
     "chatlog-on", "enable chatlog on the channel the commands is given in", "chatlog-on"
 )
 
-## chatlog-off command
+# chatlog-off command
 
 
 def handle_chatlogoff(bot, ievent):
@@ -325,7 +325,7 @@ examples.add(
     "chatlog-off",
 )
 
-## chatlog-searh command
+# chatlog-searh command
 
 
 def handle_chatlogsearch(bot, event):
@@ -361,7 +361,7 @@ examples.add(
     "chatlog-search", "search the chatlogs of a channel.", "chatlog-search jsonbot"
 )
 
-## chatlog-stats command
+# chatlog-stats command
 
 
 def handle_chatlogstats(bot, event):

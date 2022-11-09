@@ -6,29 +6,29 @@
 
 __version__ = "1"
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.persist import Persist
 from jsb.utils.name import stripname
 from jsb.lib.gozerevent import GozerEvent
 from jsb.imports import getjson
 
-## xmpp import
+# xmpp import
 
 from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
 
-## basic imports
+# basic imports
 
 import hmac
 import uuid
 import time
 import hashlib
 
-## defines
+# defines
 
 idattributes = ["createtime", "origin", "type", "idtime", "payload"]
 
-## functions
+# functions
 
 
 def getid(container):
@@ -41,7 +41,7 @@ def getid(container):
     return uuid.uuid3(uuid.NAMESPACE_URL, name).hex
 
 
-## classes
+# classes
 
 
 class Container(GozerEvent):

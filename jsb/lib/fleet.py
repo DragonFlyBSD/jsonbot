@@ -4,8 +4,15 @@
 
 """ fleet is a list of bots. """
 
-## jsb imports
+# jsb imports
 
+from jsb.utils.locking import lockdec
+import copy
+import _thread
+import threading
+import logging
+import time
+import os
 from jsb.utils.exception import handle_exception
 from jsb.utils.generic import waitforqueue
 from jsb.utils.trace import whichmodule
@@ -19,40 +26,33 @@ from .threads import start_new_thread
 from .eventhandler import mainhandler
 from jsb.utils.name import stripname
 from jsb.lib.factory import BotFactory
-from jsb.utils.lazydict import LazyDict  ## simplejson imports
+from jsb.utils.lazydict import LazyDict  # simplejson imports
 
 from jsb.imports import getjson
 
 json = getjson()
 
-## basic imports
+# basic imports
 
-import os
-import time
-import logging
-import threading
-import _thread
-import copy
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## classes
+# classes
 
 
 class FleetBotAlreadyExists(Exception):
     pass
 
 
-## locks
+# locks
 
-from jsb.utils.locking import lockdec
 
 lock = _thread.allocate_lock()
 locked = lockdec(lock)
 
-## Fleet class
+# Fleet class
 
 
 class Fleet(Persist):
@@ -396,7 +396,7 @@ class Fleet(Persist):
             bot.say(chan, "done!")
 
 
-## global fleet object
+# global fleet object
 
 fleet = None
 

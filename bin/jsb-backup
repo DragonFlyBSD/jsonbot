@@ -8,8 +8,14 @@
 # import warnings
 # warnings.simplefilter("ignore")
 
-## bootstrap
+# bootstrap
 
+from jsb.lib.datadir import getdatadir
+from jsb.utils.popen import Popen
+from jsb.utils.generic import gethighest
+from jsb.utils.log import setloglevel
+from optparse import OptionParser
+from jsb.version import getversion
 from subprocess import Popen
 import os
 import sys
@@ -17,11 +23,9 @@ import time
 
 sys.path.insert(0, os.getcwd())
 
-from jsb.version import getversion
 
-## command line parsing
+# command line parsing
 
-from optparse import OptionParser
 
 parser = OptionParser(
     usage="usage: %prog [options] <appid>", version="%prog" + getversion()
@@ -58,13 +62,9 @@ opts.args = args
 
 print(getversion("BACKUP"))
 
-from jsb.utils.log import setloglevel
 
 setloglevel(opts.loglevel or "warn", opts.colors)
 
-from jsb.utils.generic import gethighest
-from jsb.utils.popen import Popen
-from jsb.lib.datadir import getdatadir
 
 if opts.datadir:
     ddir = opts.datadir

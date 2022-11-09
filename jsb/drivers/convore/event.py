@@ -4,28 +4,28 @@
 
 """ convore event. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.locking import lockdec
 from jsb.lib.eventbase import EventBase
 from jsb.utils.lazydict import LazyDict
 from jsb.imports import getjson
 
-## basic imports
+# basic imports
 
 import logging
 import _thread
 
-## defines
+# defines
 
 json = getjson()
 
-## locks
+# locks
 
 parselock = _thread.allocate_lock()
 locked = lockdec(parselock)
 
-## ConvoreEvent
+# ConvoreEvent
 
 
 class ConvoreEvent(EventBase):

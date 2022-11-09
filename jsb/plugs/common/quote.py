@@ -4,24 +4,24 @@
 
 """ manage quotes. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.persist import PlugPersist
 
-## basic imports
+# basic imports
 
 import random
 
-## defines
+# defines
 
 quotes = PlugPersist("quotes.data")
 
 if not quotes.data.index:
     quotes.data.index = 0
 
-## quote-add command
+# quote-add command
 
 
 def handle_quoteadd(bot, event):
@@ -38,7 +38,7 @@ def handle_quoteadd(bot, event):
 cmnds.add("quote-add", handle_quoteadd, ["USER", "GUEST"])
 examples.add("quote-add", "add a quote to the bot", "quote-add blablabla")
 
-## quote command
+# quote command
 
 
 def handle_quote(bot, event):

@@ -4,7 +4,7 @@
 
 """ kickban functionality for IRC. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.generic import getwho
 from jsb.lib.commands import cmnds
@@ -12,18 +12,18 @@ from jsb.lib.examples import examples
 from jsb.lib.callbacks import callbacks
 from jsb.lib.wait import waiter
 
-## basic imports
+# basic imports
 
 import queue
 import logging
 
-## defines
+# defines
 
 bans = {}
 cachetime = 300
 timeout = 10
 
-## callbacks
+# callbacks
 
 
 def handle_367(bot, ievent):
@@ -45,7 +45,7 @@ def handle_mode(bot, ievent):
 callbacks.add("367", handle_367)
 callbacks.add("MODE", handle_mode)
 
-## functions
+# functions
 
 
 def get_bans(bot, channel):
@@ -77,7 +77,7 @@ def get_bothost(bot):
     return getwho(bot, bot.cfg.nick).split("@")[-1].lower()
 
 
-## ban-list command
+# ban-list command
 
 
 def handle_ban_list(bot, ievent):
@@ -92,7 +92,7 @@ def handle_ban_list(bot, ievent):
 cmnds.add("ban-list", handle_ban_list, "OPER", threaded=True)
 examples.add("ban-list", "list all bans.", "ban-list")
 
-## ban-remove command
+# ban-remove command
 
 
 def handle_ban_remove(bot, ievent):
@@ -118,7 +118,7 @@ def handle_ban_remove(bot, ievent):
 cmnds.add("ban-remove", handle_ban_remove, "OPER", threaded=True)
 examples.add("ban-remove", "removes a host from the ban list", "ban-remove 1")
 
-## ban-add command
+# ban-add command
 
 
 def handle_ban_add(bot, ievent):
@@ -144,7 +144,7 @@ def handle_ban_add(bot, ievent):
 cmnds.add("ban-add", handle_ban_add, "OPER")
 examples.add("ban-add", "adds a host to the ban list", "ban-add *!*@lamers.are.us")
 
-## ban-kickban command
+# ban-kickban command
 
 
 def handle_kickban_add(bot, ievent):

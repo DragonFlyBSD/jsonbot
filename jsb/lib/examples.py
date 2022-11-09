@@ -4,11 +4,11 @@
 
 """ examples is a dict of example objects. """
 
-## basic imports
+# basic imports
 
 import re
 
-## Example class
+# Example class
 
 
 class Example(object):
@@ -21,7 +21,7 @@ class Example(object):
         self.url = url
 
 
-## Collection of exanples
+# Collection of exanples
 
 
 class Examples(dict):
@@ -48,7 +48,7 @@ class Examples(dict):
         return result
 
 
-## global examples object
+# global examples object
 
 examples = Examples()
 

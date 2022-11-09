@@ -4,7 +4,7 @@
 
 """ core bot commands. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.aliases import setalias
 from jsb.lib.config import getmainconfig
@@ -31,7 +31,7 @@ from jsb.lib.exit import globalshutdown
 from jsb.lib.runner import defaultrunner, cmndrunner, longrunner
 from jsb.lib.errors import NoSuchPlugin
 
-## basic imports
+# basic imports
 
 import time
 import sys
@@ -40,11 +40,11 @@ import copy
 import logging
 import functools
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## reboot command
+# reboot command
 
 
 def handle_reboot(bot, ievent):
@@ -74,7 +74,7 @@ def handle_reboot(bot, ievent):
 cmnds.add("reboot", handle_reboot, "OPER")
 examples.add("reboot", "reboot the bot.", "reboot")
 
-## quit command
+# quit command
 
 
 def handle_quit(bot, ievent):
@@ -89,7 +89,7 @@ def handle_quit(bot, ievent):
 cmnds.add("quit", handle_quit, "OPER")
 examples.add("quit", "quit the bot.", "quit")
 
-## encoding command
+# encoding command
 
 
 def handle_encoding(bot, ievent):
@@ -100,7 +100,7 @@ def handle_encoding(bot, ievent):
 cmnds.add("encoding", handle_encoding, ["USER", "GUEST"])
 examples.add("encoding", "show default encoding", "encoding")
 
-## uptime command
+# uptime command
 
 
 def handle_uptime(bot, ievent):
@@ -113,7 +113,7 @@ def handle_uptime(bot, ievent):
 cmnds.add("uptime", handle_uptime, ["USER", "GUEST"])
 examples.add("uptime", "show uptime of the bot", "uptime")
 
-## list command
+# list command
 
 
 def handle_available(bot, ievent):
@@ -131,7 +131,7 @@ def handle_available(bot, ievent):
 cmnds.add("list", handle_available, ["USER", "GUEST"])
 examples.add("list", "list available plugins", "list")
 
-## commands command
+# commands command
 
 
 def handle_commands(bot, ievent):
@@ -158,7 +158,7 @@ def handle_commands(bot, ievent):
 cmnds.add("commands", handle_commands, ["USER", "GUEST"])
 examples.add("commands", "show commands of <plugin>", "1) commands core")
 
-## perm command
+# perm command
 
 
 def handle_perm(bot, ievent):
@@ -182,7 +182,7 @@ def handle_perm(bot, ievent):
 cmnds.add("perm", handle_perm, ["USER", "GUEST"])
 examples.add("perm", "show permission of command", "perm quit")
 
-## version command
+# version command
 
 
 def handle_version(bot, ievent):
@@ -214,7 +214,7 @@ cmnds.add("version", handle_version, ["USER", "GUEST"])
 examples.add("version", "show version of the bot", "version")
 setalias("v", "version")
 
-## whereis command
+# whereis command
 
 
 def handle_whereis(bot, ievent):
@@ -237,7 +237,7 @@ examples.add(
     "whereis", "whereis <cmnd> .. show in which plugins <what> is", "whereis test"
 )
 
-## help-plug command
+# help-plug command
 
 
 def handle_helpplug(bot, ievent):
@@ -325,7 +325,7 @@ def handle_helpplug(bot, ievent):
 cmnds.add("help-plug", handle_helpplug, ["USER", "GUEST"], how="msg")
 examples.add("help-plug", "get help on <plugin>", "1) help-plug 2) help-plug misc")
 
-## help-site command
+# help-site command
 
 
 def handle_helpsite(bot, event):
@@ -357,7 +357,7 @@ def handle_helpsite(bot, event):
 cmnds.add("help-site", handle_helpsite, ["OPER", "USER", "GUEST"])
 examples.add("help-site", "show url pointing to the docs", "1) help 2) help rss")
 
-## help command
+# help command
 
 
 def handle_help(bot, event):
@@ -395,7 +395,7 @@ def handle_help(bot, event):
 cmnds.add("help", handle_help, ["OPER", "USER", "GUEST"])
 examples.add("help", "show help of a command", "help rss-list")
 
-## apro command
+# apro command
 
 
 def handle_apro(bot, ievent):
@@ -418,7 +418,7 @@ examples.add(
     "apro", "apro <what> .. search for commands that contain <what>", "apro com"
 )
 
-## whatcommands command
+# whatcommands command
 
 
 def handle_whatcommands(bot, ievent):
@@ -443,7 +443,7 @@ examples.add(
     "whatcommands", "show commands with permission <perm>", "whatcommands USER"
 )
 
-## versions command
+# versions command
 
 
 def handle_versions(bot, ievent):
@@ -464,7 +464,7 @@ def handle_versions(bot, ievent):
 cmnds.add("versions", handle_versions, ["USER", "GUEST"])
 examples.add("versions", "show versions of all loaded modules", "versions")
 
-## loglevel command
+# loglevel command
 
 
 def handle_loglevel(bot, event):
@@ -487,7 +487,7 @@ examples.add(
     "loglevel", "set loglevel ot on of debug, info, warning or error", "loglevel warn"
 )
 
-## threads command
+# threads command
 
 
 def handle_threads(bot, ievent):
@@ -511,7 +511,7 @@ def handle_threads(bot, ievent):
 cmnds.add("threads", handle_threads, ["USER", "GUEST"])
 examples.add("threads", "show running threads", "threads")
 
-## loaded command
+# loaded command
 
 
 def handle_loaded(bot, event):
@@ -522,7 +522,7 @@ def handle_loaded(bot, event):
 cmnds.add("loaded", handle_loaded, ["USER", "GUEST"])
 examples.add("loaded", "show list of loaded plugins", "loaded")
 
-## statusline command
+# statusline command
 
 
 def handle_statusline(bot, event):
@@ -536,7 +536,7 @@ def handle_statusline(bot, event):
 cmnds.add("statusline", handle_statusline, ["USER", "GUEST"])
 examples.add("statusline", "show status line", "statusline")
 
-## topper command
+# topper command
 
 
 def handle_topper(bot, event):
@@ -554,7 +554,7 @@ def handle_topper(bot, event):
 cmnds.add("topper", handle_topper, ["USER", "GUEST"])
 examples.add("topper", "show topper line", "topper")
 
-## running command
+# running command
 
 
 def handle_running(bot, event):
@@ -568,7 +568,7 @@ def handle_running(bot, event):
 cmnds.add("running", handle_running, ["USER", "GUEST"])
 examples.add("running", "show running tasks", "running")
 
-## descriptions command
+# descriptions command
 
 
 def handle_descriptions(bot, event):

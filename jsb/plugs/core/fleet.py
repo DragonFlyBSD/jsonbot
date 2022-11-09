@@ -8,7 +8,7 @@
 
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.config import Config
 from jsb.lib.threads import start_new_thread
@@ -18,16 +18,16 @@ from jsb.lib.examples import examples
 from jsb.utils.name import stripname
 from jsb.utils.generic import waitforqueue
 
-## basic imports
+# basic imports
 
 import os
 import copy
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## fleet-avail command
+# fleet-avail command
 
 
 def handle_fleetavail(bot, ievent):
@@ -38,7 +38,7 @@ def handle_fleetavail(bot, ievent):
 cmnds.add("fleet-avail", handle_fleetavail, "OPER")
 examples.add("fleet-avail", "show available fleet bots", "fleet-avail")
 
-## fleet-connect command
+# fleet-connect command
 
 
 def handle_fleetconnect(bot, ievent):
@@ -76,7 +76,7 @@ examples.add(
     "fleet-connect", "connect bot with <name> to irc server", "fleet-connect test"
 )
 
-## fleet-disconnect command
+# fleet-disconnect command
 
 
 def handle_fleetdisconnect(bot, ievent):
@@ -104,7 +104,7 @@ examples.add(
     "fleet-disconnect test",
 )
 
-## fleet-list command
+# fleet-list command
 
 
 def handle_fleetlist(bot, ievent):
@@ -115,7 +115,7 @@ def handle_fleetlist(bot, ievent):
 cmnds.add("fleet-list", handle_fleetlist, ["OPER", "USER", "GUEST"])
 examples.add("fleet-list", "show current fleet list", "fleet-list")
 
-## fleet-del command
+# fleet-del command
 
 
 def handle_fleetdel(bot, ievent):
@@ -139,7 +139,7 @@ examples.add(
     "fleet-del", "fleet-del <botname> .. delete bot from fleet list", "fleet-del test"
 )
 
-## fleet-disable command
+# fleet-disable command
 
 
 def fleet_disable(bot, ievent):
@@ -159,7 +159,7 @@ def fleet_disable(bot, ievent):
 cmnds.add("fleet-disable", fleet_disable, "OPER")
 examples.add("fleet-disable", "disable a fleet bot", "fleet-disable local")
 
-## fleet-enable command
+# fleet-enable command
 
 
 def fleet_enable(bot, ievent):
@@ -198,7 +198,7 @@ def fleet_enable(bot, ievent):
 cmnds.add("fleet-enable", fleet_enable, "OPER", threaded=True)
 examples.add("fleet-enable", "enable a fleet bot", "fleet-enable local")
 
-## fleet-add command
+# fleet-add command
 
 
 def fleet_add(bot, ievent):
@@ -249,7 +249,7 @@ def fleet_add(bot, ievent):
 cmnds.add("fleet-add", fleet_add, "OPER", threaded=True)
 examples.add("fleet-add", "add a fleet bot", "fleet-add local irc localhost jsbtest")
 
-## fleet-cmnd command
+# fleet-cmnd command
 
 
 def fleet_cmnd(bot, ievent):

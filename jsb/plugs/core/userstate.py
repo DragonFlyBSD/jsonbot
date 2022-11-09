@@ -4,14 +4,14 @@
 
 """ userstate is stored in jsondata/state/users/<username>. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.persiststate import UserState
 from jsb.lib.errors import NoSuchUser
 
-## set command
+# set command
 
 
 def handle_set(bot, ievent):
@@ -29,7 +29,7 @@ def handle_set(bot, ievent):
 cmnds.add("set", handle_set, ["OPER", "USER", "GUEST"])
 examples.add("set", "set userstate", "set place heerhugowaard")
 
-## get command
+# get command
 
 
 def handle_get(bot, ievent):
@@ -51,7 +51,7 @@ def handle_get(bot, ievent):
 cmnds.add("get", handle_get, ["OPER", "USER", "GUEST"])
 examples.add("get", "get your userstate", "get")
 
-## unset command
+# unset command
 
 
 def handle_unset(bot, ievent):

@@ -4,16 +4,16 @@
 
 """ schenk wat koffie! """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 import random
 
-## defines
+# defines
 
 koffie = []
 thee = []
@@ -28,7 +28,7 @@ sex = []
 roken = []
 beledig = []
 
-## init function
+# init function
 
 
 def init():
@@ -83,7 +83,7 @@ def init():
     return 1
 
 
-## functions
+# functions
 
 
 def do(bot, ievent, txt):
@@ -93,7 +93,7 @@ def do(bot, ievent, txt):
         bot.say(ievent.channel, txt, event=ievent)
 
 
-## koffie command
+# koffie command
 
 
 def handle_koffie(bot, ievent):
@@ -111,7 +111,7 @@ def handle_koffie(bot, ievent):
 cmnds.add("koffie", handle_koffie, "USER")
 examples.add("koffie", "get a koffie quote", "koffie")
 
-## thee command
+# thee command
 
 
 def handle_thee(bot, ievent):
@@ -129,7 +129,7 @@ def handle_thee(bot, ievent):
 cmnds.add("thee", handle_thee, "USER")
 examples.add("thee", "get an thee", "thee")
 
-## bier command
+# bier command
 
 
 def handle_bier(bot, ievent):
@@ -147,7 +147,7 @@ def handle_bier(bot, ievent):
 cmnds.add("bier", handle_bier, "USER")
 examples.add("bier", "get a bier", "bier")
 
-## wijn command
+# wijn command
 
 
 def handle_wijn(bot, ievent):
@@ -165,7 +165,7 @@ def handle_wijn(bot, ievent):
 cmnds.add("wijn", handle_wijn, "USER")
 examples.add("wijn", "get a wijn", "wijn")
 
-## fris command
+# fris command
 
 
 def handle_fris(bot, ievent):
@@ -183,7 +183,7 @@ def handle_fris(bot, ievent):
 cmnds.add("fris", handle_fris, "USER")
 examples.add("fris", "get a fris", "fris")
 
-## taart command
+# taart command
 
 
 def handle_taart(bot, ievent):
@@ -201,7 +201,7 @@ def handle_taart(bot, ievent):
 cmnds.add("taart", handle_taart, "USER")
 examples.add("taart", "get a taart", "taart")
 
-## koek command
+# koek command
 
 
 def handle_koek(bot, ievent):
@@ -222,7 +222,7 @@ examples.add("koek", "get a koek", "koek")
 cmnds.add("koekje", handle_koek, "USER")
 examples.add("koekje", "get a koekje", "koekje")
 
-## chips command
+# chips command
 
 
 def handle_chips(bot, ievent):
@@ -240,7 +240,7 @@ def handle_chips(bot, ievent):
 cmnds.add("chips", handle_chips, "USER")
 examples.add("chips", "get a chips", "chips")
 
-## soep command
+# soep command
 
 
 def handle_soep(bot, ievent):
@@ -258,7 +258,7 @@ def handle_soep(bot, ievent):
 cmnds.add("soep", handle_soep, "USER")
 examples.add("soep", "get a soep", "soep")
 
-## sex command
+# sex command
 
 
 def handle_sex(bot, ievent):
@@ -276,7 +276,7 @@ def handle_sex(bot, ievent):
 cmnds.add("sex", handle_sex, "USER")
 examples.add("sex", "get a sex", "sex")
 
-## roken command
+# roken command
 
 
 def handle_roken(bot, ievent):
@@ -294,7 +294,7 @@ def handle_roken(bot, ievent):
 cmnds.add("roken", handle_roken, "USER")
 examples.add("roken", "get a roken", "roken")
 
-## beledig command
+# beledig command
 
 
 def handle_beledig(bot, ievent):
@@ -312,7 +312,7 @@ def handle_beledig(bot, ievent):
 cmnds.add("beledig", handle_beledig, "USER")
 examples.add("beledig", "get/give an belediging ", "beledig")
 
-## text definitions
+# text definitions
 
 koffietxt = """ schenkt een kopje koffie in voor
 schenkt een kopje koffie wiener melange in voor

@@ -4,7 +4,7 @@
 
 """ exception related functions. """
 
-## basic imports
+# basic imports
 
 import sys
 import traceback
@@ -13,7 +13,7 @@ import _thread
 import os
 import logging
 
-## defines
+# defines
 
 bork = False
 exceptionlist = []
@@ -27,7 +27,7 @@ GREEN = "\033[92m"
 ENDC = "\033[0m"
 
 
-## exceptionmsg function
+# exceptionmsg function
 
 
 def exceptionmsg():
@@ -56,7 +56,7 @@ def exceptionmsg():
     return res
 
 
-## handle_exception function
+# handle_exception function
 
 
 def handle_exception(event=None, log=True, txt="", stop=False):

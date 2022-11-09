@@ -10,7 +10,7 @@ this were adapted from that plugin
 http://inamidst.com/phenny/
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
@@ -18,7 +18,7 @@ from jsb.lib.persist import PlugPersist
 from jsb.lib.examples import examples
 from jsb.plugs.common.tinyurl import get_tinyurl
 
-## basic imports
+# basic imports
 
 import logging
 import xmlrpc.client
@@ -26,14 +26,14 @@ import re
 
 # import modules.activecollab
 
-## defines
+# defines
 
 recent_tickets = {}
 min_age = 60 * 5
 rpc_clients = {}
 cfg = PlugPersist("jira", {})
 
-## getServerInfo function
+# getServerInfo function
 
 
 def getServerInfo(server, auth):
@@ -175,7 +175,7 @@ callbacks.add("MESSAGE", doLookup, containsJiraTag, threaded=True)
 callbacks.add("DISPATCH", doLookup, containsJiraTag, threaded=True)
 callbacks.add("TORNADO", doLookup, containsJiraTag, threaded=True)
 
-## add_jira_server command
+# add_jira_server command
 
 
 def handle_add_jira_server(bot, ievent):
@@ -210,7 +210,7 @@ examples.add(
     "add_jira_server FireBreath http://jira.firebreath.org myuser mypassword",
 )
 
-## del_jira_server command
+# del_jira_server command
 
 
 def handle_del_jira_server(bot, ievent):
@@ -237,7 +237,7 @@ examples.add(
     "del_jira_server FireBreath http://jira.firebreath.org myuser mypassword",
 )
 
-## jira_issue_lookup_enable command
+# jira_issue_lookup_enable command
 
 
 def handle_jira_issue_lookup_enable(bot, ievent):
@@ -276,7 +276,7 @@ examples.add(
     "jira_issue_lookup_enable jiraserver FIREBREATH",
 )
 
-## jira_issue_lookup_disable command
+# jira_issue_lookup_disable command
 
 
 def handle_jira_issue_lookup_disable(bot, ievent):

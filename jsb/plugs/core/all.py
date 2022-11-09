@@ -10,7 +10,7 @@ from jsb.lib.commands import cmnds
 from jsb.lib.less import outcache
 from jsb.lib.examples import examples
 
-## all command
+# all command
 
 
 def handle_all(bot, event):

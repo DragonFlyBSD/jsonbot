@@ -4,17 +4,17 @@
 
 """ convert input/output stream. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.utils.trace import calledfrom
 
-## basic imports
+# basic imports
 
 import sys
 import logging
 
-## Morph claas
+# Morph claas
 
 
 class Morph(object):

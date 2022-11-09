@@ -5,7 +5,7 @@
 """ This product includes GeoLite data created by MaxMind, available from http://maxmind.com/ """
 
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.callbacks import callbacks
 from jsb.lib.examples import examples
@@ -14,16 +14,16 @@ from jsb.utils.url import geturl2
 from jsb.utils.exception import handle_exception
 from jsb.imports import getjson
 
-## basic imports
+# basic imports
 
 from socket import gethostbyname
 import re
 
-## defines
+# defines
 
 URL = "http://geoip.pidgets.com/?ip=%s&format=json"
 
-## querygeoipserver function
+# querygeoipserver function
 
 
 def querygeoipserver(ip):
@@ -31,7 +31,7 @@ def querygeoipserver(ip):
     return ipinfo
 
 
-## host2ip function
+# host2ip function
 
 
 def host2ip(query):
@@ -48,7 +48,7 @@ def host2ip(query):
     return ip
 
 
-## geo command
+# geo command
 
 
 def handle_geo(bot, event):
@@ -72,7 +72,7 @@ def handle_geo(bot, event):
 cmnds.add("geo", handle_geo, ["OPER", "GEO"])
 examples.add("geo", "do a geo lookup on ip nr", "geo 127.0.0.1")
 
-## callbacks
+# callbacks
 
 
 def handle_geoPRE(bot, event):
@@ -102,7 +102,7 @@ def handle_geoJOIN(bot, event):
 
 callbacks.add("JOIN", handle_geoJOIN, handle_geoPRE)
 
-## geo-on command
+# geo-on command
 
 
 def handle_geoon(bot, event):
@@ -115,7 +115,7 @@ def handle_geoon(bot, event):
 cmnds.add("geo-on", handle_geoon, ["OPER"])
 examples.add("geo-on", "enable geo loopups.", "geo-on")
 
-## geo-off command
+# geo-off command
 
 
 def handle_geooff(bot, event):

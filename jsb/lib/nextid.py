@@ -4,10 +4,10 @@
 
 """ provide increasing counters """
 
-## basic imports
+# basic imports
 
 
-## Nextid class
+# Nextid class
 
 
 class Nextid(object):

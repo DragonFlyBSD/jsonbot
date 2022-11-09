@@ -4,7 +4,7 @@
 
 """ base class of all events.  """
 
-## jsb imports
+# jsb imports
 
 from .channelbase import ChannelBase
 from jsb.utils.lazydict import LazyDict
@@ -19,7 +19,7 @@ from jsb.lib.users import getusers
 from jsb.lib.commands import cmnds
 from jsb.lib.floodcontrol import floodcontrol
 
-## basic imports
+# basic imports
 
 from collections import deque
 import copy
@@ -29,13 +29,13 @@ import time
 import _thread
 import uuid
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 lock = _thread.allocate_lock()
 locked = lockdec(lock)
 
-## classes
+# classes
 
 
 class EventBase(LazyDict):

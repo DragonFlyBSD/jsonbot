@@ -7,27 +7,27 @@
     functionality.
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.url import striphtml
 from jsb.lib.eventbase import EventBase
 
-## dom imports
+# dom imports
 
 from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
 
-## for exceptions
+# for exceptions
 
 
-## xmpp imports
+# xmpp imports
 
 from jsb.drivers.xmpp.namespace import attributes, subelements
 
-## basic imports
+# basic imports
 
 import logging
 
-## GozerEvent class
+# GozerEvent class
 
 
 class GozerEvent(EventBase):

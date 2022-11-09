@@ -4,13 +4,13 @@
 
 """ JSONBOT flood control. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.statdict import StatDict
 from jsb.utils.lazydict import LazyDict
 from jsb.lib.config import getmainconfig
 
-## basic imports
+# basic imports
 
 import logging
 import time

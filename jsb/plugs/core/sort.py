@@ -7,25 +7,25 @@
 __author__ = "Wijnand 'maze' Modderman <http://tehmaze.com>"
 __license__ = "BSD"
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.utils.generic import waitforqueue
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 import optparse
 import time
 
-## SortError exception
+# SortError exception
 
 
 class SortError(Exception):
     pass
 
 
-## SortOptionParser class
+# SortOptionParser class
 
 
 class SortOptionParser(optparse.OptionParser):
@@ -85,7 +85,7 @@ class SortOptionParser(optparse.OptionParser):
             raise SortError
 
 
-## muneric_compare function
+# muneric_compare function
 
 
 def numeric_compare(x, y):
@@ -100,7 +100,7 @@ def numeric_compare(x, y):
     return a - b
 
 
-## sort command
+# sort command
 
 
 def handle_sort(bot, ievent):

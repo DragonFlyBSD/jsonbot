@@ -4,11 +4,11 @@
 
 """ pickled dict of lists """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.persist import Persist
 
-## Pdol class
+# Pdol class
 
 
 class Pdol(Persist):

@@ -8,7 +8,7 @@
 
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.utils.generic import toenc, fromenc
@@ -23,11 +23,11 @@ from jsb.lib.morphs import inputmorphs, outputmorphs
 from jsb.lib.exit import globalshutdown
 from jsb.lib.config import Config, getmainconfig
 
-## jsb.irc imports
+# jsb.irc imports
 
 from .ircevent import IrcEvent
 
-## basic imports
+# basic imports
 
 import traceback
 import time
@@ -38,12 +38,12 @@ import random
 import logging
 import select
 
-## locks
+# locks
 
 outlock = _thread.allocate_lock()
 outlocked = lockdec(outlock)
 
-## exceptions
+# exceptions
 
 
 class Irc(BotBase):

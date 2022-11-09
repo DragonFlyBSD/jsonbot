@@ -4,18 +4,18 @@
 
 """ do a fqdn loopup. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 from socket import gethostbyname
 from socket import getfqdn
 import re
 
-## dns command
+# dns command
 
 
 def handle_dns(bot, event):

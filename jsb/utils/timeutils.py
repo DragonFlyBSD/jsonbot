@@ -4,17 +4,17 @@
 
 """ time related helper functions. """
 
-## jsb imports
+# jsb imports
 
 from .exception import handle_exception
 
-## basic imports
+# basic imports
 
 import time
 import re
 import calendar
 
-## defines
+# defines
 
 leapfactor = float(6 * 60 * 60) / float(365 * 24 * 60 * 60)
 timere = re.compile("(\S+)\s+(\S+)\s+(\d+)\s+(\d+):(\d+):(\d+)\s+(\d+)")
@@ -34,7 +34,7 @@ bdmonths = [
     "Dec",
 ]
 
-## elapsedstring function
+# elapsedstring function
 
 
 def elapsedstring(nsec, ywd=None):
@@ -103,7 +103,7 @@ def elapsedstring(nsec, ywd=None):
     return result.strip()
 
 
-## hourmin function
+# hourmin function
 
 
 def hourmin(ttime):
@@ -121,7 +121,7 @@ def hourmin(ttime):
     return result
 
 
-## striptime function
+# striptime function
 
 
 def striptime(what):
@@ -134,7 +134,7 @@ def striptime(what):
     return what.strip()
 
 
-## now function
+# now function
 
 
 def now():
@@ -146,7 +146,7 @@ def now():
     return ttime
 
 
-## today function
+# today function
 
 
 def today():
@@ -163,7 +163,7 @@ def today():
         return result
 
 
-## strtotime function
+# strtotime function
 
 
 def strtotime(what):
@@ -298,7 +298,7 @@ def strtotime2(what):
         pass
 
 
-## uurminsec function
+# uurminsec function
 
 
 def uurminsec(ttime):
@@ -320,7 +320,7 @@ def uurminsec(ttime):
     return result
 
 
-## getdaymonth function
+# getdaymonth function
 
 
 def getdaymonth(ttime):
@@ -333,7 +333,7 @@ def getdaymonth(ttime):
         return (None, None)
 
 
-## getdaymonthyear function
+# getdaymonthyear function
 
 
 def getdaymonthyear(ttime):
@@ -346,7 +346,7 @@ def getdaymonthyear(ttime):
         return (None, None, None)
 
 
-## dmy function
+# dmy function
 
 
 def dmy(ttime):

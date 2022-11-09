@@ -5,10 +5,14 @@
 """ provide partyline functionality .. manage dcc sockets. """
 
 
+import logging
+import socket
+import _thread
+
 __copyright__ = "this file is in the public domain"
 __author__ = "Aim"
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.fleet import getfleet
 from jsb.utils.exception import handle_exception
@@ -17,13 +21,10 @@ from jsb.imports import getjson
 
 json = getjson()
 
-## basic imports
+# basic imports
 
-import _thread
-import socket
-import logging
 
-## classes
+# classes
 
 
 class PartyLine(object):
@@ -194,7 +195,7 @@ class PartyLine(object):
         return False
 
 
-## global partyline object
+# global partyline object
 
 partyline = PartyLine()
 

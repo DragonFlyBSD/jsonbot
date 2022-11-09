@@ -7,7 +7,7 @@
 __copyright__ = "this file is in the public domain"
 __author__ = "Landon Fowles"
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.url import geturl
 from jsb.utils.generic import getwho
@@ -16,13 +16,13 @@ from jsb.lib.persist import Persist
 from jsb.lib.examples import examples
 from jsb.lib.persiststate import UserState
 
-## basic imports
+# basic imports
 
 from xml.dom import minidom
 from urllib.parse import urlencode
 import logging
 
-## weather command
+# weather command
 
 
 def handle_weather(bot, ievent):

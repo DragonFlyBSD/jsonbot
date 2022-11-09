@@ -4,31 +4,31 @@
 
 """ stop a running bot """
 
-## jsb imports
+# jsb imports
 
-import os, sys
+from optparse import OptionParser
+import sys
+import os
+from subprocess import Popen
+from jsb.version import getversion
+from jsb.lib.datadir import getdatadir
+from jsb.utils.popen import gozerpopen
+import os
+import sys
 
 sys.path.insert(0, os.getcwd())
 sys.path.insert(0, os.getcwd() + os.sep + "..")
 
 os.environ["PATH"] = os.getcwd() + os.sep + "bin:" + os.environ["PATH"]
 
-from jsb.utils.popen import gozerpopen
-from jsb.lib.datadir import getdatadir
-from jsb.version import getversion
 
 print(getversion("STOP"))
 
-## basic imports
-
-from subprocess import Popen
-import os
-import sys
+# basic imports
 
 
-## options parser
+# options parser
 
-from optparse import OptionParser
 
 parser = OptionParser(
     usage="usage: %prog [options] [list of appids]", version="%prog " + getversion()

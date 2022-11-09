@@ -4,12 +4,12 @@
 
 """ trace related functions """
 
-## basic imports
+# basic imports
 
 import sys
 import os
 
-## defines
+# defines
 
 stopmarkers = [
     "waveapi",
@@ -25,7 +25,7 @@ stopmarkers = [
     "versions",
 ]
 
-## calledfrom function
+# calledfrom function
 
 
 def calledfrom(frame):
@@ -48,7 +48,7 @@ def calledfrom(frame):
     return modstr
 
 
-## callstack function
+# callstack function
 
 
 def callstack(frame):
@@ -80,14 +80,14 @@ def callstack(frame):
     return result
 
 
-## where function
+# where function
 
 
 def where():
     return callstack(sys._getframe(0))
 
 
-## whichmodule function
+# whichmodule function
 
 
 def whichmodule(depth=1):
@@ -114,7 +114,7 @@ def whichmodule(depth=1):
     return modstr
 
 
-## whichplugin function
+# whichplugin function
 
 
 def whichplugin(depth=1):

@@ -4,7 +4,7 @@
 
 """ this is the dispatch plugin that dispatches events to commands. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.utils.generic import waitforqueue
@@ -12,16 +12,16 @@ from jsb.lib.callbacks import last_callbacks
 from jsb.lib.errors import NoSuchCommand, NoSuchUser
 from jsb.lib.commands import cmnds
 
-## basic logging
+# basic logging
 
 import logging
 import copy
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## dispatch-precondition
+# dispatch-precondition
 
 
 def predispatch(bot, event):
@@ -42,7 +42,7 @@ def predispatch(bot, event):
     return True
 
 
-## dispatch-callback
+# dispatch-callback
 
 
 def dispatch(bot, event):
@@ -79,7 +79,7 @@ def dispatch(bot, event):
         event.ready()
 
 
-## register callback
+# register callback
 
 last_callbacks.add("PRIVMSG", dispatch, predispatch, speed=3)
 last_callbacks.add("MESSAGE", dispatch, predispatch)

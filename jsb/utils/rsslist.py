@@ -4,15 +4,15 @@
 
 """ create a list of rss data """
 
-## jsb imports
+# jsb imports
 
 from .exception import handle_exception
 
-## basic imports
+# basic imports
 
 import xml.dom.minidom
 
-## gettext function
+# gettext function
 
 
 def gettext(nodelist):

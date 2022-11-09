@@ -15,17 +15,17 @@ from jsb.utils.pdod import Pdod
 from jsb.lib.persistconfig import PersistConfig
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 import os
 import time
 
-## defines
+# defines
 
 cfg = PersistConfig()
 cfg.define("tz", "+0100")
 
-## Seen-class
+# Seen-class
 
 
 class Seen(Pdod):
@@ -102,18 +102,18 @@ class Seen(Pdod):
         return len(list(self.data.keys()))
 
 
-## init
+# init
 
 seen = Seen()
 
-## callbacks and commands register
+# callbacks and commands register
 
 callbacks.add("PRIVMSG", seen.privmsgcb)
 callbacks.add("JOIN", seen.joincb)
 callbacks.add("PART", seen.partcb)
 callbacks.add("QUIT", seen.quitcb)
 
-## seen command
+# seen command
 
 
 def handle_seen(bot, ievent):
@@ -172,14 +172,14 @@ def handle_seen(bot, ievent):
 cmnds.add("seen", handle_seen, ["OPER", "USER", "GUEST"])
 examples.add("seen", "show last spoken txt of a user", "seen dunker")
 
-## shutdown
+# shutdown
 
 
 def shutdown():
     seen.save()
 
 
-## size
+# size
 
 
 def size():

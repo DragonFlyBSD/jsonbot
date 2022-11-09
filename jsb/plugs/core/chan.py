@@ -4,7 +4,7 @@
 
 """ channel related commands. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.persist import Persist
 from jsb.lib.commands import cmnds
@@ -14,12 +14,12 @@ from jsb.lib.channelbase import ChannelBase
 from jsb.lib.datadir import getdatadir
 from jsb.utils.exception import handle_exception
 
-## basic imports
+# basic imports
 
 import os
 import logging
 
-## chan-token command
+# chan-token command
 
 
 def handle_chantoken(bot, event):
@@ -51,7 +51,7 @@ examples.add(
 )
 
 
-## chan-join command
+# chan-join command
 
 
 def handle_chanjoin(bot, ievent):
@@ -77,7 +77,7 @@ examples.add(
     "1) chan-join #test 2) chan-join #test mekker",
 )
 
-## chan-del command
+# chan-del command
 
 
 def handle_chandel(bot, ievent):
@@ -99,7 +99,7 @@ def handle_chandel(bot, ievent):
 cmnds.add("chan-del", handle_chandel, "OPER")
 examples.add("chan-del", "remove channel from bot.channels", "chan-del #mekker")
 
-## chan-part command
+# chan-part command
 
 
 def handle_chanpart(bot, ievent):
@@ -117,7 +117,7 @@ cmnds.add("chan-part", handle_chanpart, "OPER")
 cmnds.add("part", handle_chanpart, "OPER")
 examples.add("chan-part", "chan-part [<channel>]", "1) chan-part 2) chan-part #test")
 
-## chan-list command
+# chan-list command
 
 
 def handle_chanlist(bot, ievent):
@@ -135,7 +135,7 @@ def handle_chanlist(bot, ievent):
 cmnds.add("chan-list", handle_chanlist, ["USER", "GUEST"])
 examples.add("chan-list", "show what channels the bot is on", "chan-list")
 
-## chan-cycle command
+# chan-cycle command
 
 
 def handle_chancycle(bot, ievent):
@@ -153,7 +153,7 @@ def handle_chancycle(bot, ievent):
 cmnds.add("chan-cycle", handle_chancycle, "OPER")
 examples.add("chan-cycle", "part/join channel", "chan-cycle")
 
-## chan-silent command
+# chan-silent command
 
 
 def handle_chansilent(bot, ievent):
@@ -175,7 +175,7 @@ examples.add(
     "chan-silent", "set silent mode on channel the command was given in", "chan-silent"
 )
 
-## chan-loud command
+# chan-loud command
 
 
 def handle_chanloud(bot, ievent):
@@ -197,7 +197,7 @@ examples.add(
     "chan-loud", "disable silent mode of channel command was given in", "chan-loud"
 )
 
-## chan-withnotice command
+# chan-withnotice command
 
 
 def handle_chanwithnotice(bot, ievent):
@@ -221,7 +221,7 @@ examples.add(
     "chan-withnotice",
 )
 
-## chan-withprivmsg command
+# chan-withprivmsg command
 
 
 def handle_chanwithprivmsg(bot, ievent):
@@ -245,7 +245,7 @@ examples.add(
     "chan-withprivmsg",
 )
 
-## chan-mode command
+# chan-mode command
 
 
 def handle_channelmode(bot, ievent):
@@ -266,7 +266,7 @@ def handle_channelmode(bot, ievent):
 cmnds.add("chan-mode", handle_channelmode, "OPER")
 examples.add("chan-mode", "show mode of channel", "1) chan-mode 2) chan-mode #test")
 
-## mode callback
+# mode callback
 
 
 def modecb(bot, ievent):
@@ -279,7 +279,7 @@ def modecb(bot, ievent):
 
 callbacks.add("MODE", modecb)
 
-## chan-denyplug command
+# chan-denyplug command
 
 
 def handle_chandenyplug(bot, event):
@@ -304,7 +304,7 @@ examples.add(
     "chan-denyplug idle",
 )
 
-## chan-allowplug command
+# chan-allowplug command
 
 
 def handle_chanallowplug(bot, event):
@@ -329,7 +329,7 @@ examples.add(
     "chan-denyplug idle",
 )
 
-## chan-allowcommand command
+# chan-allowcommand command
 
 
 def handle_chanallowcommand(bot, event):
@@ -358,7 +358,7 @@ examples.add(
     "chan-allowcommand learn",
 )
 
-## chan-silentcommand command
+# chan-silentcommand command
 
 
 def handle_chansilentcommand(bot, event):
@@ -385,7 +385,7 @@ examples.add(
     "chan-silentcommand", "add a command to the allow list.", "chan-silentcommand learn"
 )
 
-## chan-loudcommand command
+# chan-loudcommand command
 
 
 def handle_chanloudcommand(bot, event):
@@ -412,7 +412,7 @@ examples.add(
     "chan-loudcommand learn",
 )
 
-## chan-removecommand command
+# chan-removecommand command
 
 
 def handle_chanremovecommand(bot, event):
@@ -439,7 +439,7 @@ examples.add(
     "chan-removecommand learn",
 )
 
-## chan-upgrade command
+# chan-upgrade command
 
 
 def handle_chanupgrade(bot, event):
@@ -476,7 +476,7 @@ cmnds.add(
 )
 examples.add("chan-upgrade", "upgrade the channel.", "chan-upgrade")
 
-## chan-allowwatch command
+# chan-allowwatch command
 
 
 def handle_chanallowwatch(bot, event):
@@ -497,7 +497,7 @@ examples.add(
     "chan-allowwatch bthate@gmail.com",
 )
 
-## chan-delwatch command
+# chan-delwatch command
 
 
 def handle_chandelwatch(bot, event):
@@ -521,7 +521,7 @@ examples.add(
     "chan-delwatch bthate@gmail.com",
 )
 
-## chan-enable command
+# chan-enable command
 
 
 def handle_chanenable(bot, event):
@@ -538,7 +538,7 @@ examples.add(
     "chan-enable",
 )
 
-## chan-disable command
+# chan-disable command
 
 
 def handle_chandisable(bot, event):

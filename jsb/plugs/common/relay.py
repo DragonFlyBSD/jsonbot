@@ -4,7 +4,7 @@
 
 """ relay to other users/channels. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.callbacks import first_callbacks
@@ -15,7 +15,7 @@ from jsb.lib.errors import NoSuchWave
 from jsb.utils.exception import handle_exception
 from jsb.utils.generic import stripcolor
 
-## basic imports
+# basic imports
 
 import logging
 from copy import deepcopy as cpy
@@ -28,7 +28,7 @@ from copy import deepcopy as cpy
 block = PlugPersist("block")
 relay = PlugPersist("relay")
 
-## CALLBACKS
+# CALLBACKS
 
 # these are the callbacks that do the hard work of the relay plugin takes
 # place. The precondition is called to see whether the callback should fire
@@ -140,13 +140,13 @@ first_callbacks.add("PRIVMSG", relaycallback, relayprecondition)
 first_callbacks.add("CONVORE", relaycallback, relayprecondition)
 first_callbacks.add("TORNADO", relaycallback, relayprecondition)
 
-## COMMANDS
+# COMMANDS
 
 # this is where the commands for the relay plugin are defined, Arguments to a
 # command function are the bot that the event occured on and the event that
 # triggered the command. Think the code speaks for itself here ;]
 
-## relay command
+# relay command
 
 
 def handle_relay(bot, event):
@@ -196,7 +196,7 @@ examples.add(
     "1) relay default-sxmpp sxmpp bthate@gmail.com 2) relay botfather",
 )
 
-## relay-stop command
+# relay-stop command
 
 
 def handle_relaystop(bot, event):
@@ -232,7 +232,7 @@ examples.add(
     "relay-stop", "close a relay to another user", "relay-stop bthate@gmail.com"
 )
 
-## relay-clear command
+# relay-clear command
 
 
 def handle_relayclear(bot, event):
@@ -262,7 +262,7 @@ cmnds.add(
 )
 examples.add("relay-clear", "clear all relays from a channel", "relay-clear")
 
-## relay-list command
+# relay-list command
 
 
 def handle_askrelaylist(bot, event):
@@ -277,7 +277,7 @@ def handle_askrelaylist(bot, event):
 cmnds.add("relay-list", handle_askrelaylist, ["OPER", "USER"])
 examples.add("relay-list", "show all relays of user/channel/wave.", "relay-list")
 
-## relay-block command
+# relay-block command
 
 
 def handle_relayblock(bot, event):
@@ -301,7 +301,7 @@ examples.add(
     "relay-block", "block a relay from another user", "relay-block bthate@gmail.com"
 )
 
-## relay-unblock command
+# relay-unblock command
 
 
 def handle_relayunblock(bot, event):
@@ -325,7 +325,7 @@ examples.add(
     "relay-unblock", "remove a block of another user", "relay-unblock bthate@gmail.com"
 )
 
-## relay-blocklist command
+# relay-blocklist command
 
 
 def handle_relayblocklist(bot, event):

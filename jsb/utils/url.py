@@ -4,20 +4,24 @@
 
 """ url related functions. """
 
-## jsb imports
+# jsb imports
 
 from .lazydict import LazyDict
 from .generic import fromenc, toenc
 from jsb.lib.errors import URLNotEnabled
 
-## basic imports
+# basic imports
 
 import logging
 import time
 import sys
 import re
-import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.parse
+import urllib.error
+import urllib.request
+import urllib.error
+import urllib.parse
 import urllib.parse
 
 # import sgmllib
@@ -26,7 +30,7 @@ import http.client
 import html.entities
 import cgi
 
-## defines
+# defines
 
 re_url_match = re.compile("((?:http|https)://\S+)")
 
@@ -59,7 +63,7 @@ def url_disable():
     logging.error("url fetching is disabled.")
 
 
-## useragent function
+# useragent function
 
 
 def useragent():
@@ -73,7 +77,7 @@ def useragent():
     )
 
 
-## Url class
+# Url class
 
 
 class Url(LazyDict):
@@ -155,7 +159,7 @@ class Url(LazyDict):
         return urls
 
 
-## CBURLopener class
+# CBURLopener class
 
 
 class CBURLopener(urllib.request.FancyURLopener):
@@ -169,7 +173,7 @@ class CBURLopener(urllib.request.FancyURLopener):
         urllib.request.FancyURLopener.__init__(self, *args)
 
 
-## geturl function
+# geturl function
 
 
 def geturl(url, version=None):
@@ -185,7 +189,7 @@ def geturl(url, version=None):
     return tmp
 
 
-## geturl2 function
+# geturl2 function
 
 
 def geturl2(url, decode=False, timeout=5):
@@ -212,7 +216,7 @@ def geturl2(url, decode=False, timeout=5):
     return res
 
 
-## geturl4 function
+# geturl4 function
 
 
 def geturl4(url, myheaders={}, postdata={}, keyfile="", certfile="", port=80):
@@ -245,7 +249,7 @@ def geturl4(url, myheaders={}, postdata={}, keyfile="", certfile="", port=80):
     return connection.getresponse()
 
 
-## posturl function
+# posturl function
 
 
 def posturl(url, myheaders, postdata, keyfile=None, certfile="", port=80):
@@ -271,7 +275,7 @@ def posturl(url, myheaders, postdata, keyfile=None, certfile="", port=80):
     return connection.getresponse()
 
 
-## delete url function
+# delete url function
 
 
 def deleteurl(url, myheaders={}, postdata={}, keyfile="", certfile="", port=80):
@@ -297,7 +301,7 @@ def deleteurl(url, myheaders={}, postdata={}, keyfile="", certfile="", port=80):
     return connection.getresponse()
 
 
-## put url function
+# put url function
 
 
 def puturl(url, myheaders={}, postdata={}, keyfile="", certfile="", port=80):
@@ -323,7 +327,7 @@ def puturl(url, myheaders={}, postdata={}, keyfile="", certfile="", port=80):
     return connection.getresponse()
 
 
-## getpostdata function
+# getpostdata function
 
 
 def getpostdata(event):
@@ -344,7 +348,7 @@ def getpostdata(event):
     return result
 
 
-## getpostdata_gae function
+# getpostdata_gae function
 
 
 def getpostdata_gae(request):
@@ -359,7 +363,7 @@ def getpostdata_gae(request):
     # return result
 
 
-## decode_html_entities function
+# decode_html_entities function
 
 
 def decode_html_entities(s):
@@ -386,7 +390,7 @@ def decode_html_entities(s):
     return s
 
 
-## get_encoding function
+# get_encoding function
 
 
 def get_encoding(data):
@@ -429,7 +433,7 @@ def get_encoding(data):
     return sys.getdefaultencoding()
 
 
-## Stripper class
+# Stripper class
 
 # class Stripper(sgmllib.SGMLParser):
 class Stripper:
@@ -452,7 +456,7 @@ class Stripper:
         self.theString += data
 
 
-## striphtml function
+# striphtml function
 
 
 def striphtml(txt):

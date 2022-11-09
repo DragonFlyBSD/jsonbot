@@ -4,7 +4,7 @@
 
 """ jsonbot resource files .. files with the .jsb extension which consists of commands to be executed. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
@@ -13,15 +13,15 @@ from jsb.utils.exception import handle_exception
 from jsb.utils.generic import waitforqueue, waitevents
 from jsb.lib.config import getmainconfig
 
-## basic imports
+# basic imports
 
 import copy
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## rc command
+# rc command
 
 
 def handle_rc(bot, event):

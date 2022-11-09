@@ -4,7 +4,7 @@
 
 """ implements a REST server, soon to be adapted for use with the jsb-tornado program. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.callbacks import callbacks
 from jsb.utils.url import posturl, getpostdata
@@ -15,12 +15,12 @@ from jsb.lib.eventbase import EventBase
 from jsb.utils.exception import handle_exception
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 import socket
 import logging
 
-## defines
+# defines
 
 enable = False
 
@@ -41,11 +41,11 @@ except Exception as ex:
     logging.warn("error binding socket: %s" % str(ex))
     enable = False
 
-## server part
+# server part
 
 server = None
 
-## functions
+# functions
 
 
 def startserver(force=False):
@@ -89,7 +89,7 @@ def stopserver():
         handle_exception()
 
 
-## plugin init
+# plugin init
 
 
 def init():
@@ -102,7 +102,7 @@ def shutdown():
         stopserver()
 
 
-## rest-start command
+# rest-start command
 
 
 def handle_rest_start(bot, event):
@@ -116,7 +116,7 @@ def handle_rest_start(bot, event):
 cmnds.add("rest-start", handle_rest_start, "OPER")
 examples.add("rest-start", "start the REST server", "rest-start")
 
-## rest-stop command
+# rest-stop command
 
 
 def handle_rest_stop(bot, event):

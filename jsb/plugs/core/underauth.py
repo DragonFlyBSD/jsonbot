@@ -4,16 +4,16 @@
 
 """ handle non-ident connection on undernet. """
 
-## copyright
+# copyright
 
 __copyright__ = "this file is in the public domain"
 __author__ = "aafshar@gmail.com"
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.callbacks import callbacks
 
-##  pre_underauth_cb precondition
+# pre_underauth_cb precondition
 
 
 def pre_underauth_cb(bot, ievent):
@@ -30,7 +30,7 @@ def pre_underauth_cb(bot, ievent):
         return False
 
 
-## underauth_cb callback
+# underauth_cb callback
 
 
 def underauth_cb(bot, ievent):

@@ -4,7 +4,7 @@
 
 """ show how long someone has been idle. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.timeutils import elapsedstring
 from jsb.utils.generic import getwho
@@ -13,12 +13,12 @@ from jsb.lib.callbacks import callbacks
 from jsb.lib.examples import examples
 from jsb.lib.persist import PlugPersist
 
-## basic imports
+# basic imports
 
 import time
 import logging
 
-## defines
+# defines
 
 changed = False
 
@@ -26,7 +26,7 @@ idle = PlugPersist("idle.data")
 if not idle.data:
     idle.data = {}
 
-## save on shutdown
+# save on shutdown
 
 
 def ticksave(bot, event):
@@ -39,7 +39,7 @@ def ticksave(bot, event):
 
 callbacks.add("TICK60", ticksave)
 
-## callbacks
+# callbacks
 
 
 def preidle(bot, event):
@@ -60,7 +60,7 @@ def idlecb(bot, event):
 
 callbacks.add("PRIVMSG", idlecb, preidle)
 
-## idle command
+# idle command
 
 
 def handle_idle(bot, ievent):

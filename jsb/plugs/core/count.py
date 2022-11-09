@@ -4,16 +4,16 @@
 
 """ count number of items in result queue. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.utils.generic import waitforqueue
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 
-## count command
+# count command
 
 
 def handle_count(bot, ievent):

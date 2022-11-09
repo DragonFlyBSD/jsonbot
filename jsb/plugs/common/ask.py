@@ -4,7 +4,7 @@
 
 """ ask a user a question and relay back the response. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.callbacks import callbacks
@@ -12,11 +12,11 @@ from jsb.lib.persist import PlugPersist
 from jsb.lib.examples import examples
 from jsb.lib.fleet import getfleet
 
-## basic imports
+# basic imports
 
 import logging
 
-## defines
+# defines
 
 defaultJID = "bart@jsonbot.org"
 
@@ -24,7 +24,7 @@ questions = PlugPersist("questions")
 experts = PlugPersist("experts")
 subjects = PlugPersist("subjects")
 
-## ask-precondition
+# ask-precondition
 
 
 def askprecondition(bot, event):
@@ -34,7 +34,7 @@ def askprecondition(bot, event):
         return True
 
 
-## ask-callback
+# ask-callback
 
 
 def askcallback(bot, event):
@@ -80,7 +80,7 @@ callbacks.add("WEB", askcallback, askprecondition)
 callbacks.add("CONVORE", askcallback, askprecondition)
 callbacks.add("PRIVMSG", askcallback, askprecondition)
 
-## ask command
+# ask command
 
 
 def handle_ask(bot, event):
@@ -134,7 +134,7 @@ examples.add(
     "ask ask-bot what is the mercurial repository",
 )
 
-## ask-stop command
+# ask-stop command
 
 
 def handle_askstop(bot, event):
@@ -148,7 +148,7 @@ def handle_askstop(bot, event):
 cmnds.add("ask-stop", handle_askstop, ["OPER", "USER", "GUEST"])
 examples.add("ask-stop", "stop listening to answers", "ask-stop")
 
-## ask-join command
+# ask-join command
 
 
 def handle_askjoin(bot, event):
@@ -180,7 +180,7 @@ examples.add(
     "ask-join", "ask-join <subject> .. join a subject as an expert", "ask-join ask-bot"
 )
 
-## ask-part command
+# ask-part command
 
 
 def handle_askpart(bot, event):
@@ -206,7 +206,7 @@ def handle_askpart(bot, event):
 cmnds.add("ask-part", handle_askpart, ["OPER", "USER", "GUEST"])
 examples.add("ask-part", "leave the subject expert list", "ask-part ask-bot")
 
-## ask-list command
+# ask-list command
 
 
 def handle_asklist(bot, event):
@@ -217,7 +217,7 @@ def handle_asklist(bot, event):
 cmnds.add("ask-list", handle_asklist, ["OPER", "USER", "GUEST"])
 examples.add("ask-list", "list available subjects", "ask-list")
 
-## ask-experts command
+# ask-experts command
 
 
 def handle_askexperts(bot, event):
@@ -236,7 +236,7 @@ def handle_askexperts(bot, event):
 cmnds.add("ask-experts", handle_askexperts, ["OPER", "USER", "GUEST"])
 examples.add("ask-experts", "list all experts on a subject", "ask-experts ask-bot")
 
-## ask-subjects command
+# ask-subjects command
 
 
 def handle_asksubjects(bot, event):

@@ -7,7 +7,7 @@
 
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.errors import CannotAuth, StreamError
 from jsb.lib.eventbase import EventBase
@@ -23,11 +23,11 @@ from jsb.lib.fleet import getfleet
 from jsb.contrib.digestmd5 import makeresp
 from jsb.imports import getdns
 
-## xmpp import
+# xmpp import
 
 from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
 
-## basic imports
+# basic imports
 
 import socket
 import time
@@ -40,7 +40,7 @@ import sys
 import base64
 import random
 
-## python 2.5 shim
+# python 2.5 shim
 
 try:
     bytes()
@@ -50,7 +50,7 @@ except:
         return str(txt)
 
 
-## locks
+# locks
 
 outlock = _thread.allocate_lock()
 inlock = _thread.allocate_lock()
@@ -59,7 +59,7 @@ outlocked = lockdec(outlock)
 inlocked = lockdec(inlock)
 connectlocked = lockdec(connectlock)
 
-## classes
+# classes
 
 
 class XMLStream(NodeBuilder):

@@ -4,13 +4,13 @@
 
 """ xmpp related commands. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.fleet import getfleet
 
-## xmpp-invite command
+# xmpp-invite command
 
 
 def handle_xmppinvite(bot, event):

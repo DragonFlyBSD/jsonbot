@@ -4,7 +4,7 @@
 
 """ quotes plugin """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.persist import Persist
 from jsb.lib.commands import cmnds
@@ -15,7 +15,7 @@ from jsb.db.direct import Db
 from jsb.lib.plugins import plugs
 from jsb.lib.aliases import setalias
 
-## basic imports
+# basic imports
 
 import random
 import re
@@ -23,11 +23,11 @@ import time
 import _thread
 import logging
 
-## main db
+# main db
 
 db = None
 
-## plugin initialisation
+# plugin initialisation
 
 
 def init():
@@ -48,12 +48,12 @@ def init():
     setalias("q-bad", "quote2-bad")
 
 
-## locks
+# locks
 
 quoteslock = _thread.allocate_lock()
 locked = lockdec(quoteslock)
 
-## QuoteItem class
+# QuoteItem class
 
 
 class QuoteItem(object):
@@ -68,7 +68,7 @@ class QuoteItem(object):
         self.time = ttime
 
 
-## QuetesDb class
+# QuetesDb class
 
 
 class QuotesDb(object):
@@ -194,11 +194,11 @@ class QuotesDb(object):
         return res
 
 
-## defines
+# defines
 
 quotes = QuotesDb()
 
-## size function
+# size function
 
 
 def size():
@@ -206,7 +206,7 @@ def size():
     return quotes.size()
 
 
-## quote2-add command
+# quote2-add command
 
 
 def handle_quoteadd(bot, ievent):
@@ -221,7 +221,7 @@ def handle_quoteadd(bot, ievent):
 cmnds.add("quote2-add", handle_quoteadd, ["USER", "QUOTEADD"], allowqueue=False)
 examples.add("quote2-add", "quote-add <txt> .. add quote", "quote2-add mekker")
 
-## quote2-who command
+# quote2-who command
 
 
 def handle_quotewho(bot, ievent):
@@ -244,7 +244,7 @@ def handle_quotewho(bot, ievent):
 cmnds.add("quote2-who", handle_quotewho, ["USER", "WEB", "ANON", "ANONQUOTE"])
 examples.add("quote2-who", "quote-who <nr> .. show who quote <nr>", "quote2-who 1")
 
-## quote2-del command
+# quote2-del command
 
 
 def handle_quotedel(bot, ievent):
@@ -266,7 +266,7 @@ def handle_quotedel(bot, ievent):
 cmnds.add("quote2-del", handle_quotedel, ["QUOTEDEL", "OPER", "QUOTE"])
 examples.add("quote2-del", "quote-del <nr> .. delete quote", "quote2-del 2")
 
-## quote2-last command
+# quote2-last command
 
 
 def handle_quotelast(bot, ievent):
@@ -311,7 +311,7 @@ def handle_quotelast(bot, ievent):
 cmnds.add("quote2-last", handle_quotelast, ["USER", "WEB", "ANON", "ANONQUOTE"])
 examples.add("quote2-last", "show last quote", "quote2-last")
 
-## quote2-2 command
+# quote2-2 command
 
 
 def handle_quote2(bot, ievent):
@@ -342,7 +342,7 @@ def handle_quote2(bot, ievent):
 cmnds.add("quote2-2", handle_quote2, ["USER", "WEB", "ANON", "ANONQUOTE"])
 examples.add("quote2-2", "quote-2 .. show 2 random quotes", "quote2-2")
 
-## quote2-id command
+# quote2-id command
 
 
 def handle_quoteid(bot, ievent):
@@ -372,7 +372,7 @@ def handle_quoteid(bot, ievent):
 cmnds.add("quote2-id", handle_quoteid, ["USER", "WEB", "ANON", "ANONQUOTE"])
 examples.add("quote2-id", "quote-id <nr> .. get quote <nr>", "quote2-id 2")
 
-## quote2 command
+# quote2 command
 
 
 def handle_quote(bot, ievent):
@@ -394,7 +394,7 @@ def handle_quote(bot, ievent):
 cmnds.add("quote2", handle_quote, ["USER", "WEB", "ANON", "ANONQUOTE"])
 examples.add("quote2", "show random quote", "quote2")
 
-## quote2-search command
+# quote2-search command
 
 
 def handle_quotesearch(bot, ievent):
@@ -436,7 +436,7 @@ examples.add(
     "quote2-search bla",
 )
 
-## quote2-count command
+# quote2-count command
 
 
 def handle_quotescount(bot, ievent):
@@ -447,7 +447,7 @@ def handle_quotescount(bot, ievent):
 cmnds.add("quote2-count", handle_quotescount, ["USER", "WEB", "ANON", "ANONQUOTE"])
 examples.add("quote2-count", "count nr of quotes", "quote2-count")
 
-## quote2-good command
+# quote2-good command
 
 
 def handle_quotegood(bot, ievent):
@@ -470,7 +470,7 @@ def handle_quotegood(bot, ievent):
 cmnds.add("quote2-good", handle_quotegood, ["USER", "WEB", "ANON", "ANONQUOTE"])
 examples.add("quote2-good", "show top 10 quote karma", "quote2-good")
 
-## quote2-bad command
+# quote2-bad command
 
 
 def handle_quotebad(bot, ievent):

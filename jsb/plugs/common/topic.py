@@ -4,16 +4,16 @@
 
 """ manage topics. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 import time
 
-## checktopicmode function
+# checktopicmode function
 
 
 def checktopicmode(bot, ievent):
@@ -27,7 +27,7 @@ def checktopicmode(bot, ievent):
     return 1
 
 
-## topic command
+# topic command
 
 
 def handle_gettopic(bot, ievent):
@@ -50,7 +50,7 @@ def handle_gettopic(bot, ievent):
 cmnds.add("topic", handle_gettopic, "USER", threaded=True)
 examples.add("topic", "get topic", "1) topic 2) topic #dunkbots")
 
-## topic-set command
+# topic-set command
 
 
 def handle_topicset(bot, ievent):
@@ -67,7 +67,7 @@ def handle_topicset(bot, ievent):
 cmnds.add("topic-set", handle_topicset, "USER", allowqueue=False)
 examples.add("topic-set", "set channel topic", "topic-set Yooo")
 
-## topic-add
+# topic-add
 
 
 def handle_topicadd(bot, ievent):
@@ -90,7 +90,7 @@ def handle_topicadd(bot, ievent):
 cmnds.add("topic-add", handle_topicadd, "USER", threaded=True)
 examples.add("topic-add", "add a topic item to the current topic.", "topic-add mekker")
 
-## topic-del command
+# topic-del command
 
 
 def handle_topicdel(bot, ievent):
@@ -122,7 +122,7 @@ def handle_topicdel(bot, ievent):
 cmnds.add("topic-del", handle_topicdel, "USER", threaded=True)
 examples.add("topic-del", "topic-del <topicnr> .. delete topic item", "topic-del 1")
 
-## topic-move
+# topic-move
 
 
 def handle_topicmove(bot, ievent):
@@ -162,7 +162,7 @@ def handle_topicmove(bot, ievent):
 cmnds.add("topic-move", handle_topicmove, "USER", threaded=True)
 examples.add("topic-move", "move topic items", "topic-move 3 1")
 
-## topic-listadd command
+# topic-listadd command
 
 
 def handle_topiclistadd(bot, ievent):
@@ -212,7 +212,7 @@ examples.add(
     "topic-listadd 1 bart",
 )
 
-## topic-listdel command
+# topic-listdel command
 
 
 def handle_topiclistdel(bot, ievent):
@@ -268,4 +268,4 @@ def handle_topiclistdel(bot, ievent):
 cmnds.add("topic-listdel", handle_topiclistdel, "USER", threaded=True)
 examples.add("topic-listdel", "delete  user from topic list", "topic-listdel 1 bart")
 
-#### BHJTW 6-03-2012
+# BHJTW 6-03-2012

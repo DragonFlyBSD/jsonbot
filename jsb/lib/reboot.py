@@ -4,22 +4,22 @@
 
 """ reboot code. """
 
-## jsb imports
+# jsb imports
 
+import time
+import logging
+import tempfile
+import sys
+import os
 from jsb.lib.fleet import getfleet
 from jsb.imports import getjson
 
 json = getjson()
 
-## basic imports
+# basic imports
 
-import os
-import sys
-import tempfile
-import logging
-import time
 
-## reboot function
+# reboot function
 
 
 def reboot():
@@ -28,7 +28,7 @@ def reboot():
     os.execl(sys.argv[0], *sys.argv)
 
 
-## reboot_stateful function
+# reboot_stateful function
 
 
 def reboot_stateful(bot, ievent, fleet, partyline):

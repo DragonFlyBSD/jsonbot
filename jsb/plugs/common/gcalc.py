@@ -5,17 +5,19 @@
 
 """ use google to calculate e.g. !gcalc 1 + 1 """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.utils.url import useragent
 
-## basic imports
+# basic imports
 
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.error
+import urllib.parse
 
-## gcalc command
+# gcalc command
 
 
 def handle_gcalc(bot, ievent):

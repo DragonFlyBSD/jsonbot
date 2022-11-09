@@ -5,7 +5,7 @@
 
 """ lists per user """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.lib.commands import cmnds
@@ -13,15 +13,15 @@ from jsb.lib.examples import examples
 from jsb.lib.users import getusers
 from jsb.db.direct import Db
 
-## basic imports
+# basic imports
 
 import logging
 
-## defines
+# defines
 
 db = None
 
-## plugin initialisation
+# plugin initialisation
 
 
 def init():
@@ -31,7 +31,7 @@ def init():
     db = getmaindb()
 
 
-## size function
+# size function
 
 
 def size():
@@ -44,7 +44,7 @@ def size():
     return result[0][0]
 
 
-## list functions
+# list functions
 
 
 def getlists(username):
@@ -101,7 +101,7 @@ def mergelist(username, listname, l):
         addtolist(username, listname, i)
 
 
-## lists commands
+# lists commands
 
 
 def handle_lists(bot, ievent):
@@ -147,7 +147,7 @@ examples.add(
     "1) lists bla 2) lists bla, mekker",
 )
 
-## lists-del command
+# lists-del command
 
 
 def handle_listsdel(bot, ievent):
@@ -189,7 +189,7 @@ examples.add(
     "1) lists-del mekker , 1 2) lists-del mekker , 0 3 6",
 )
 
-## lists-show command
+# lists-show command
 
 
 def handle_listsshow(bot, ievent):
@@ -211,7 +211,7 @@ def handle_listsshow(bot, ievent):
 cmnds.add("lists-show", handle_listsshow, "USER")
 examples.add("lists-show", "show available channel list", "lists-show")
 
-## lists-merge command
+# lists-merge command
 
 
 def handle_listsmerge(bot, ievent):

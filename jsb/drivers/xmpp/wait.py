@@ -4,23 +4,23 @@
 
 """ wait for ircevent based on ircevent.CMND """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.locking import lockdec
 from jsb.lib.wait import Wait
 import jsb.lib.threads as thr
 
-## basic imports
+# basic imports
 
 import _thread
 import logging
 
-## locks
+# locks
 
 waitlock = _thread.allocate_lock()
 locked = lockdec(waitlock)
 
-## classes
+# classes
 
 
 class XMPPWait(Wait):

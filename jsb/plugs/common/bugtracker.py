@@ -31,7 +31,12 @@ from jsb.utils.lazydict import LazyDict
 import copy
 import os
 import re
-import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.parse
+import urllib.error
+import urllib.request
+import urllib.error
+import urllib.parse
 import xml.dom.minidom
 
 feedparser = getfeedparser()
@@ -92,7 +97,7 @@ class BugTracker:
     def show_url(self, bugId):
         raise BugTrackerNotImplemented
 
-    ## bug-close command
+    # bug-close command
 
     def handle_close(self, bot, ievent):
         if len(ievent.args) < 3:
@@ -115,7 +120,7 @@ class BugTracker:
         except BugTrackerNotFound as e:
             ievent.reply("error: not found: %s" % e)
 
-    ## bug-comments command
+    # bug-comments command
 
     def handle_comments(self, bot, ievent):
         if not ievent.args or not ievent.args[0].isdigit():
@@ -142,7 +147,7 @@ class BugTracker:
         except BugTrackerNotFound as e:
             ievent.reply("error: not found: %s" % e)
 
-    ## bug-list command
+    # bug-list command
 
     def handle_list(self, bot, ievent):
         try:
@@ -158,7 +163,7 @@ class BugTracker:
         except BugTrackerNotFound as e:
             ievent.reply("error: not found: %s" % e)
 
-    ## bug-show command
+    # bug-show command
 
     def handle_show(self, bot, ievent):
         if len(ievent.args) != 1:
@@ -776,11 +781,11 @@ class BugManager(Pdod):
         self.instances[bot.cfg.name][ievent.channel].scan_privmsg(bot, ievent)
 
 
-## define
+# define
 
 bugtrackers = BugManager()
 
-## plugin init
+# plugin init
 
 
 def init():

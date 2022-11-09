@@ -4,16 +4,16 @@
 
 """ echo typed sentences. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.callbacks import callbacks, first_callbacks, last_callbacks
 
-## basic imports
+# basic imports
 
 
-## echo-callback
+# echo-callback
 
 
 def echopre(bot, event):
@@ -36,7 +36,7 @@ def echocb(bot, event):
 # first_callbacks.add("TORNADO", echocb, echopre)
 # first_callbacks.add("DISPATCH", echocb, echopre)
 
-## echo command
+# echo command
 
 
 def handle_echo(bot, event):

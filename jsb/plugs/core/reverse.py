@@ -7,16 +7,16 @@
 __copyright__ = "this file is in the public domain"
 __author__ = "Hans van Kranenburg <hans@knorrie.org>"
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.generic import waitforqueue
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 
-## reverse command
+# reverse command
 
 
 def handle_reverse(bot, ievent):

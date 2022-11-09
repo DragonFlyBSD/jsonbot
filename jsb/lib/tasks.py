@@ -2,17 +2,17 @@
 #
 #
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.trace import calledfrom
 from jsb.lib.plugins import plugs
 
-## basic imports
+# basic imports
 
 import logging
 import sys
 
-## TaskManager class
+# TaskManager class
 
 
 class TaskManager(object):
@@ -59,6 +59,6 @@ class TaskManager(object):
         return handler(*args, **kwargs)
 
 
-## global task manager
+# global task manager
 
 taskmanager = TaskManager()

@@ -4,17 +4,17 @@
 
 """ keep a whitelist of allowed entities based on userhost. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.persist import Persist
 from jsb.lib.datadir import getdatadir
 
-## basic imports
+# basic imports
 
 import logging
 import os
 
-## GateKeeper class
+# GateKeeper class
 
 
 class GateKeeper(Persist):

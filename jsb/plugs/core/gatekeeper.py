@@ -4,12 +4,12 @@
 
 """ gatekeeper commands. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
-## gatekeeper-allow command
+# gatekeeper-allow command
 
 
 def handle_gatekeeperallow(bot, event):
@@ -28,7 +28,7 @@ examples.add(
     "gatekeeper-allow jsb@jsonbot.org",
 )
 
-## gatekeeper-deny command
+# gatekeeper-deny command
 
 
 def handle_gatekeeperdeny(bot, event):

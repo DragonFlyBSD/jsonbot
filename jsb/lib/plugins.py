@@ -4,7 +4,7 @@
 
 """ holds all the plugins. plugins are imported modules. """
 
-## jsb imports
+# jsb imports
 
 from _thread import start_new_thread
 from .commands import cmnds
@@ -21,7 +21,7 @@ from .morphs import outputmorphs, inputmorphs
 from .wait import waiter
 from .boot import plugblacklist
 
-## basic imports
+# basic imports
 
 import os
 import logging
@@ -30,16 +30,16 @@ import _thread
 import time
 import importlib
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## locks
+# locks
 
 loadlock = _thread.allocate_lock()
 locked = lockdec(loadlock)
 
-## Plugins class
+# Plugins class
 
 
 class Plugins(LazyDict):
@@ -286,6 +286,6 @@ class Plugins(LazyDict):
                 return "%s.%s" % (module, plugname)
 
 
-## global plugins object
+# global plugins object
 
 plugs = Plugins()

@@ -2,13 +2,13 @@
 #
 #
 
-## basic imports
+# basic imports
 
 import cgi
 import re
 import html.entities
 
-## unescape_charref function
+# unescape_charref function
 
 
 def unescape_charref(ref):
@@ -21,7 +21,7 @@ def unescape_charref(ref):
     return chr(int(name, base))
 
 
-## replace_entities function
+# replace_entities function
 
 
 def replace_entities(match):
@@ -37,7 +37,7 @@ def replace_entities(match):
     return repl
 
 
-## html_unescape function
+# html_unescape function
 
 
 def html_unescape(data):
@@ -45,7 +45,7 @@ def html_unescape(data):
     return re.sub(r"&#?[A-Za-z0-9]+?;", replace_entities, data)
 
 
-## html_escape function
+# html_escape function
 
 
 def html_escape(data):

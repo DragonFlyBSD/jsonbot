@@ -8,7 +8,7 @@
 
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.generic import getwho
 from jsb.utils.timeutils import strtotime, striptime, today
@@ -21,24 +21,24 @@ from jsb.lib.persist import PlugPersist
 from jsb.lib.persiststate import UserState
 from jsb.utils.lazydict import LazyDict
 
-## basic imports
+# basic imports
 
 import time
 import _thread
 
-## defines
+# defines
 
 todolock = _thread.allocate_lock()
 locked = lockdec(todolock)
 
-## Todo-class
+# Todo-class
 
 
 class Todo(LazyDict):
     pass
 
 
-## TodoList class
+# TodoList class
 
 
 class TodoList(UserState):
@@ -101,7 +101,7 @@ class TodoList(UserState):
         return res
 
 
-## todo command
+# todo command
 
 
 def handle_todo(bot, ievent):
@@ -153,7 +153,7 @@ examples.add(
     "1) todo 2) todo program the bot 3) todo 22:00 sleep",
 )
 
-## todo-done command
+# todo-done command
 
 
 def handle_tododone(bot, ievent):
@@ -204,7 +204,7 @@ examples.add(
     "1) todo-done 1 2) todo-done 3 5 8",
 )
 
-## todo-time command
+# todo-time command
 
 
 def handle_todotime(bot, ievent):
@@ -221,7 +221,7 @@ def handle_todotime(bot, ievent):
 cmnds.add("todo-time", handle_todotime, ["USER", "GUEST"])
 examples.add("todo-time", "todo-time .. show todo items with time fields", "todo-time")
 
-## todo-week command
+# todo-week command
 
 
 def handle_todoweek(bot, ievent):
@@ -235,7 +235,7 @@ def handle_todoweek(bot, ievent):
 cmnds.add("todo-week", handle_todoweek, ["USER", "GUEST"])
 examples.add("todo-week", "todo-week .. todo items for this week", "todo-week")
 
-## todo-today command
+# todo-today command
 
 
 def handle_today(bot, ievent):
@@ -253,7 +253,7 @@ def handle_today(bot, ievent):
 cmnds.add("todo-today", handle_today, ["USER", "GUEST"])
 examples.add("todo-today", "todo-today .. todo items for today", "todo-today")
 
-## todo-tomorrow command
+# todo-tomorrow command
 
 
 def handle_tomorrow(bot, ievent):
@@ -287,7 +287,7 @@ examples.add(
     "todo-tomorrow", "todo-tomorrow .. todo items for tomorrow", "todo-tomorrow"
 )
 
-## todo-setprio command
+# todo-setprio command
 
 
 def handle_setpriority(bot, ievent):
@@ -319,7 +319,7 @@ def handle_setpriority(bot, ievent):
 cmnds.add("todo-setprio", handle_setpriority, ["USER", "GUEST"])
 examples.add("todo-setprio", "set todo priority", "todo-setprio 2 5")
 
-## todo-settime command
+# todo-settime command
 
 
 def handle_todosettime(bot, ievent):
@@ -359,7 +359,7 @@ examples.add(
     "1) todo-settime owner 3 2-2-2010 2) todo-settime 2 22:00",
 )
 
-## todo-getprio command
+# todo-getprio command
 
 
 def handle_getpriority(bot, ievent):
@@ -400,7 +400,7 @@ examples.add(
     "1) todo-getprio #dunkbots 5 2) todo-getprio 3",
 )
 
-## saytodo function
+# saytodo function
 
 
 def saytodo(bot, ievent, todoos, target=""):

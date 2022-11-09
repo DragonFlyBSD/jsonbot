@@ -38,17 +38,17 @@
 #  * Hans van Kranenburg (Knorrie)
 #
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
 __version__ = "0.2a"
 
-## basic imports
+# basic imports
 
 
-## IP class
+# IP class
 
 
 class IP(object):
@@ -95,13 +95,19 @@ class IP(object):
             "00001": "UNASSIGNED",  # 800::/5
             "0001": "UNASSIGNED",  # 1000::/4
             "0010000000000000": "RESERVED",  # 2000::/16 Reserved
-            "0010000000000001": "ASSIGNABLE",  # 2001::/16 Sub-TLA Assignments [RFC2450]
-            "00100000000000010000000": "ASSIGNABLE IANA",  # 2001:0000::/29 - 2001:01F8::/29 IANA
-            "00100000000000010000001": "ASSIGNABLE APNIC",  # 2001:0200::/29 - 2001:03F8::/29 APNIC
-            "00100000000000010000010": "ASSIGNABLE ARIN",  # 2001:0400::/29 - 2001:05F8::/29 ARIN
-            "00100000000000010000011": "ASSIGNABLE RIPE",  # 2001:0600::/29 - 2001:07F8::/29 RIPE NCC
+            # 2001::/16 Sub-TLA Assignments [RFC2450]
+            "0010000000000001": "ASSIGNABLE",
+            # 2001:0000::/29 - 2001:01F8::/29 IANA
+            "00100000000000010000000": "ASSIGNABLE IANA",
+            # 2001:0200::/29 - 2001:03F8::/29 APNIC
+            "00100000000000010000001": "ASSIGNABLE APNIC",
+            # 2001:0400::/29 - 2001:05F8::/29 ARIN
+            "00100000000000010000010": "ASSIGNABLE ARIN",
+            # 2001:0600::/29 - 2001:07F8::/29 RIPE NCC
+            "00100000000000010000011": "ASSIGNABLE RIPE",
             "0010000000000010": "6TO4",  # 2002::/16 "6to4" [RFC3056]
-            "0011111111111110": "6BONE TEST",  # 3ffe::/16 6bone Testing [RFC2471]
+            # 3ffe::/16 6bone Testing [RFC2471]
+            "0011111111111110": "6BONE TEST",
             "0011111111111111": "RESERVED",  # 3fff::/16 Reserved
             "010": "GLOBAL-UNICAST",  # 4000::/3
             "011": "UNASSIGNED",  # 6000::/3
@@ -354,7 +360,7 @@ class IP(object):
         return (self.dq, self.mask)
 
 
-## Network class
+# Network class
 
 
 class Network(IP):
@@ -488,7 +494,7 @@ class Network(IP):
         return 2 ** ((self.version() == 4 and 32 or 128) - self.mask)
 
 
-## ipcalc command
+# ipcalc command
 
 
 def handle_ipcalc(bot, ievent):

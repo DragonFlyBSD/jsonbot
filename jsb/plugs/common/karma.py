@@ -4,7 +4,7 @@
 
 """ maintain karma! """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.name import stripname
 from jsb.lib.callbacks import callbacks
@@ -14,19 +14,19 @@ from jsb.lib.persist import PlugPersist, PlugPersistCollection
 from jsb.utils.statdict import StatDict
 from jsb.lib.persistconfig import PersistConfig
 
-## basic imports
+# basic imports
 
 import logging
 import re
 
-## defines
+# defines
 
 RE_KARMA = re.compile(r"^(?P<item>\([^\)]+\)|\[[^\]]+\]|\w+)(?P<mod>\+\+|--)( |$)")
 
 cfg = PersistConfig()
 cfg.define("verbose", "1")
 
-## KarmaItem class
+# KarmaItem class
 
 
 class KarmaItem(PlugPersist):
@@ -43,7 +43,7 @@ class KarmaItem(PlugPersist):
         self.data.whydown = self.data.whydown or []
 
 
-## karma-precondition
+# karma-precondition
 
 
 def prekarma(bot, event):
@@ -61,7 +61,7 @@ def prekarma(bot, event):
     return False
 
 
-## karma-callbacks
+# karma-callbacks
 
 
 def karmacb(bot, event):
@@ -115,7 +115,7 @@ callbacks.add("CONSOLE", karmacb, prekarma)
 callbacks.add("CONVORE", karmacb, prekarma)
 callbacks.add("TORNADO", karmacb, prekarma)
 
-## karma command
+# karma command
 
 
 def handle_karma(bot, event):
@@ -134,7 +134,7 @@ def handle_karma(bot, event):
 cmnds.add("karma", handle_karma, ["OPER", "USER", "GUEST"])
 examples.add("karma", "show karma", "karma jsb")
 
-## karma-whyup command
+# karma-whyup command
 
 
 def handle_karmawhyup(bot, event):
@@ -150,7 +150,7 @@ def handle_karmawhyup(bot, event):
 cmnds.add("karma-whyup", handle_karmawhyup, ["OPER", "USER", "GUEST"])
 examples.add("karma-whyup", "show why a karma item is upped", "karma-whyup jsb")
 
-## karma-whoup command
+# karma-whoup command
 
 
 def handle_karmawhoup(bot, event):
@@ -170,7 +170,7 @@ def handle_karmawhoup(bot, event):
 cmnds.add("karma-whoup", handle_karmawhoup, ["OPER", "USER", "GUEST"])
 examples.add("karma-whoup", "show who upped an item", "karma-whoup jsb")
 
-## karma-whydown command
+# karma-whydown command
 
 
 def handle_karmawhydown(bot, event):
@@ -186,7 +186,7 @@ def handle_karmawhydown(bot, event):
 cmnds.add("karma-whydown", handle_karmawhydown, ["OPER", "USER", "GUEST"])
 examples.add("karma-whydown", "show why a karma item is downed", "karma-whydown jsb")
 
-## karma-whodown command
+# karma-whodown command
 
 
 def handle_karmawhodown(bot, event):
@@ -206,7 +206,7 @@ def handle_karmawhodown(bot, event):
 cmnds.add("karma-whodown", handle_karmawhodown, ["OPER", "USER", "GUEST"])
 examples.add("karma-whodown", "show who downed an item", "karma-whodown jsb")
 
-## karma-good command
+# karma-good command
 
 
 def handle_karmagood(bot, event):

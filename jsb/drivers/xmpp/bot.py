@@ -4,7 +4,7 @@
 
 """ jabber bot definition """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.errors import CannotAuth, CantLogon, NoUserProvided
 from jsb.lib.users import users
@@ -23,11 +23,11 @@ from jsb.lib.channelbase import ChannelBase
 from jsb.lib.fleet import getfleet
 from jsb.contrib.digestmd5 import makeresp
 
-## jsb.socket imports
+# jsb.socket imports
 
 from jsb.utils.generic import waitforqueue, jabberstrip, getrandomnick, toenc, fromenc
 
-## xmpp imports
+# xmpp imports
 
 from jsb.contrib.xmlstream import XMLescape, XMLunescape
 from .presence import Presence
@@ -37,7 +37,7 @@ from .core import XMLStream
 from .jid import JID, InvalidJID
 from .errors import xmpperrors
 
-## basic imports
+# basic imports
 
 import time
 import copy
@@ -46,12 +46,12 @@ import queue
 import _thread
 import logging
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
 
-## locks
+# locks
 
 outlock = _thread.allocate_lock()
 inlock = _thread.allocate_lock()
@@ -60,7 +60,7 @@ outlocked = lockdec(outlock)
 inlocked = lockdec(inlock)
 connectlocked = lockdec(connectlock)
 
-## SXMPPBot class
+# SXMPPBot class
 
 
 class SXMPPBot(XMLStream, BotBase):

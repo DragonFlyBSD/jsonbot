@@ -4,13 +4,13 @@
 
 """ negative grep. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.examples import examples
 from jsb.lib.commands import cmnds
 from jsb.utils.generic import waitforqueue
 
-## basic imports
+# basic imports
 
 import getopt
 import re

@@ -4,8 +4,10 @@
 
 """ web event. """
 
-## jsb imports
+# jsb imports
 
+import logging
+import tornado
 from jsb.lib.eventbase import EventBase
 from jsb.utils.generic import splittxt, fromenc, toenc
 from jsb.utils.xmpp import stripped
@@ -19,13 +21,11 @@ from jsb.lib.errors import NoInput
 
 json = getjson()
 
-import tornado
 
-## basic imports
+# basic imports
 
-import logging
 
-## WebEvent class
+# WebEvent class
 
 
 class TornadoEvent(EventBase):

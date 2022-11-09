@@ -4,7 +4,7 @@
 
 """ console bot. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.datadir import getdatadir
 from jsb.utils.generic import waitforqueue
@@ -17,7 +17,7 @@ from jsb.utils.exception import handle_exception
 from jsb.lib.eventhandler import mainhandler
 from .event import ConsoleEvent
 
-## basic imports
+# basic imports
 
 import logging
 import sys
@@ -27,14 +27,14 @@ import readline
 import atexit
 import copy
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 histfilepath = os.path.expanduser(
     getdatadir() + os.sep + "run" + os.sep + "console-history"
 )
 
-## HistoryConsole class
+# HistoryConsole class
 
 
 class HistoryConsole(code.InteractiveConsole):
@@ -55,11 +55,11 @@ class HistoryConsole(code.InteractiveConsole):
         readline.write_history_file(histfile or self.fname)
 
 
-## the console
+# the console
 
 console = HistoryConsole()
 
-## ConsoleBot
+# ConsoleBot
 
 
 class ConsoleBot(BotBase):

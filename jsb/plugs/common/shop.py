@@ -4,7 +4,7 @@
 
 """ maitain a shopping list (per user). """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.generic import getwho, jsonstring
 from jsb.lib.users import users
@@ -12,10 +12,10 @@ from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.utils.pdol import Pdol
 
-## basic imports
+# basic imports
 
 
-## functions
+# functions
 
 
 def sayshop(bot, ievent, shoplist):
@@ -31,7 +31,7 @@ def sayshop(bot, ievent, shoplist):
     ievent.reply("shoplist: ", result, dot=" ")
 
 
-## shop command
+# shop command
 
 
 def handle_shop(bot, ievent):
@@ -62,7 +62,7 @@ def handle_shop2(bot, ievent):
 cmnds.add("shop", handle_shop, ["OPER", "USER", "GUEST"])
 examples.add("shop", "show shop items or add a shop item", "1) shop 2) shop bread")
 
-## got command
+# got command
 
 
 def handle_got(bot, ievent):

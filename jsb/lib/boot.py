@@ -4,7 +4,7 @@
 
 """ admin related data and functions. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.generic import checkpermissions, isdebian, botuser
 from jsb.lib.persist import Persist
@@ -16,7 +16,7 @@ from jsb.lib.jsbimport import _import
 from jsb.utils.lazydict import LazyDict
 from jsb.memcached import startmcdaemon
 
-## basic imports
+# basic imports
 
 import logging
 import os
@@ -24,12 +24,12 @@ import sys
 import copy
 import importlib
 
-## paths
+# paths
 
 sys.path.insert(0, os.getcwd())
 sys.path.insert(0, os.getcwd() + os.sep + "..")
 
-## defines
+# defines
 
 try:
     import waveapi
@@ -73,7 +73,7 @@ plugwhitelist = None
 plugblacklist = None
 cpy = copy.deepcopy
 
-## scandir function
+# scandir function
 
 
 def scandir(d, dbenable=False):
@@ -104,7 +104,7 @@ def scandir(d, dbenable=False):
     return changed
 
 
-## boot function
+# boot function
 
 
 def boot(
@@ -286,7 +286,7 @@ def boot(
     logging.warn("ready")
 
 
-## filestamps stuff
+# filestamps stuff
 
 
 def checkconfig():
@@ -390,7 +390,7 @@ def find_packages(d=None):
     return packages
 
 
-## commands related commands
+# commands related commands
 
 
 def savecmndtable(modname=None, saveperms=True):
@@ -471,7 +471,7 @@ def getcmndtable():
     return cmndtable.data
 
 
-## callbacks related commands
+# callbacks related commands
 
 
 def savecallbacktable(modname=None):
@@ -542,7 +542,7 @@ def getcallbacktable():
     return callbacktable.data
 
 
-## plugin list related commands
+# plugin list related commands
 
 
 def savepluginlist(modname=None):
@@ -612,7 +612,7 @@ def getpluginlist():
     return result
 
 
-## update_mod command
+# update_mod command
 
 
 def update_mod(modname):

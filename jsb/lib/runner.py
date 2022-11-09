@@ -4,7 +4,7 @@
 
 """ threads management to run jobs. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.threads import getname, start_new_thread, start_bot_command
 from jsb.utils.exception import handle_exception
@@ -16,14 +16,14 @@ from jsb.lib.threadloop import RunnerLoop
 from jsb.lib.callbacks import callbacks
 from jsb.lib.errors import URLNotEnabled
 
-## basic imports
+# basic imports
 
 import time
 import _thread
 import random
 import logging
 
-## Runner class
+# Runner class
 
 
 class Runner(RunnerLoop):
@@ -74,7 +74,7 @@ class Runner(RunnerLoop):
                 logging.warn(str(event.cbtype))
 
 
-## BotEventRunner class
+# BotEventRunner class
 
 
 class BotEventRunner(Runner):
@@ -134,7 +134,7 @@ class LongRunner(Runner):
         logging.debug("long finished - %s" % self.nowrunning)
 
 
-## Runners class
+# Runners class
 
 
 class Runners(object):
@@ -219,7 +219,7 @@ class Runners(object):
         logging.debug("%s - now running: %s" % (self.name, self.size()))
 
 
-## show runner status
+# show runner status
 
 
 def runner_status():
@@ -235,7 +235,7 @@ callbackrunner = Runners("callback", 30, BotEventRunner)
 waitrunner = Runners("wait", 20, BotEventRunner)
 apirunner = Runners("api", 10, BotEventRunner)
 
-## cleanup
+# cleanup
 
 
 def runnercleanup(bot, event):

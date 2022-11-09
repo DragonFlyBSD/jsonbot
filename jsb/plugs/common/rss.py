@@ -15,7 +15,7 @@
 
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.persist import Persist, PlugPersist
 from jsb.utils.url import geturl2, useragent
@@ -35,14 +35,14 @@ from jsb.lib.channelbase import ChannelBase
 from jsb.imports import getfeedparser, getjson
 from jsb.lib.boot import ongae
 
-## google imports
+# google imports
 
 try:
     from google.appengine.api.memcache import get, set, delete
 except ImportError:
     from jsb.lib.cache import get, set, delete
 
-## tinyurl import
+# tinyurl import
 
 try:
     from jsb.plugs.common.tinyurl import get_tinyurl
@@ -54,7 +54,7 @@ except ImportError:
         ]
 
 
-## basic imports
+# basic imports
 
 import time
 import os
@@ -63,7 +63,7 @@ import hashlib
 import copy
 import re
 
-## exceptions
+# exceptions
 
 
 class RssException(Exception):
@@ -86,7 +86,7 @@ class RssNoSuchItem(RssException):
     pass
 
 
-## defines
+# defines
 
 feedparser = getfeedparser()
 json = getjson()
@@ -131,7 +131,7 @@ if not runners.data:
     runners.data = LazyDict()
     runners.save()
 
-## helper functions
+# helper functions
 
 
 def txtindicts(result, d):
@@ -172,7 +172,7 @@ def strippassword(url):
     return url
 
 
-## Feed class
+# Feed class
 
 
 class Feed(Persist):
@@ -513,7 +513,7 @@ class Feed(Persist):
         return res
 
 
-## Rssdict class
+# Rssdict class
 
 
 class Rssdict(PlugPersist):
@@ -636,7 +636,7 @@ class Rssdict(PlugPersist):
         logging.warn("%s started" % name)
 
 
-## Rsswatcher class
+# Rsswatcher class
 
 
 class Rsswatcher(Rssdict):
@@ -933,7 +933,7 @@ class Rsswatcher(Rssdict):
         return feeds
 
 
-## more global defines
+# more global defines
 
 watcher = Rsswatcher("rss")
 urls = PlugPersist("urls")
@@ -941,14 +941,14 @@ etags = PlugPersist("etags")
 
 assert watcher
 
-## size function
+# size function
 
 
 def size():
     return "%s (feeds)" % watcher.size()
 
 
-## dosync function
+# dosync function
 
 
 def dummycb(bot, event):
@@ -972,7 +972,7 @@ def dosync(feedname):
         logging.error("%s - error: %s" % (feedname, str(ex)))
 
 
-## shouldpoll function
+# shouldpoll function
 
 
 def shouldpoll(name, curtime):
@@ -997,14 +997,14 @@ def shouldpoll(name, curtime):
         return True
 
 
-## dodata function
+# dodata function
 
 
 def dodata(data, name):
     watcher.handle_data(data, name=name)
 
 
-## rssfetchcb callback
+# rssfetchcb callback
 
 
 def rssfetchcb(rpc):
@@ -1030,7 +1030,7 @@ def rssfetchcb(rpc):
         )
 
 
-## creaete_rsscallback function
+# creaete_rsscallback function
 
 
 def create_rsscallback(rpc):
@@ -1038,7 +1038,7 @@ def create_rsscallback(rpc):
     return lambda: rssfetchcb(rpc)
 
 
-## doperiodicalGAE function
+# doperiodicalGAE function
 
 
 def doperiodicalGAE(*args, **kwargs):
@@ -1096,7 +1096,7 @@ def doperiodicalGAE(*args, **kwargs):
         urls.save()
 
 
-## doperiodical function
+# doperiodical function
 
 
 def doperiodical(*args, **kwargs):
@@ -1126,7 +1126,7 @@ def doperiodical(*args, **kwargs):
 
 callbacks.add("TICK60", doperiodical)
 
-## init function
+# init function
 
 
 def init():
@@ -1136,7 +1136,7 @@ def init():
         start_new_thread(watcher.checkrunners, ())
 
 
-## shutdown function
+# shutdown function
 
 
 def shutdown():
@@ -1144,7 +1144,7 @@ def shutdown():
     taskmanager.unload("rss")
 
 
-## size function
+# size function
 
 
 def size():
@@ -1152,7 +1152,7 @@ def size():
     return watcher.size()
 
 
-## save function
+# save function
 
 
 def save():
@@ -1160,7 +1160,7 @@ def save():
     watcher.save()
 
 
-## rss-clone command
+# rss-clone command
 
 
 def handle_rssclone(bot, event):
@@ -1175,7 +1175,7 @@ def handle_rssclone(bot, event):
 # cmnds.add('rss-clone', handle_rssclone, 'USER')
 # examples.add('rss-clone', 'clone feeds into new channel', 'rss-clone #dunkbots')
 
-## rss-cloneurl command
+# rss-cloneurl command
 
 
 def handle_rsscloneurl(bot, event):
@@ -1190,7 +1190,7 @@ def handle_rsscloneurl(bot, event):
 # cmnds.add('rss-cloneurl', handle_rsscloneurl, 'OPER')
 # examples.add('rss-cloneurl', 'clone feeds from remote url', 'rss-cloneurl http://jsonbot.org/feeds.opml')
 
-## rss-add command
+# rss-add command
 
 
 def handle_rssadd(bot, ievent):
@@ -1215,7 +1215,7 @@ examples.add(
     "rss-add jsonbot http://code.google.com/feeds/p/jsonbot/hgchanges/basic",
 )
 
-## rss-register command
+# rss-register command
 
 
 def handle_rssregister(bot, ievent):
@@ -1249,7 +1249,7 @@ examples.add(
     "rss-register jsonbot-hg http://code.google.com/feeds/p/jsonbot/hgchanges/basic",
 )
 
-## rss-del command
+# rss-del command
 
 
 def handle_rssdel(bot, ievent):
@@ -1271,7 +1271,7 @@ def handle_rssdel(bot, ievent):
 cmnds.add("rss-del", handle_rssdel, ["OPER", "RSS"])
 examples.add("rss-del", "remove a feed from the rsswatcher", "rss-del mekker")
 
-## rss-sync command
+# rss-sync command
 
 
 def handle_rsssync(bot, ievent):
@@ -1297,7 +1297,7 @@ cmnds.add(
 )
 examples.add("rss-sync", "sync feed with the latest.", "rss-sync mekker")
 
-## rss-watch command
+# rss-watch command
 
 
 def handle_rsswatch(bot, ievent):
@@ -1349,7 +1349,7 @@ examples.add(
     "1) rss-watch jsonbot 2) rss-watch jsonbot 600",
 )
 
-## rss-start command
+# rss-start command
 
 
 def handle_rssstart(bot, ievent):
@@ -1379,7 +1379,7 @@ def handle_rssstart(bot, ievent):
 cmnds.add("rss-start", handle_rssstart, ["RSS", "USER"])
 examples.add("rss-start", "start a rss feed (per user/channel) ", "rss-start jsonbot")
 
-## rss-stop command
+# rss-stop command
 
 
 def handle_rssstop(bot, ievent):
@@ -1419,7 +1419,7 @@ def handle_rssstop(bot, ievent):
 cmnds.add("rss-stop", handle_rssstop, ["RSS", "USER"])
 examples.add("rss-stop", "stop a rss feed (per user/channel) ", "rss-stop jsonbot")
 
-## rss-stopall command
+# rss-stopall command
 
 
 def handle_rssstopall(bot, ievent):
@@ -1449,7 +1449,7 @@ examples.add(
     "rss-stopall",
 )
 
-## rss-channels command
+# rss-channels command
 
 
 def handle_rsschannels(bot, ievent):
@@ -1483,7 +1483,7 @@ examples.add(
     "rss-channels", "show channels in which a feed runs", "rss-channels jsonbot"
 )
 
-## rss-addchannel command
+# rss-addchannel command
 
 
 def handle_rssaddchannel(bot, ievent):
@@ -1537,7 +1537,7 @@ examples.add(
     "1) rss-addchannel jsonbot #dunkbots 2) rss-addchannel jsonbot main #dunkbots",
 )
 
-## rss-setitems command
+# rss-setitems command
 
 
 def handle_rsssetitems(bot, ievent):
@@ -1567,7 +1567,7 @@ examples.add(
     "rss-setitems jsonbot author author link pubDate",
 )
 
-## rss-additem command
+# rss-additem command
 
 
 def handle_rssadditem(bot, ievent):
@@ -1600,7 +1600,7 @@ examples.add(
     "rss-additem jsonbot link",
 )
 
-## rss-delitem command
+# rss-delitem command
 
 
 def handle_rssdelitem(bot, ievent):
@@ -1634,7 +1634,7 @@ examples.add(
     "rss-delitem jsonbot link",
 )
 
-## rss-markuplist command
+# rss-markuplist command
 
 
 def handle_rssmarkuplist(bot, ievent):
@@ -1651,7 +1651,7 @@ cmnds.add(
 )
 examples.add("rss-markuplist", "show possible markup entries", "rss-markuplist")
 
-## rss-markup command
+# rss-markup command
 
 
 def handle_rssmarkup(bot, ievent):
@@ -1680,7 +1680,7 @@ examples.add(
     "rss-markup", "show markup list for a feed (per user/channel)", "rss-markup jsonbot"
 )
 
-## rss-addmarkup command
+# rss-addmarkup command
 
 
 def handle_rssaddmarkup(bot, ievent):
@@ -1717,7 +1717,7 @@ examples.add(
     "rss-addmarkup jsonbot all-lines 1",
 )
 
-## rss-delmarkup command
+# rss-delmarkup command
 
 
 def handle_rssdelmarkup(bot, ievent):
@@ -1751,7 +1751,7 @@ examples.add(
     "rss-delmarkup jsonbot all-lines",
 )
 
-## rss-delchannel command
+# rss-delchannel command
 
 
 def handle_rssdelchannel(bot, ievent):
@@ -1802,7 +1802,7 @@ examples.add(
     "1) rss-delchannel jsonbot #dunkbots 2) rss-delchannel jsonbot main #dunkbots",
 )
 
-## rss-stopwatch command
+# rss-stopwatch command
 
 
 def handle_rssstopwatch(bot, ievent):
@@ -1832,7 +1832,7 @@ cmnds.add(
 )
 examples.add("rss-stopwatch", "stop polling a feed", "rss-stopwatch jsonbot")
 
-## rss-sleeptime command
+# rss-sleeptime command
 
 
 def handle_rsssleeptime(bot, ievent):
@@ -1853,7 +1853,7 @@ def handle_rsssleeptime(bot, ievent):
 cmnds.add("rss-sleeptime", handle_rsssleeptime, "USER")
 examples.add("rss-sleeptime", "get sleeping time of a feed", "rss-sleeptime jsonbot")
 
-## rss-setsleeptime command
+# rss-setsleeptime command
 
 
 def handle_rsssetsleeptime(bot, ievent):
@@ -1894,7 +1894,7 @@ examples.add(
     "rss-setsleeptime jsonbot 600",
 )
 
-## rss-get command
+# rss-get command
 
 
 def handle_rssget(bot, ievent):
@@ -1926,7 +1926,7 @@ def handle_rssget(bot, ievent):
 cmnds.add("rss-get", handle_rssget, ["RSS", "USER"], threaded=True)
 examples.add("rss-get", "get data of a feed", "rss-get jsonbot")
 
-## rss-running command
+# rss-running command
 
 
 def handle_rssrunning(bot, ievent):
@@ -1945,7 +1945,7 @@ def handle_rssrunning(bot, ievent):
 cmnds.add("rss-running", handle_rssrunning, ["RSS", "OPER"])
 examples.add("rss-running", "rss-running .. get running rsswatchers", "rss-running")
 
-## rss-list command
+# rss-list command
 
 
 def handle_rsslist(bot, ievent):
@@ -1961,7 +1961,7 @@ def handle_rsslist(bot, ievent):
 cmnds.add("rss-list", handle_rsslist, ["RSS", "USER"])
 examples.add("rss-list", "get list of rss items", "rss-list")
 
-## rss-url command
+# rss-url command
 
 
 def handle_rssurl(bot, ievent):
@@ -1987,7 +1987,7 @@ cmnds.add(
 )
 examples.add("rss-url", "get url of feed", "rss-url jsonbot")
 
-## rss-seturl command
+# rss-seturl command
 
 
 def handle_rssseturl(bot, ievent):
@@ -2023,7 +2023,7 @@ examples.add(
     "rss-seturl jsonbot-hg http://code.google.com/feeds/p/jsonbot/hgchanges/basic",
 )
 
-## rss-itemslist
+# rss-itemslist
 
 
 def handle_rssitemslist(bot, ievent):
@@ -2052,7 +2052,7 @@ def handle_rssitemslist(bot, ievent):
 cmnds.add("rss-itemslist", handle_rssitemslist, ["RSS", "USER"])
 examples.add("rss-itemslist", "get itemslist of feed", "rss-itemslist jsonbot")
 
-## rss-scan command
+# rss-scan command
 
 
 def handle_rssscan(bot, ievent):
@@ -2092,7 +2092,7 @@ examples.add(
     "rss-scan jsonbot",
 )
 
-## rss-feeds
+# rss-feeds
 
 
 def handle_rssfeeds(bot, ievent):
@@ -2115,7 +2115,7 @@ examples.add(
     "1) rss-feeds 2) rss-feeds #dunkbots",
 )
 
-## rss-link command
+# rss-link command
 
 
 def handle_rsslink(bot, ievent):
@@ -2145,7 +2145,7 @@ examples.add(
     "rss-link jsonbot gozer",
 )
 
-## rss-description commmand
+# rss-description commmand
 
 
 def handle_rssdescription(bot, ievent):
@@ -2171,7 +2171,7 @@ examples.add(
     "rss-description jsonbot gozer",
 )
 
-## rss-all command
+# rss-all command
 
 
 def handle_rssall(bot, ievent):
@@ -2191,7 +2191,7 @@ def handle_rssall(bot, ievent):
 cmnds.add("rss-all", handle_rssall, ["RSS", "USER"])
 examples.add("rss-all", "give titles of a feed", "rss-all jsonbot")
 
-## rss-search
+# rss-search
 
 
 def handle_rsssearch(bot, ievent):

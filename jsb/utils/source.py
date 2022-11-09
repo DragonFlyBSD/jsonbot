@@ -4,13 +4,13 @@
 
 """ get the location of a source """
 
-## basic imports
+# basic imports
 
 import os
 import logging
 import sys
 
-## getsource function
+# getsource function
 
 
 def getsource(mod):

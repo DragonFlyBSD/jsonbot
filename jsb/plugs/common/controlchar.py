@@ -8,12 +8,12 @@
 
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
-## cc command
+# cc command
 
 
 def handle_cc(bot, ievent):
@@ -45,7 +45,7 @@ examples.add(
     "cc", "set control char of channel or show control char of channel", "1) cc ! 2) cc"
 )
 
-## cc-add command
+# cc-add command
 
 
 def handle_ccadd(bot, ievent):
@@ -71,7 +71,7 @@ def handle_ccadd(bot, ievent):
 cmnds.add("cc-add", handle_ccadd, "OPER", allowqueue=False)
 examples.add("cc-add", "cc-add <control char> .. add control character", "cc-add #")
 
-## cc-del command
+# cc-del command
 
 
 def handle_ccdel(bot, ievent):

@@ -4,7 +4,7 @@
 
 """ irc related commands. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.callbacks import callbacks
 from jsb.lib.partyline import partyline
@@ -14,16 +14,16 @@ from jsb.lib.fleet import getfleet
 from jsb.lib.wait import waiter
 import jsb.lib.threads as thr
 
-## basic imports
+# basic imports
 
 import sets
 import time
 
-## define
+# define
 
 ignorenicks = []
 
-## broadcast command
+# broadcast command
 
 
 def handle_broadcast(bot, ievent):
@@ -44,7 +44,7 @@ examples.add(
     "broadcast good morning",
 )
 
-## jump command
+# jump command
 
 
 def handle_jump(bot, ievent):
@@ -67,7 +67,7 @@ def handle_jump(bot, ievent):
 cmnds.add("jump", handle_jump, "OPER")
 examples.add("jump", "jump <server> <port> .. switch server", "jump localhost 6667")
 
-## nick command
+# nick command
 
 
 def handle_nick(bot, ievent):
@@ -88,7 +88,7 @@ def handle_nick(bot, ievent):
 cmnds.add("nick", handle_nick, "OPER", threaded=True)
 examples.add("nick", "nick <nickname> .. set nick of the bot", "nick mekker")
 
-## sendraw command
+# sendraw command
 
 
 def handle_sendraw(bot, ievent):
@@ -105,7 +105,7 @@ examples.add(
     "sendraw PRIVMSG #test :yo!",
 )
 
-## nicks command
+# nicks command
 
 nickresult = []
 
@@ -139,7 +139,7 @@ def handle_nicks(bot, event):
 cmnds.add("nicks", handle_nicks, ["OPER", "USER"], threaded=True)
 examples.add("nicks", "show nicks on channel the command was given in", "nicks")
 
-## action command
+# action command
 
 
 def handle_action(bot, ievent):
@@ -156,7 +156,7 @@ def handle_action(bot, ievent):
 cmnds.add("action", handle_action, ["ACTION", "OPER"])
 examples.add("action", "send an action message", "action #test yoo dudes")
 
-## say command
+# say command
 
 
 def handle_say(bot, ievent):
@@ -172,7 +172,7 @@ def handle_say(bot, ievent):
 cmnds.add("say", handle_say, ["SAY", "OPER"], speed=1)
 examples.add("say", "send txt to channel/user", "say #test good morning")
 
-## server command
+# server command
 
 
 def handle_server(bot, ievent):
@@ -183,7 +183,7 @@ def handle_server(bot, ievent):
 cmnds.add("server", handle_server, "OPER")
 examples.add("server", "show server hostname of bot", "server")
 
-## voice command
+# voice command
 
 
 def handle_voice(bot, ievent):

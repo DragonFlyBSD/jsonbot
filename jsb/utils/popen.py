@@ -4,11 +4,11 @@
 
 """ popen helper functions. """
 
-## defines
+# defines
 
 go = False
 
-## basic imports
+# basic imports
 
 try:
     from subprocess import Popen, PIPE
@@ -22,12 +22,12 @@ except:
 
 if go:
 
-    ## locks
+    # locks
 
     popenlock = _thread.allocate_lock()
     popenlocked = lockdec(popenlock)
 
-    ## exceptions
+    # exceptions
 
     class PopenWhitelistError(Exception):
         def __init__(self, item):
@@ -45,7 +45,7 @@ if go:
         def __str__(self):
             return str(self.item)
 
-    ## GozerStringIO class
+    # GozerStringIO class
 
     class GozerStringIO(io.StringIO):
 
@@ -55,7 +55,7 @@ if go:
             """read multiple lines."""
             return self.read().split("\n")
 
-    ## GozerPopen4 class
+    # GozerPopen4 class
 
     class GozerPopen4(Popen):
 
@@ -92,7 +92,7 @@ if go:
                 pass
             return self.returncode
 
-    ## gozerpopen function
+    # gozerpopen function
 
     def gozerpopen(args, userargs=[]):
         """do the actual popen .. make sure the arguments are passed on as list."""

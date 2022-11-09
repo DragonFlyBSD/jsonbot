@@ -4,14 +4,14 @@
 
 """ data dumper commands. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.aliases import setalias
 from jsb.lib.config import getmainconfig
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
-## data-event command
+# data-event command
 
 
 def handle_dataevent(bot, event):
@@ -22,7 +22,7 @@ def handle_dataevent(bot, event):
 cmnds.add("data-event", handle_dataevent, "OPER")
 examples.add("data-event", "dump event data", "data-event")
 
-## data-chan command
+# data-chan command
 
 
 def handle_datachan(bot, event):
@@ -33,7 +33,7 @@ def handle_datachan(bot, event):
 cmnds.add("data-chan", handle_datachan, "OPER")
 examples.add("data-chan", "dump channel data", "data-chan")
 
-## data-bot command
+# data-bot command
 
 
 def handle_databot(bot, event):
@@ -44,7 +44,7 @@ def handle_databot(bot, event):
 cmnds.add("data-bot", handle_databot, "OPER")
 examples.add("data-bot", "dump bot data", "data-bot")
 
-## data-cfg command
+# data-cfg command
 
 
 def handle_datacfg(bot, event):

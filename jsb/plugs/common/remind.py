@@ -4,7 +4,7 @@
 
 """ remind people .. say txt when somebody gets active """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.generic import getwho
 from jsb.lib.commands import cmnds
@@ -12,11 +12,11 @@ from jsb.lib.examples import examples
 from jsb.lib.callbacks import callbacks
 from jsb.lib.persist import PlugPersist
 
-## basic imports
+# basic imports
 
 import time
 
-## Remind-class
+# Remind-class
 
 
 class Remind(PlugPersist):
@@ -68,12 +68,12 @@ class Remind(PlugPersist):
         self.save()
 
 
-## defines
+# defines
 
 remind = Remind("remind.data")
 assert remind
 
-## callbacks
+# callbacks
 
 
 def preremind(bot, ievent):
@@ -92,7 +92,7 @@ callbacks.add("MESSAGE", remindcb, preremind, threaded=True)
 callbacks.add("WEB", remindcb, preremind, threaded=True)
 callbacks.add("TORNADO", remindcb, preremind, threaded=True)
 
-## remind command
+# remind command
 
 
 def handle_remind(bot, ievent):

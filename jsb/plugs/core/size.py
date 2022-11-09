@@ -4,17 +4,17 @@
 
 """ call a size() function in every module in sys.modules """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 import sys
 
-## size command
+# size command
 
 
 def handle_size(bot, event):

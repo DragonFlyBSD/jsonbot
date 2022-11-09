@@ -20,8 +20,10 @@ unless you set up an alias in your channel:
 
 """
 
-## jsb imports
+# jsb imports
 
+from socketserver import ThreadingMixIn, StreamRequestHandler
+import socketserver
 from jsb.lib.threads import start_new_thread
 from jsb.lib.persist import PlugPersist
 from jsb.lib.fleet import getfleet
@@ -29,12 +31,12 @@ from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.callbacks import callbacks
 
-## basic imports
+# basic imports
 
 import logging
 import time
 
-## defines
+# defines
 
 cfg = PlugPersist(
     "irccat",
@@ -49,8 +51,6 @@ cfg = PlugPersist(
     },
 )
 
-import socketserver
-from socketserver import ThreadingMixIn, StreamRequestHandler
 
 shared_data = {}
 

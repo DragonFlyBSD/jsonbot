@@ -4,8 +4,12 @@
 
 """ a lazydict allows dotted access to a dict .. dict.key. """
 
-## jsb imports
+# jsb imports
 
+import threading
+import types
+import logging
+import copy
 from jsb.utils.locking import lockdec
 from jsb.utils.exception import handle_exception
 from jsb.utils.trace import whichmodule, where
@@ -14,20 +18,15 @@ from jsb.imports import getjson
 
 json = getjson()
 
-## basic imports
+# basic imports
 
-import copy
-import logging
-import types
-import threading
-import types
 
-## locks
+# locks
 
 lock = threading.RLock()
 locked = lockdec(lock)
 
-## defines
+# defines
 
 defaultignore = [
     "aliases",
@@ -99,7 +98,7 @@ dontshow = [
 ]
 cpy = copy.deepcopy
 
-## checkignore function
+# checkignore function
 
 
 def checkignore(name, ignore):
@@ -113,7 +112,7 @@ def checkignore(name, ignore):
     return False
 
 
-## stripignore function
+# stripignore function
 
 
 def stripignore(d):
@@ -160,7 +159,7 @@ def dumpelement(element, prev={}, withtypes=False, full=False):
     return new
 
 
-## LazyDict class
+# LazyDict class
 
 
 class LazyDict(dict):

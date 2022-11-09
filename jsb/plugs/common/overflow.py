@@ -4,8 +4,15 @@
 
 """ Grabs data for a StackOverflow user. You must enable this plugin first by running .. ;overflow-cfg enable 1 """
 
-## jsb imports
+# jsb imports
 
+import urllib.error
+import urllib.parse
+import urllib.request
+import gzip
+import io
+import time
+import logging
 from jsb.utils.exception import handle_exception
 from jsb.utils.lazydict import LazyDict
 from jsb.utils.url import geturl2, striphtml, re_url_match
@@ -25,15 +32,10 @@ from jsb.imports import getjson
 
 json = getjson()
 
-## basic imports
+# basic imports
 
-import logging
-import time
-import io
-import gzip
-import urllib.request, urllib.parse, urllib.error
 
-## defines
+# defines
 
 cfg = PersistConfig()
 cfg.define("enable", 0)
@@ -48,7 +50,7 @@ state.define("watch", [])
 teller = 0
 dostop = False
 
-## plugin init
+# plugin init
 
 
 def init_threaded():
@@ -60,14 +62,14 @@ def init_threaded():
         logging.error("URL fetching is not enabled")
 
 
-## plugin shutdown
+# plugin shutdown
 
 
 def shutdown():
     periodical.kill()
 
 
-## make sure plugin gets autoloaded on start
+# make sure plugin gets autoloaded on start
 
 
 def dummycb(bot, event):
@@ -77,7 +79,7 @@ def dummycb(bot, event):
 callbacks.add("START", dummycb)
 
 
-## geturls function
+# geturls function
 
 
 def geturls(txt):
@@ -98,7 +100,7 @@ def geturls(txt):
     return (result, striphtml(txt))
 
 
-## OverFlowAPI
+# OverFlowAPI
 
 
 class OverFlowAPI(object):
@@ -140,7 +142,7 @@ class OverFlowAPI(object):
 
 of = OverFlowAPI()
 
-## gettimeline function
+# gettimeline function
 
 
 def gettimeline(target, nr=30):
@@ -184,7 +186,7 @@ def sync():
     return todo
 
 
-## scan function
+# scan function
 
 
 @minutely
@@ -254,7 +256,7 @@ def scan(skip=False):
                 logging.warn("no %s bot in fleet" % botname)
 
 
-## overflow-start command
+# overflow-start command
 
 
 def handle_overflowstart(bot, event):
@@ -291,7 +293,7 @@ examples.add(
     "overflow-start bthate:625680",
 )
 
-## overflow-stop command
+# overflow-stop command
 
 
 def handle_overflowstop(bot, event):
@@ -320,7 +322,7 @@ examples.add(
     "overflow-stop", "stop monitoring a stackoverflow id", "overflow-stop 625680"
 )
 
-## overflow-list command
+# overflow-list command
 
 
 def handle_overflowlist(bot, event):
@@ -335,7 +337,7 @@ cmnds.add(
     ],
 )
 
-## overflow-names command
+# overflow-names command
 
 
 def handle_overflownames(bot, event):
@@ -350,7 +352,7 @@ cmnds.add(
     ],
 )
 
-## overflow-disable command
+# overflow-disable command
 
 
 def handle_overflowdisable(bot, event):
@@ -367,7 +369,7 @@ cmnds.add(
     ],
 )
 
-## overflow-enable command
+# overflow-enable command
 
 
 def handle_overflowenable(bot, event):
@@ -384,7 +386,7 @@ cmnds.add(
     ],
 )
 
-## overflow-answers command
+# overflow-answers command
 
 
 def handle_overflowanswers(bot, event):
@@ -397,7 +399,7 @@ def handle_overflowanswers(bot, event):
 
 cmnds.add("overflow-answers", handle_overflowanswers, ["OPER", "USER"])
 
-## overflow-search command
+# overflow-search command
 
 
 def handle_overflowsearch(bot, event):
@@ -434,4 +436,4 @@ cmnds.add("overflow-search", handle_overflowsearch, ["OPER", "USER"])
 
 """
 
-#### BHJTW 09-02-2012
+# BHJTW 09-02-2012

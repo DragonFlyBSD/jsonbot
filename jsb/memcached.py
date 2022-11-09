@@ -4,12 +4,12 @@
 
 """ memcached support functions. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.datadir import getdatadir
 from jsb.lib.config import getmainconfig
 
-## basic imports
+# basic imports
 
 import os
 import os.path

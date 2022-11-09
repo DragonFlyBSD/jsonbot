@@ -4,7 +4,7 @@
 
 """ karma plugin """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
@@ -14,13 +14,13 @@ from jsb.utils.locking import lockdec
 from jsb.utils.statdict import StatDict
 from jsb.lib.aliases import setalias
 
-## basic imports
+# basic imports
 
 import _thread
 import time
 import logging
 
-## defines
+# defines
 
 ratelimited = []
 limiterlock = _thread.allocate_lock()
@@ -28,7 +28,7 @@ limlock = lockdec(limiterlock)
 
 db = None
 
-## KarmaDb class
+# KarmaDb class
 
 
 class KarmaDb(object):
@@ -340,11 +340,11 @@ class KarmaDb(object):
         return statdict.top()
 
 
-## karma object
+# karma object
 
 karma = KarmaDb()
 
-## size function
+# size function
 
 
 def size():
@@ -352,7 +352,7 @@ def size():
     return karma.size()
 
 
-## karma ratelimiter
+# karma ratelimiter
 
 
 @limlock
@@ -388,7 +388,7 @@ def ratelimit(bot, ievent):
         handle_exception(ievent)
 
 
-## karma2-get command
+# karma2-get command
 
 
 def handle_karmaget(bot, ievent):
@@ -410,7 +410,7 @@ examples.add(
     "karma2-get", "karma-get <item> .. show karma of <item>", "karma2-get dunker"
 )
 
-## karma2-del command
+# karma2-del command
 
 
 def handle_karmadel(bot, ievent):
@@ -429,7 +429,7 @@ def handle_karmadel(bot, ievent):
 cmnds.add("karma2-del", handle_karmadel, ["OPER"])
 examples.add("karma2-del", "karma-del <item> .. delete karma item", "karma2-del dunker")
 
-## karmaup RE
+# karmaup RE
 
 
 def handle_karmaup(bot, ievent):
@@ -464,7 +464,7 @@ def handle_karmaup2(bot, ievent):
 
 cmnds.add("^(.+)\+\+$", handle_karmaup2, ["USER", "ANON", "ANONKARMA"], regex=True)
 
-## karmadown RE
+# karmadown RE
 
 
 def handle_karmadown(bot, ievent):
@@ -498,7 +498,7 @@ def handle_karmadown2(bot, ievent):
 
 cmnds.add("^(.+)\-\-$", handle_karmadown2, ["USER", "KARMA", "ANONKARMA"], regex=True)
 
-## karma2-whyup command
+# karma2-whyup command
 
 
 def handle_karmawhyup(bot, ievent):
@@ -521,7 +521,7 @@ examples.add(
     "karma2-whyup gozerbot",
 )
 
-## karma2-whydown command
+# karma2-whydown command
 
 
 def handle_whykarmadown(bot, ievent):
@@ -544,7 +544,7 @@ examples.add(
     "karma2-whydown gozerbot",
 )
 
-## karma2-good
+# karma2-good
 
 
 def handle_karmagood(bot, ievent):
@@ -563,7 +563,7 @@ def handle_karmagood(bot, ievent):
 cmnds.add("karma2-good", handle_karmagood, ["USER", "WEB", "ANON", "ANONKARMA"])
 examples.add("karma2-good", "show top 10 karma", "karma2-good")
 
-## karma2-bad
+# karma2-bad
 
 
 def handle_karmabad(bot, ievent):
@@ -582,7 +582,7 @@ def handle_karmabad(bot, ievent):
 cmnds.add("karma2-bad", handle_karmabad, ["USER", "WEB", "ANON", "ANONKARMA"])
 examples.add("karma2-bad", "show lowest top 10 karma", "karma2-bad")
 
-## karma2-whoup command
+# karma2-whoup command
 
 
 def handle_whokarmaup(bot, ievent):
@@ -611,7 +611,7 @@ examples.add(
     "karma2-whoup gozerbot",
 )
 
-## karma2-whodown command
+# karma2-whodown command
 
 
 def handle_whokarmadown(bot, ievent):
@@ -640,7 +640,7 @@ examples.add(
     "karma2-whodown gozerbot",
 )
 
-## karma2-search command
+# karma2-search command
 
 
 def handle_karmasearch(bot, ievent):
@@ -664,7 +664,7 @@ examples.add(
     "karma2-search", "karma-search <txt> .. search karma", "karma2-search gozerbot"
 )
 
-## karma2-whatup command
+# karma2-whatup command
 
 
 def handle_karmawhatup(bot, ievent):
@@ -691,7 +691,7 @@ examples.add(
     "karma2-whatup dunker",
 )
 
-## karma2-whatdown command
+# karma2-whatdown command
 
 
 def handle_karmawhatdown(bot, ievent):
@@ -718,7 +718,7 @@ examples.add(
     "karma2-whatdown dunker",
 )
 
-## plugin initialisation
+# plugin initialisation
 
 
 def init():

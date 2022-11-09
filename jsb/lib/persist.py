@@ -8,8 +8,15 @@
 
 """
 
-## jsb imports
+# jsb imports
 
+import sys
+import copy
+import os.path
+import os
+import logging
+import _thread
+from collections import deque
 from jsb.utils.trace import whichmodule, calledfrom, callstack, where
 from jsb.utils.lazydict import LazyDict
 from jsb.utils.exception import handle_exception
@@ -21,33 +28,26 @@ from jsb.lib.errors import MemcachedCounterError, JSONParseError
 
 from .datadir import getdatadir
 
-## simplejson imports
+# simplejson imports
 
 from jsb.imports import getjson
 
 json = getjson()
 
-## basic imports
+# basic imports
 
-from collections import deque
-import _thread
-import logging
-import os
-import os.path
-import copy
-import sys
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## locks
+# locks
 
 
 persistlock = _thread.allocate_lock()
 persistlocked = lockdec(persistlock)
 
-## global list to keeptrack of what persist objects need to be saved
+# global list to keeptrack of what persist objects need to be saved
 
 needsaving = deque()
 
@@ -71,7 +71,7 @@ def cleanup(bot=None, event=None):
     return needsaving
 
 
-## try google first
+# try google first
 
 try:
     from google.appengine.ext.db.metadata import Kind
@@ -82,7 +82,7 @@ try:
 
     logging.debug("using BigTable based Persist")
 
-    ## JSONindb class
+    # JSONindb class
 
     class JSONindb(db.Model):
         """model to store json files in."""
@@ -92,7 +92,7 @@ try:
         filename = db.StringProperty()
         content = db.TextProperty(indexed=False)
 
-    ## Persist class
+    # Persist class
 
     class Persist(object):
 
@@ -286,7 +286,7 @@ try:
         def upgrade(self, filename):
             self.init(self.data, filename=filename)
 
-    ## findfilenames function
+    # findfilenames function
 
     def findfilenames(target, filter=[], skip=[]):
         res = []
@@ -320,11 +320,11 @@ try:
 
 except ImportError:
 
-    ## file based persist
+    # file based persist
 
     logging.debug("using file based Persist")
 
-    ## imports for shell bots
+    # imports for shell bots
 
     if True:
         got = False
@@ -344,7 +344,7 @@ except ImportError:
 
     import fcntl
 
-    ## classes
+    # classes
 
     class Persist(object):
 
@@ -531,7 +531,7 @@ except ImportError:
             finally:
                 pass
 
-    ## findfilenames function
+    # findfilenames function
 
     def findfilenames(target, filter=[], skip=[]):
         res = []
@@ -598,7 +598,7 @@ class GlobalPersist(Persist):
         )
 
 
-## PersistCollection class
+# PersistCollection class
 
 
 class PersistCollection(object):
@@ -662,7 +662,7 @@ class PersistCollection(object):
         return res
 
 
-## PlugPersistCollection class
+# PlugPersistCollection class
 
 
 class PlugPersistCollection(PersistCollection):
@@ -674,7 +674,7 @@ class PlugPersistCollection(PersistCollection):
         PersistCollection.__init__(self, self.path)
 
 
-## GlobalPersistCollection class
+# GlobalPersistCollection class
 
 
 class GlobalPersistCollection(PersistCollection):

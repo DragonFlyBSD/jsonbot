@@ -4,12 +4,12 @@
 
 """ pickled dicts of dicts """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.lazydict import LazyDict
 from jsb.lib.persist import Persist
 
-## Pdod class
+# Pdod class
 
 
 class Pdod(Persist):

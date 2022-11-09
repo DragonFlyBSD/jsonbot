@@ -4,7 +4,7 @@
 
 """ manage birthdays """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.timeutils import getdaymonth, strtotime, elapsedstring, bdmonths
 from jsb.utils.generic import getwho
@@ -19,11 +19,11 @@ from jsb.db import getmaindb
 import time
 import re
 
-## defines
+# defines
 
 db = None
 
-## bd-set command
+# bd-set command
 
 
 def handle_bdset(bot, ievent):
@@ -60,7 +60,7 @@ def handle_bdset(bot, ievent):
 cmnds.add("bd-set", handle_bdset, "USER")
 examples.add("bd-set", "bd-set <date> .. set birthday", "bd-set 3-11-1967")
 
-## bd-del command
+# bd-del command
 
 
 def handle_bddel(bot, ievent):
@@ -85,7 +85,7 @@ def handle_bddel(bot, ievent):
 cmnds.add("bd-del", handle_bddel, "USER")
 examples.add("bd-del", "delete birthday data", "bd-del")
 
-## bd command
+# bd command
 
 
 def handle_bd(bot, ievent):
@@ -131,7 +131,7 @@ examples.add(
     "1) bd 2) bd dunker",
 )
 
-## bd-check command
+# bd-check command
 
 
 def handle_checkbd(bot, ievent):
@@ -203,7 +203,7 @@ def handle_checkbd2(bot, ievent):
         ievent.reply("no birthdays found for %s" % bdmonths[monthnr])
 
 
-## age command
+# age command
 
 
 def handle_age(bot, ievent):
@@ -242,7 +242,7 @@ def handle_age(bot, ievent):
 cmnds.add("age", handle_age, ["USER", "WEB"])
 examples.add("age", "age <nick> .. show how old <nick> is", "age dunker")
 
-## plugin initialisation
+# plugin initialisation
 
 
 def init():

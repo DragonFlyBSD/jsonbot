@@ -4,17 +4,17 @@
 
 """ the choice command can be used with a string or in a pipeline. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.generic import waitforqueue
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 import random
 
-## choice command
+# choice command
 
 
 def handle_choice(bot, ievent):

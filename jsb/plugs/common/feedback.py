@@ -4,7 +4,7 @@
 
 """ give feedback on the bot to bthate@gmail.com. needs a xmpp server, so use jsb-xmpp or jsb-fleet. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
@@ -13,10 +13,10 @@ from jsb.lib.factory import bot_factory
 from jsb.utils.lazydict import LazyDict
 from jsb.utils.generic import waitforqueue
 
-## basic imports
+# basic imports
 
 
-## feedback command
+# feedback command
 
 
 def handle_feedback(bot, event):

@@ -7,7 +7,7 @@
 __author__ = "Wijnand 'tehmaze' Modderman - http://tehmaze.com"
 __license__ = "BSD"
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.examples import examples
 from jsb.lib.callbacks import callbacks
@@ -16,12 +16,12 @@ from jsb.lib.datadir import getdatadir
 from jsb.lib.fleet import getfleet
 from jsb.utils.pdod import Pdod
 
-## basic imports
+# basic imports
 
 import os
 import logging
 
-## NSAuth class
+# NSAuth class
 
 
 class NSAuth(Pdod):
@@ -109,17 +109,17 @@ class NSAuth(Pdod):
             pass
 
 
-## init stuff
+# init stuff
 
 nsauth = NSAuth()
 if not nsauth.data:
     nsauth = NSAuth()
 
-## register callback
+# register callback
 
 callbacks.add("001", nsauth.handle_001, threaded=True)
 
-## ns-add command
+# ns-add command
 
 
 def handle_nsadd(bot, ievent):
@@ -149,7 +149,7 @@ examples.add(
     "ns-add mekker",
 )
 
-## ns-del command
+# ns-del command
 
 
 def handle_nsdel(bot, ievent):
@@ -174,7 +174,7 @@ def handle_nsdel(bot, ievent):
 cmnds.add("ns-del", handle_nsdel, "OPER", threaded=True)
 examples.add("ns-del", "ns-del <fleetbot name>", "ns-del test")
 
-## ns-send command
+# ns-send command
 
 
 def handle_nssend(bot, ievent):
@@ -191,7 +191,7 @@ def handle_nssend(bot, ievent):
 cmnds.add("ns-send", handle_nssend, "OPER", threaded=True)
 examples.add("ns-send", "ns-send <txt> .. send txt to nickserv", "ns-send identify bla")
 
-## ns-auth command
+# ns-auth command
 
 
 def handle_nsauth(bot, ievent):
@@ -216,7 +216,7 @@ def handle_nsauth(bot, ievent):
 cmnds.add("ns-auth", handle_nsauth, "OPER", threaded=True)
 examples.add("ns-auth", "ns-auth [<botname>]", "1) ns-auth 2) ns-auth test")
 
-## ns-list command
+# ns-list command
 
 
 def handle_nslist(bot, ievent):

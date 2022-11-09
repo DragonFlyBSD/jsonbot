@@ -2,7 +2,7 @@
 #
 #
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception, exceptionmsg
 from jsb.utils.trace import calledfrom
@@ -10,7 +10,7 @@ from jsb.lib.persiststate import ObjectState
 from jsb.lib.threads import start_new_thread
 from jsb.version import version
 
-## basic imports
+# basic imports
 
 from socketserver import BaseServer, ThreadingMixIn
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -22,7 +22,7 @@ import select
 import socket
 import logging
 
-## RestServerBase class
+# RestServerBase class
 
 
 class RestServerBase(HTTPServer):
@@ -180,7 +180,7 @@ class RestServerBase(HTTPServer):
         )
 
 
-## Mixin classes
+# Mixin classes
 
 
 class RestServer(ThreadingMixIn, RestServerBase):
@@ -193,7 +193,7 @@ class RestServerAsync(RestServerBase, dispatcher):
     pass
 
 
-## RestReqeustHandler class
+# RestReqeustHandler class
 
 
 class RestRequestHandler(BaseHTTPRequestHandler):
@@ -279,7 +279,7 @@ class RestRequestHandler(BaseHTTPRequestHandler):
             )
 
 
-## secure classes .. not working yet
+# secure classes .. not working yet
 
 
 class SecureRestServer(RestServer):
@@ -316,7 +316,10 @@ class SecureAuthRestServer(SecureRestServer):
         ctx.load_client_ca(chain)
         # ctx.load_verify_locations(chain)
         logging.info("rest.server - creating SSL socket on %s" % str(server_address))
-        callback = lambda conn, cert, errno, depth, retcode: retcode
+
+        def callback(conn, cert, errno, depth, retcode):
+            return retcode
+
         ctx.set_verify(SSL.VERIFY_FAIL_IF_NO_PEER_CERT | SSL.VERIFY_PEER, callback)
         ctx.set_session_id("jsb")
         self.socket = SSL.Connection(

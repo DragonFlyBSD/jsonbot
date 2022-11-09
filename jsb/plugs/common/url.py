@@ -4,7 +4,7 @@
 
 """ maintain log of urls. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.lib.callbacks import callbacks
@@ -12,18 +12,18 @@ from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.persiststate import PlugState
 
-## basic imports
+# basic imports
 
 import re
 import logging
 
-## defines
+# defines
 
 re_url_match = re.compile("((?:http|https)://\S+)")
 state = None
 initdone = False
 
-## init function
+# init function
 
 
 def init():
@@ -35,7 +35,7 @@ def init():
     return 1
 
 
-## size function
+# size function
 
 
 def size():
@@ -49,7 +49,7 @@ def size():
     return s
 
 
-## search function
+# search function
 
 
 def search(what, queue):
@@ -70,7 +70,7 @@ def search(what, queue):
         queue.put_nowait(url)
 
 
-## get function
+# get function
 
 
 def latest(bot, event):
@@ -79,7 +79,7 @@ def latest(bot, event):
     return state.data.urls[bot.cfg.name][event.channel][-1]
 
 
-## url callbacks
+# url callbacks
 
 
 def urlpre(bot, ievent):
@@ -109,7 +109,7 @@ callbacks.add("PRIVMSG", urlcb, urlpre, threaded=True)
 callbacks.add("MESSAGE", urlcb, urlpre, threaded=True)
 callbacks.add("TORNADO", urlcb, urlpre, threaded=True)
 
-## url-search commands
+# url-search commands
 
 
 def handle_urlsearch(bot, ievent):
@@ -141,7 +141,7 @@ def handle_urlsearch(bot, ievent):
 cmnds.add("url-search", handle_urlsearch, ["OPER", "USER", "GUEST"])
 examples.add("url-search", "search matching url entries", "url-search jsonbot")
 
-## url-searchall command
+# url-searchall command
 
 
 def handle_urlsearchall(bot, ievent):
@@ -172,7 +172,7 @@ def handle_urlsearchall(bot, ievent):
 cmnds.add("url-searchall", handle_urlsearchall, ["OPER", "USER", "GUEST"])
 examples.add("url-searchall", "search matching url entries", "url-searchall jsonbot")
 
-## url-size command
+# url-size command
 
 
 def handle_urlsize(bot, ievent):

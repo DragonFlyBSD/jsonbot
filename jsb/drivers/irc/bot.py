@@ -9,7 +9,7 @@
 
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.utils.generic import waitforqueue, uniqlist, strippedtxt
@@ -32,7 +32,7 @@ from .channels import Channels
 from .irc import Irc
 from .ircevent import IrcEvent
 
-## basic imports
+# basic imports
 
 import re
 import socket
@@ -41,11 +41,11 @@ import queue
 import time
 import logging
 
-## defines
+# defines
 
 dccchatre = re.compile("\001DCC CHAT CHAT (\S+) (\d+)\001", re.I)
 
-## classes
+# classes
 
 
 class IRCBot(Irc):

@@ -9,7 +9,7 @@
 from jsb.utils.exception import handle_exception
 from jsb.utils.limlist import Limlist
 
-## google imports
+# google imports
 
 try:
     import waveapi
@@ -17,11 +17,10 @@ try:
 except ImportError:
     from jsb.lib.cache import get, set, delete
 
-## basic imports
+# basic imports
 
 
-
-## Less class
+# Less class
 
 
 class Less(object):

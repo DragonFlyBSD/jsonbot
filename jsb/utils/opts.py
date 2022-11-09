@@ -4,19 +4,19 @@
 
 """ options related functions. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.errors import NameNotSet, NoUserProvided, NoOwnerSet
 from jsb.version import version
 from jsb.utils.name import stripname
 
-## basic imports
+# basic imports
 
 import os
 import logging
 import optparse
 
-## EventOptionParser class
+# EventOptionParser class
 
 
 class EventOptionParser(optparse.OptionParser):
@@ -27,7 +27,7 @@ class EventOptionParser(optparse.OptionParser):
         pass
 
 
-## makeopts function
+# makeopts function
 
 
 def makeircopts(txt=""):
@@ -160,7 +160,7 @@ def makeircopts(txt=""):
     return opts
 
 
-## makeconvoreopts
+# makeconvoreopts
 
 
 def makeconvoreopts(txt=""):
@@ -233,7 +233,7 @@ def makeconvoreopts(txt=""):
     return opts
 
 
-## makexmppopts
+# makexmppopts
 
 
 def makesxmppopts(txt=""):
@@ -358,7 +358,7 @@ def makesxmppopts(txt=""):
     return opts
 
 
-## makeconsoleopts
+# makeconsoleopts
 
 
 def makeconsoleopts():
@@ -408,7 +408,7 @@ def makeconsoleopts():
     return opts
 
 
-## makefleetopts function
+# makefleetopts function
 
 
 def makefleetopts():
@@ -482,7 +482,7 @@ def makefleetopts():
     return opts
 
 
-## makeeventopts function
+# makeeventopts function
 
 
 def makeeventopts(txt):
@@ -529,7 +529,7 @@ def makeeventopts(txt):
     return opts
 
 
-## makeconfig function
+# makeconfig function
 
 
 def makeconsoleconfig(opts=None, botname=None):
@@ -549,7 +549,7 @@ def makeconsoleconfig(opts=None, botname=None):
     return cfg
 
 
-## makeircconfig function
+# makeircconfig function
 
 
 def makeircconfig(opts=None, botname=None):
@@ -621,7 +621,7 @@ def makeircconfig(opts=None, botname=None):
     return cfg
 
 
-## makexmppconfig function
+# makexmppconfig function
 
 
 def makesxmppconfig(opts=None, botname=None, type="sxmpp"):

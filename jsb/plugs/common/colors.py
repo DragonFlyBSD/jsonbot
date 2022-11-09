@@ -4,7 +4,7 @@
 
 """ use the morph to add color to selected words. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
@@ -14,16 +14,16 @@ from jsb.lib.persiststate import PlugState
 from jsb.utils.lazydict import LazyDict
 from jsb.lib.boot import ongae
 
-## basic imports
+# basic imports
 
 import logging
 
-## defines
+# defines
 
 state = PlugState()
 state.define("colormapping", {})
 
-## the morph
+# the morph
 
 
 def docolormorph(txt, event):
@@ -53,7 +53,7 @@ def docolormorph(txt, event):
     return txt
 
 
-## color-list command
+# color-list command
 
 
 def handle_colorlist(bot, event):
@@ -64,7 +64,7 @@ def handle_colorlist(bot, event):
 cmnds.add("color-list", handle_colorlist, ["OPER"])
 examples.add("color-list", "show color mapping", "color-list")
 
-## color-add command
+# color-add command
 
 
 def handle_coloradd(bot, event):
@@ -93,7 +93,7 @@ examples.add(
     "color-add", "add a text color replacement to the morphs", "color-add dunker 8"
 )
 
-## color-del command
+# color-del command
 
 
 def handle_colordel(bot, event):
@@ -114,7 +114,7 @@ examples.add(
     "color-del", "remove a text color replacement from the morphs", "color-del dunker"
 )
 
-## start
+# start
 
 
 def init():

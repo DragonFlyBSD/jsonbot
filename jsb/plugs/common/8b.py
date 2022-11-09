@@ -4,17 +4,17 @@
 
 """ run the eight ball. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 import random
 
-## defines
+# defines
 
 balltxt = [
     "Signs point to yes.",
@@ -39,7 +39,7 @@ balltxt = [
     "Don't count on it.",
 ]
 
-## 8b command
+# 8b command
 
 
 def handle_8b(bot, ievent):

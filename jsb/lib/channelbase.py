@@ -4,7 +4,7 @@
 
 """ provide a base class for channels. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.name import stripname
 from jsb.utils.lazydict import LazyDict
@@ -13,13 +13,13 @@ from jsb.lib.datadir import getdatadir
 from jsb.utils.trace import whichmodule
 from jsb.lib.errors import NoChannelProvided, NoChannelSet
 
-## basic imports
+# basic imports
 
 import time
 import os
 import logging
 
-## classes
+# classes
 
 
 class ChannelBase(Persist):

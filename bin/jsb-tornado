@@ -4,22 +4,51 @@
 
 """ jsb tornado dispatch handler.  dispatches remote commands.  """
 
+import select
+import logging
+import os
+import sys
+import tornado.websocket
+import tornado.httpserver
+import tornado.auth
+import tornado.ioloop
+import tornado.web
+from jsb.api import api_check
+from jsb.lib.floodcontrol import floodcontrol
+from jsb.lib.commands import cmnds
+from jsb.lib.exit import globalshutdown
+from jsb.lib.partyline import partyline
+from jsb.utils.source import getsource
+from jsb.imports import gettornado
+from jsb.drivers.tornado.event import TornadoEvent
+from jsb.drivers.tornado.bot import TornadoBot
+from jsb.lib.threads import start_new_thread
+from jsb.utils.lazydict import LazyDict
+from jsb.lib.errors import NoSuchCommand, NoInput
+from jsb.lib.fleet import getfleet
+from jsb.utils.exception import handle_exception, exceptionmsg
+from jsb.lib.persist import Persist
+from jsb.lib.plugins import plugs
+from jsb.utils.url import getpostdata, useragent
+from jsb.utils.xmpp import stripped
+from jsb.utils.generic import fromenc, toenc
+from jsb.lib.boot import boot
+from jsb.utils.log import setloglevel
+from jsb.lib.datadir import getdatadir
+from optparse import OptionParser
+from jsb.version import getversion
 import warnings
 
 warnings.simplefilter("ignore")
 
-## bootstrap
+# bootstrap
 
-import os, sys
 
 sys.path.insert(0, os.getcwd())
 
 
-from jsb.version import getversion
+# command line parsing
 
-## command line parsing
-
-from optparse import OptionParser
 
 parser = OptionParser(
     usage="usage: %prog [options] <appid>", version="%prog " + getversion()
@@ -117,7 +146,6 @@ if opts.datadir:
 
     setdatadir(opts.datadir)
 
-from jsb.lib.datadir import getdatadir
 
 if opts.ssl:
     if os.path.exists(os.getcwd() + os.sep + "jsb.crt"):
@@ -143,13 +171,11 @@ if opts.nourl:
 
     url_disable()
 
-from jsb.utils.log import setloglevel
 
 setloglevel(opts.loglevel or "warn", not opts.nocolors)
 
-## boot
+# boot
 
-from jsb.lib.boot import boot
 
 boot()
 
@@ -159,47 +185,17 @@ if opts.owner:
     u = users_boot()
     u.make_owner(opts.owner)
 
-## jsb imports
+# jsb imports
 
-from jsb.utils.generic import fromenc, toenc
-from jsb.version import getversion
-from jsb.utils.xmpp import stripped
-from jsb.utils.url import getpostdata, useragent
-from jsb.lib.plugins import plugs
-from jsb.lib.persist import Persist
-from jsb.utils.exception import handle_exception, exceptionmsg
-from jsb.lib.fleet import getfleet
-from jsb.lib.errors import NoSuchCommand, NoInput
-from jsb.utils.lazydict import LazyDict
-from jsb.lib.threads import start_new_thread
-from jsb.drivers.tornado.bot import TornadoBot
-from jsb.drivers.tornado.event import TornadoEvent
-from jsb.lib.datadir import getdatadir
-from jsb.imports import gettornado
-from jsb.utils.source import getsource
-from jsb.lib.partyline import partyline
-from jsb.lib.exit import globalshutdown
-from jsb.lib.commands import cmnds
-from jsb.lib.floodcontrol import floodcontrol
-from jsb.api import api_check
 
 tornado = gettornado()
 fleet = getfleet()
 
-## tornado import
+# tornado import
 
-import tornado.web
-import tornado.ioloop
-import tornado.auth
-import tornado.httpserver
-import tornado.websocket
 
-## basic imports
+# basic imports
 
-import sys
-import os
-import logging
-import select
 
 bot = TornadoBot(botname="tornado-bot")
 logging.warn("tornado bot type %s" % bot.type)
@@ -216,7 +212,7 @@ else:
     logging.warn("jsb.data is at %s" % ddir)
 
 
-## jsb specific ioloop
+# jsb specific ioloop
 
 
 class JSBLoop(tornado.ioloop.IOLoop):
@@ -225,7 +221,7 @@ class JSBLoop(tornado.ioloop.IOLoop):
         tornado.ioloop.IOLoop.__init__(self, tornado.ioloop._Select(), *args)
 
 
-## server part
+# server part
 
 
 class TornadoServer(tornado.httpserver.HTTPServer):
@@ -233,7 +229,7 @@ class TornadoServer(tornado.httpserver.HTTPServer):
     pass
 
 
-## web socket
+# web socket
 
 
 class WebSocket(tornado.websocket.WebSocketHandler):
@@ -281,7 +277,7 @@ class WebSocket(tornado.websocket.WebSocketHandler):
             logging.warn("no user %s found in websockets" % user)
 
 
-## handlers
+# handlers
 
 
 class GoogleHandler(tornado.web.RequestHandler, tornado.auth.GoogleMixin):
@@ -554,7 +550,7 @@ class WarpHandler(BaseHandler):
             handle_exception()
 
 
-## the application
+# the application
 
 settings = {
     "static_path": ddir + os.sep + "static",
@@ -577,7 +573,7 @@ application = tornado.web.Application(
     **settings
 )
 
-## runtime
+# runtime
 
 if opts.ssl:
     server = TornadoServer(application, ssl_options=ssl_options)

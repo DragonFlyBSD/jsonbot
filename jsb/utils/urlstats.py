@@ -4,7 +4,7 @@
 
 """ persist stats of an url. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.persist import Persist, PersistCollection
 from jsb.lib.datadir import getdatadir
@@ -12,13 +12,13 @@ from jsb.utils.statdict import StatDict
 from jsb.utils.name import stripname
 from jsb.utils.url import striphtml, Url
 
-## basic imports
+# basic imports
 
 import time
 import logging
 import os
 
-## UrlStats class
+# UrlStats class
 
 
 class UrlStats(Persist):

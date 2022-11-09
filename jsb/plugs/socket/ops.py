@@ -9,7 +9,7 @@
     this can be disabled by using ops-cfg oponsplit 1
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.generic import getwho
 from jsb.lib.commands import cmnds
@@ -18,16 +18,16 @@ from jsb.lib.callbacks import callbacks
 from jsb.lib.users import getusers
 from jsb.lib.persistconfig import PersistConfig
 
-## basic imports
+# basic imports
 
 import logging
 
-## defines
+# defines
 
 cfg = PersistConfig()
 cfg.define("oponsplit", 0)
 
-## onjoincb callback
+# onjoincb callback
 
 
 def opjoincb(bot, ievent):
@@ -51,7 +51,7 @@ def opjoincb(bot, ievent):
 
 callbacks.add("JOIN", opjoincb)
 
-## op command
+# op command
 
 
 def handle_op1(bot, ievent):
@@ -81,7 +81,7 @@ examples.add(
     "1) op 2) op dunker",
 )
 
-## ops-permadd command
+# ops-permadd command
 
 
 def handle_permadd(bot, ievent):
@@ -106,7 +106,7 @@ def handle_permadd(bot, ievent):
 cmnds.add("ops-permadd", handle_permadd, "OPER")
 examples.add("ops-permadd", "add permanent ops for user", "ops-permadd dunker")
 
-## ops-permdel command
+# ops-permdel command
 
 
 def handle_permdel(bot, ievent):
@@ -131,7 +131,7 @@ def handle_permdel(bot, ievent):
 cmnds.add("ops-permdel", handle_permdel, "OPER")
 examples.add("ops-permdel", "delete permanent ops for user", "ops-permadd dunker")
 
-## splitted command
+# splitted command
 
 
 def handle_splitted(bot, ievent):
@@ -142,7 +142,7 @@ def handle_splitted(bot, ievent):
 cmnds.add("splitted", handle_splitted, "OPER")
 examples.add("splitted", "show whos on the splitted list", "splitted")
 
-## splitted-clear command
+# splitted-clear command
 
 
 def handle_splittedclear(bot, ievent):
@@ -154,7 +154,7 @@ def handle_splittedclear(bot, ievent):
 cmnds.add("splitted-clear", handle_splittedclear, "OPER")
 examples.add("splitted-clear", "clear the splitted list", "splitted-clear")
 
-## ops-disable command
+# ops-disable command
 
 
 def handle_opsdisable(bot, ievent):
@@ -177,7 +177,7 @@ def handle_opsdisable(bot, ievent):
 # cmnds.add('ops-disable', handle_opsdisable, 'OPER')
 # examples.add('ops-disable', 'ops-disable [<channel>] .. disable opping in provided channel or the channel command was given in', '1) ops-disable 2) ops-disable #dunkbots')
 
-## ops-enable command
+# ops-enable command
 
 
 def handle_opsenable(bot, ievent):
@@ -198,7 +198,7 @@ def handle_opsenable(bot, ievent):
 # cmnds.add('ops-enable', handle_opsenable, 'OPER')
 # examples.add('ops-enable', 'ops-enable [<channel>] .. enable opping in provided channel or the channel command was given in', '1) ops-enable 2) ops-enable #dunkbots')
 
-## ops-snoop command
+# ops-snoop command
 
 
 def handle_opsnoop(bot, ievent):
@@ -209,7 +209,7 @@ def handle_opsnoop(bot, ievent):
 cmnds.add("ops-snoop", handle_opsnoop, "OPER")
 examples.add("ops-snoop", "list in which channels opping is disabled", "ops-snoop")
 
-## checkmode callback
+# checkmode callback
 
 
 def checkmode(bot, ievent):

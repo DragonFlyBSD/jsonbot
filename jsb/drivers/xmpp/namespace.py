@@ -2,7 +2,7 @@
 #
 #
 
-## CONSTANTS
+# CONSTANTS
 
 attributes = {}
 subelements = {}

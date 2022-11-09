@@ -7,17 +7,17 @@
 __author__ = "Wijnand 'tehmaze' Modderman - http://tehmaze.com"
 __license__ = "BSD"
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.examples import examples
 from jsb.lib.commands import cmnds
 from jsb.utils.generic import waitforqueue
 
-## basic imports
+# basic imports
 
 import time
 
-## uniq command
+# uniq command
 
 
 def handle_uniq(bot, ievent):

@@ -8,7 +8,7 @@
 
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.utils.timeutils import strtotime, striptime
@@ -23,7 +23,7 @@ from jsb.lib.datadir import datadir
 from jsb.lib.periodical import periodical
 from jsb.lib.nextid import nextid
 
-## basic imports
+# basic imports
 
 import time
 import os
@@ -31,17 +31,17 @@ import _thread
 import logging
 import copy
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 alarms = None
 
-## locks
+# locks
 
 alarmlock = _thread.allocate_lock()
 alarmlocked = lockdec(alarmlock)
 
-## Alarmitem class
+# Alarmitem class
 
 
 class Alarmitem(LazyDict):
@@ -80,7 +80,7 @@ class Alarmitem(LazyDict):
         return result
 
 
-## Alarms class
+# Alarms class
 
 
 class Alarms(Persist):
@@ -153,7 +153,7 @@ class Alarms(Persist):
         return 1
 
 
-## defines
+# defines
 
 alarms = Alarms(
     datadir
@@ -165,7 +165,7 @@ alarms = Alarms(
     + "alarms.new"
 )
 
-## plugins shutdown
+# plugins shutdown
 
 
 def shutdown():
@@ -177,7 +177,7 @@ def size():
     return alarms.size()
 
 
-## alarm command
+# alarm command
 
 
 def handle_alarmadd(bot, ievent):
@@ -269,7 +269,7 @@ examples.add(
     "1) alarm 12:00 lunchtime 2) alarm 3-11-2008 0:01 birthday ! 3) alarm +180 egg ready",
 )
 
-## alarm-list command
+# alarm-list command
 
 
 def handle_alarmlist(bot, ievent):
@@ -287,7 +287,7 @@ def handle_alarmlist(bot, ievent):
 cmnds.add("alarm-list", handle_alarmlist, "OPER")
 examples.add("alarm-list", "list current alarms", "alarm-list")
 
-## alarm-mylist command
+# alarm-mylist command
 
 
 def handle_myalarmslist(bot, ievent):
@@ -311,7 +311,7 @@ def handle_myalarmslist(bot, ievent):
 cmnds.add("alarm-mylist", handle_myalarmslist, "USER")
 examples.add("alarm-mylist", "list alarms of user giving the commands", "alarm-mylist")
 
-## alarm-del command
+# alarm-del command
 
 
 def handle_alarmdel(bot, ievent):
@@ -333,4 +333,4 @@ def handle_alarmdel(bot, ievent):
 cmnds.add("alarm-del", handle_alarmdel, "OPER")
 examples.add("alarm-del", "delete alarm with id <nr>", "alarm-del 7")
 
-#### BHJTW 6-03-2012
+# BHJTW 6-03-2012

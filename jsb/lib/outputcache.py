@@ -2,20 +2,20 @@
 #
 #
 
-## jsb imports
+# jsb imports
 
 from .persist import Persist
 from jsb.utils.name import stripname
 from .datadir import getdatadir
 from jsb.utils.timeutils import hourmin
 
-## basic imports
+# basic imports
 
 import os
 import logging
 import time
 
-## clear function
+# clear function
 
 
 def clear(target):
@@ -37,7 +37,7 @@ def clear(target):
     return []
 
 
-## add function
+# add function
 
 
 def add(target, txtlist):
@@ -64,7 +64,7 @@ def add(target, txtlist):
     cache.save()
 
 
-## set function
+# set function
 
 
 def set(target, txtlist):
@@ -84,7 +84,7 @@ def set(target, txtlist):
     cache.save()
 
 
-## get function
+# get function
 
 
 def get(target):

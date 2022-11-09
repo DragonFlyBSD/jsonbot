@@ -4,7 +4,7 @@
 
 """ plugin management. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
@@ -14,11 +14,11 @@ from jsb.lib.boot import savecmndtable, savepluginlist, update_mod
 from jsb.lib.errors import NoSuchPlugin, RequireError
 from jsb.lib.boot import plugenable, plugdisable
 
-## basic imports
+# basic imports
 
 import logging
 
-## plug-enable command
+# plug-enable command
 
 
 def handle_plugenable(bot, event):
@@ -50,7 +50,7 @@ cmnds.add(
 )
 examples.add("plug-enable", "enable a plugin", "plug-enable rss")
 
-## plug-disable command
+# plug-disable command
 
 
 def handle_plugdisable(bot, event):
@@ -81,7 +81,7 @@ cmnds.add(
 )
 examples.add("plug-disable", "disable a plugin", "plug-disable rss")
 
-## plug-reload command
+# plug-reload command
 
 
 def handle_plugreload(bot, ievent):

@@ -4,20 +4,20 @@
 
 """ jsb cache provding get, set and delete functions. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.lazydict import LazyDict
 
 
-## basic imports
+# basic imports
 
 import logging
 
-## defines
+# defines
 
 cache = LazyDict()
 
-## functions
+# functions
 
 
 def get(name, namespace=""):

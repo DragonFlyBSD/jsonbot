@@ -8,19 +8,32 @@
 # import warnings
 # warnings.simplefilter("ignore")
 
-## bootstrap
+# bootstrap
 
-import os, sys
+import logging
+import getpass
+from jsb.lib.datadir import getdatadir
+from jsb.lib.threads import start_new_thread
+from jsb.lib.fleet import getfleet
+from jsb.lib.exit import globalshutdown
+from jsb.lib.commands import cmnds
+from jsb.lib.errors import NoOwnerSet, NoSuchCommand
+from jsb.lib.config import Config
+from jsb.drivers.console.bot import ConsoleBot
+from jsb.utils.generic import waitforqueue, waitevents
+from jsb.utils.exception import handle_exception
+from jsb.lib.boot import boot
+from optparse import OptionParser
+from jsb.utils.log import setloglevel
+from jsb.version import getversion
+import os
+import sys
 
 sys.path.insert(0, os.getcwd())
 
-from jsb.version import getversion
 
-from jsb.utils.log import setloglevel
+# command line parsing
 
-## command line parsing
-
-from optparse import OptionParser
 
 parser = OptionParser(
     usage="usage: %prog [options] <appid>", version="%prog " + getversion()
@@ -102,9 +115,8 @@ if opts.datadir:
 
     setdatadir(opts.datadir)
 
-## make config from cmndline options
+# make config from cmndline options
 
-from jsb.utils.log import setloglevel
 
 setloglevel(opts.loglevel or "error", not opts.nocolors)
 
@@ -113,32 +125,19 @@ if opts.nourl:
 
     url_disable()
 
-from jsb.lib.boot import boot
 
 if opts.fast:
     boot(opts.datadir, fast=True)
 else:
     boot(opts.datadir)
 
-## jsb imports
+# jsb imports
 
-from jsb.utils.exception import handle_exception
-from jsb.utils.generic import waitforqueue, waitevents
-from jsb.drivers.console.bot import ConsoleBot
-from jsb.lib.config import Config
-from jsb.lib.errors import NoOwnerSet, NoSuchCommand
-from jsb.lib.commands import cmnds
-from jsb.lib.exit import globalshutdown
-from jsb.lib.fleet import getfleet
-from jsb.lib.threads import start_new_thread
-from jsb.lib.datadir import getdatadir
 
-## basic imports
+# basic imports
 
-import getpass
-import logging
 
-## start the bot
+# start the bot
 name = opts.name or "default-console"
 cfg = Config("fleet" + os.sep + name + os.sep + "config")
 if not cfg.owner:

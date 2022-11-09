@@ -6,7 +6,7 @@
 
 import traceback
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from .runner import defaultrunner, callbackrunner, waitrunner
@@ -62,7 +62,7 @@ except ImportError:
     tornado = gettornado()
     import tornado.ioloop
 
-## basic imports
+# basic imports
 
 import time
 import logging
@@ -73,11 +73,11 @@ import threading
 import queue
 import re
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## locks
+# locks
 
 reconnectlock = threading.RLock()
 reconnectlocked = lockdec(reconnectlock)
@@ -85,7 +85,7 @@ reconnectlocked = lockdec(reconnectlock)
 lock = _thread.allocate_lock()
 locked = lockdec(lock)
 
-## classes
+# classes
 
 
 class BotBase(LazyDict):

@@ -4,21 +4,21 @@
 
 """ query the imdb database. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.examples import examples
 from jsb.lib.commands import cmnds
 from jsb.utils.url import geturl2, striphtml, decode_html_entities
 from jsb.imports import getjson
 
-## basic imports
+# basic imports
 
 
-## defines
+# defines
 
 URL = "http://www.deanclatworthy.com/imdb/?q=%s"
 
-## imdb command
+# imdb command
 
 
 def handle_imdb(bot, event):

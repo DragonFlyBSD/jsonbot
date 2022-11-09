@@ -4,7 +4,7 @@
 
 """ users related commands. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.generic import getwho
 from jsb.utils.exception import handle_exception
@@ -13,11 +13,11 @@ from jsb.lib.users import users
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 import logging
 
-## user-whoami command
+# user-whoami command
 
 
 def handle_whoami(bot, ievent):
@@ -28,7 +28,7 @@ def handle_whoami(bot, ievent):
 cmnds.add("user-whoami", handle_whoami, ["OPER", "USER", "GUEST"])
 examples.add("user-whoami", "get your username", "user-whoami")
 
-## user-meet command
+# user-meet command
 
 
 def handle_meet(bot, ievent):
@@ -70,7 +70,7 @@ def handle_meet(bot, ievent):
 cmnds.add("user-meet", handle_meet, ["OPER", "MEET"])
 examples.add("user-meet", "<nick> .. introduce <nick> to the bot", "user-meet dunker")
 
-## user-add command
+# user-add command
 
 
 def handle_adduser(bot, ievent):
@@ -104,7 +104,7 @@ def handle_adduser(bot, ievent):
 cmnds.add("user-add", handle_adduser, "OPER")
 examples.add("user-add", "add user to the bot", "user-add dunker bart@localhost")
 
-## user-merge command
+# user-merge command
 
 
 def handle_merge(bot, ievent):
@@ -146,7 +146,7 @@ examples.add(
     "user-merge bart dunker",
 )
 
-## user-import command
+# user-import command
 
 
 def handle_import(bot, ievent):
@@ -177,7 +177,7 @@ examples.add(
     "user-import bthate@gmail.com",
 )
 
-## user-del command
+# user-del command
 
 
 def handle_delete(bot, ievent):
@@ -207,7 +207,7 @@ examples.add(
     "user-del", "user-del <name> .. delete user with <username>", "user-del dunker"
 )
 
-## user-undel command
+# user-undel command
 
 
 def handle_undelete(bot, ievent):
@@ -239,7 +239,7 @@ examples.add(
     "user-undel dunker",
 )
 
-## user-scan command
+# user-scan command
 
 
 def handle_userscan(bot, ievent):
@@ -266,7 +266,7 @@ examples.add(
     "user-scan", "<txt> .. search database for matching usernames", "user-scan dunk"
 )
 
-## user-names command
+# user-names command
 
 
 def handle_names(bot, ievent):
@@ -277,7 +277,7 @@ def handle_names(bot, ievent):
 cmnds.add("user-names", handle_names, "OPER")
 examples.add("user-names", "show names of registered users", "user-names")
 
-## user-name command
+# user-name command
 
 
 def handle_name(bot, ievent):
@@ -288,7 +288,7 @@ def handle_name(bot, ievent):
 cmnds.add("user-name", handle_name, ["USER", "GUEST"])
 examples.add("user-name", "show name of user giving the commands", "user-name")
 
-## user-getname command
+# user-getname command
 
 
 def handle_getname(bot, ievent):
@@ -319,7 +319,7 @@ examples.add(
     "user-getname dunker",
 )
 
-## user-addperm command
+# user-addperm command
 
 
 def handle_addperm(bot, ievent):
@@ -351,7 +351,7 @@ examples.add(
     "user-addperm dunker rss",
 )
 
-## user-getperms command
+# user-getperms command
 
 
 def handle_getperms(bot, ievent):
@@ -379,7 +379,7 @@ examples.add(
     "user-getperms dunker",
 )
 
-## user-perms command
+# user-perms command
 
 
 def handle_perms(bot, ievent):
@@ -399,7 +399,7 @@ def handle_perms(bot, ievent):
 cmnds.add("user-perms", handle_perms, ["USER", "GUEST"])
 examples.add("user-perms", "get permissions", "user-perms")
 
-## user-delperm command
+# user-delperm command
 
 
 def handle_delperm(bot, ievent):
@@ -427,7 +427,7 @@ examples.add(
     "user-delperm dunker rss",
 )
 
-## user-addstatus command
+# user-addstatus command
 
 
 def handle_addstatus(bot, ievent):
@@ -458,7 +458,7 @@ examples.add(
     "user-addstatus dunker #dunkbots",
 )
 
-## user-getstatus command
+# user-getstatus command
 
 
 def handle_getstatus(bot, ievent):
@@ -486,7 +486,7 @@ examples.add(
     "user-getstatus dunker",
 )
 
-## user-status command
+# user-status command
 
 
 def handle_status(bot, ievent):
@@ -501,7 +501,7 @@ def handle_status(bot, ievent):
 cmnds.add("user-status", handle_status, ["USER", "GUEST"])
 examples.add("user-status", "get status", "user-status")
 
-## user-delstatus command
+# user-delstatus command
 
 
 def handle_delstatus(bot, ievent):
@@ -525,7 +525,7 @@ def handle_delstatus(bot, ievent):
 cmnds.add("user-delstatus", handle_delstatus, "OPER")
 examples.add("user-delstatus", "<name> <status>", "user-delstatus dunker #dunkbots")
 
-## user-adduserhost command
+# user-adduserhost command
 
 
 def handle_adduserhost(bot, ievent):
@@ -555,7 +555,7 @@ examples.add(
     "user-adduserhost dunker bart@%.a2000.nl",
 )
 
-## user-deluserhost command
+# user-deluserhost command
 
 
 def handle_deluserhost(bot, ievent):
@@ -585,7 +585,7 @@ examples.add(
     "user-deluserhost dunker bart1@bla.a2000.nl",
 )
 
-## user-getuserhosts command
+# user-getuserhosts command
 
 
 def handle_getuserhosts(bot, ievent):
@@ -610,7 +610,7 @@ examples.add(
     "user-getuserhosts dunker",
 )
 
-## user-userhosts command
+# user-userhosts command
 
 
 def handle_userhosts(bot, ievent):
@@ -625,7 +625,7 @@ def handle_userhosts(bot, ievent):
 cmnds.add("user-userhosts", handle_userhosts, ["USER", "GUEST"])
 examples.add("user-userhosts", "get userhosts", "user-userhosts")
 
-## user-getemail command
+# user-getemail command
 
 
 def handle_getemail(bot, ievent):
@@ -659,7 +659,7 @@ examples.add(
     "user-getemail dunker",
 )
 
-## user-setemail command
+# user-setemail command
 
 
 def handle_setemail(bot, ievent):
@@ -683,7 +683,7 @@ examples.add(
     "user-setemail dunker bart@gozerbot.org",
 )
 
-## user-email command
+# user-email command
 
 
 def handle_email(bot, ievent):
@@ -703,7 +703,7 @@ def handle_email(bot, ievent):
 cmnds.add("user-email", handle_email, ["USER", "GUEST"])
 examples.add("user-email", "get email", "user-email")
 
-## user-delemail command
+# user-delemail command
 
 
 def handle_delemail(bot, ievent):
@@ -722,7 +722,7 @@ def handle_delemail(bot, ievent):
 cmnds.add("user-delemail", handle_delemail, "OPER")
 examples.add("user-delemail", "reset email", "user-delemail")
 
-## user-addpermit command
+# user-addpermit command
 
 
 def handle_addpermit(bot, ievent):
@@ -756,7 +756,7 @@ examples.add(
     "user-addpermit dunker todo",
 )
 
-## user-permit command
+# user-permit command
 
 
 def handle_permit(bot, ievent):
@@ -780,7 +780,7 @@ def handle_permit(bot, ievent):
 cmnds.add("user-permit", handle_permit, ["USER", "GUEST"])
 examples.add("user-permit", "show permit of user giving the command", "user-permit")
 
-## user-delpermit command
+# user-delpermit command
 
 
 def handle_userdelpermit(bot, ievent):
@@ -812,7 +812,7 @@ examples.add(
     "user-delpermit", "user-delpermit <name> <permit>", "user-delpermit dunker todo"
 )
 
-## user-check command
+# user-check command
 
 
 def handle_check(bot, ievent):
@@ -844,7 +844,7 @@ def handle_check(bot, ievent):
 cmnds.add("user-check", handle_check, "OPER")
 examples.add("user-check", "user-check <nick>", "user-check dunker")
 
-## user-show command
+# user-show command
 
 
 def handle_show(bot, ievent):
@@ -873,7 +873,7 @@ def handle_show(bot, ievent):
 cmnds.add("user-show", handle_show, "OPER")
 examples.add("user-show", "user-show <name> .. show data of <name>", "user-show dunker")
 
-## user-match command
+# user-match command
 
 
 def handle_match(bot, ievent):
@@ -907,7 +907,7 @@ cmnds.add(
 )
 examples.add("user-match", "user-match <userhost>", "user-match test@test")
 
-## user-allstatus command
+# user-allstatus command
 
 
 def handle_getuserstatus(bot, ievent):
@@ -931,7 +931,7 @@ examples.add(
     "user-allstatus #dunkbots",
 )
 
-## user-allperm command
+# user-allperm command
 
 
 def handle_getuserperm(bot, ievent):
@@ -955,7 +955,7 @@ examples.add(
     "user-allperm rss",
 )
 
-## user-search command
+# user-search command
 
 
 def handle_usersearch(bot, ievent):

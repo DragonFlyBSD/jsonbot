@@ -4,7 +4,7 @@
 
 """ a twitter plugin for the JSONBOT, currently post only .. uses tweepy oauth. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.lib.commands import cmnds
@@ -17,7 +17,7 @@ from jsb.utils.twitter import twitterapi, twittertoken
 from jsb.lib.datadir import getdatadir
 from jsb.lib.jsbimport import _import_byfile
 
-## tweppy imports
+# tweppy imports
 
 from jsb.contrib.tweepy.auth import OAuthHandler
 from jsb.contrib.tweepy.api import API
@@ -27,13 +27,15 @@ from jsb.contrib.tweepy.models import Status, User
 from jsb.contrib import tweepy
 
 
-## basic imports
+# basic imports
 
 import os
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.error
+import urllib.parse
 import logging
 
-## credentials
+# credentials
 
 
 def getcreds(datadir):
@@ -50,7 +52,7 @@ def getcreds(datadir):
     return mod.CONSUMER_KEY, mod.CONSUMER_SECRET
 
 
-## defines
+# defines
 
 auth = None
 go = True
@@ -66,7 +68,7 @@ def getauth(datadir):
     return auth
 
 
-## postmsg function
+# postmsg function
 
 
 def postmsg(username, txt):
@@ -87,7 +89,7 @@ def postmsg(username, txt):
     return len(result)
 
 
-## TwitterUsers class
+# TwitterUsers class
 
 
 class TwitterUsers(PlugPersist):
@@ -117,7 +119,7 @@ class TwitterUsers(PlugPersist):
         return user in self.data
 
 
-## twitter command
+# twitter command
 
 
 def handle_twitter(bot, ievent):
@@ -148,7 +150,7 @@ examples.add(
     "twitter just found the http://jsonbot.org project",
 )
 
-## twitter-cmnd command
+# twitter-cmnd command
 
 
 def handle_twittercmnd(bot, ievent):
@@ -212,7 +214,7 @@ examples.add(
     "twitter-cmnd", "do a cmnd on the twitter API", "twitter-cmnd home_timeline"
 )
 
-## twitter-confirm command
+# twitter-confirm command
 
 
 def handle_twitter_confirm(bot, ievent):
@@ -242,7 +244,7 @@ examples.add(
     "twitter-confirm", "confirm your twitter account", "twitter-confirm 6992762"
 )
 
-## twitter-auth command
+# twitter-auth command
 
 
 def handle_twitter_auth(bot, ievent):
@@ -268,7 +270,7 @@ def handle_twitter_auth(bot, ievent):
 cmnds.add("twitter-auth", handle_twitter_auth, ["OPER", "USER", "GUEST"])
 examples.add("twitter-auth", "adds your twitter account", "twitter-auth")
 
-## twitter-friends command
+# twitter-friends command
 
 
 def handle_twitterfriends(bot, ievent):

@@ -4,18 +4,18 @@
 
 """ the data directory of the bot. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.source import getsource
 
-## basic imports
+# basic imports
 
 import os
 import shutil
 import logging
 import os.path
 
-## the global datadir
+# the global datadir
 
 try:
     homedir = os.path.abspath(os.path.expanduser("~"))
@@ -34,7 +34,7 @@ except ImportError:
     logging.info("datadir - shell detected")
     datadir = homedir + os.sep + ".jsb"
 
-## helper functions
+# helper functions
 
 
 def touch(fname):
@@ -50,7 +50,7 @@ def doit(ddir, mod, target=None):
     shutil.copytree(source, ddir + os.sep + (target or mod.replace(".", os.sep)))
 
 
-## makedir function
+# makedir function
 
 
 def makedirs(ddir=None):

@@ -4,8 +4,17 @@
 
 """ Rest Client class """
 
-## jsb imports
+# jsb imports
 
+import urllib.error
+import urllib.parse
+import urllib.request
+import logging
+import _thread
+import sys
+import asynchat
+import socket
+from urllib.parse import urlparse
 from jsb.utils.url import geturl4, posturl, deleteurl, useragent
 from jsb.utils.generic import toenc
 from jsb.utils.exception import handle_exception, exceptionmsg
@@ -14,20 +23,13 @@ from jsb.utils.lazydict import LazyDict
 from jsb.imports import getjson
 
 json = getjson()
-from urllib.parse import urlparse
-import socket
-import asynchat
-import urllib.request, urllib.parse, urllib.error
-import sys
-import _thread
-import logging
 
-## defines
+# defines
 
 restlock = _thread.allocate_lock()
 locked = lockdec(restlock)
 
-## RestResult class
+# RestResult class
 
 
 class RestResult(LazyDict):
@@ -41,7 +43,7 @@ class RestResult(LazyDict):
         self.reason = ""
 
 
-## RestClient class
+# RestClient class
 
 
 class RestClient(object):
@@ -142,7 +144,7 @@ class RestClient(object):
             return self.do(geturl4, self.url + "/" + str(nr))
 
 
-## RestClientAsync class
+# RestClientAsync class
 
 
 class RestClientAsync(RestClient, asynchat.async_chat):

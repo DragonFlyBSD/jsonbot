@@ -4,8 +4,13 @@
 #
 #
 
-## jsb imports
+# jsb imports
 
+import urllib.error
+import urllib.parse
+import urllib.request
+import logging
+import random
 from jsb.utils.exception import handle_exception
 from jsb.lib.commands import cmnds
 from jsb.utils.url import geturl2
@@ -15,11 +20,8 @@ json = getjson()
 
 # basic imports
 
-import urllib.request, urllib.parse, urllib.error
-import random
-import logging
 
-## defines
+# defines
 
 queryurl = "http://%s/yacysearch.json?query=%s&maximumRecords=10"
 
@@ -48,7 +50,7 @@ hosts = [
 
 errorhosts = []
 
-## getresults function
+# getresults function
 
 
 def getresults(url):
@@ -57,7 +59,7 @@ def getresults(url):
     return result
 
 
-## yacy command
+# yacy command
 
 
 def handle_yacy(bot, event):

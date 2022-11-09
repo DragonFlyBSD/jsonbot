@@ -4,18 +4,18 @@
 
 """ grep the output of bot comamnds. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.utils.generic import waitforqueue
 from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
 import getopt
 import re
 
-## grep command
+# grep command
 
 
 def handle_grep(bot, ievent):

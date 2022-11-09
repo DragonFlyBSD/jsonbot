@@ -4,7 +4,7 @@
 
 """ access stats data from the spider plugin. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
@@ -15,11 +15,11 @@ from jsb.utils.exception import handle_exception
 from jsb.utils.statdict import StatDict
 from jsb.utils.urldata import UrlData
 
-## basic imports
+# basic imports
 
 import os
 
-## searchobj function
+# searchobj function
 
 
 def makestats(objs, target, skip=[]):
@@ -86,7 +86,7 @@ def stats_response(stats, target=[], skip=[]):
     return first
 
 
-## search command
+# search command
 
 
 def handle_search(bot, event):

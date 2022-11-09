@@ -4,11 +4,11 @@
 
 """ own threading wrapper. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 
-## basic imports
+# basic imports
 
 import threading
 import re
@@ -16,7 +16,7 @@ import time
 import _thread
 import logging
 
-## defines
+# defines
 
 # RE to determine thread name
 
@@ -24,7 +24,7 @@ methodre = re.compile("method\s+(\S+)", re.I)
 funcre = re.compile("function\s+(\S+)", re.I)
 objectre = re.compile("<(\S+)\s+object at (\S+)>", re.I)
 
-## Botcommand class
+# Botcommand class
 
 
 class Botcommand(threading.Thread):
@@ -49,7 +49,7 @@ class Botcommand(threading.Thread):
             time.sleep(1)
 
 
-## Thr class
+# Thr class
 
 
 class Thr(threading.Thread):
@@ -71,7 +71,7 @@ class Thr(threading.Thread):
             time.sleep(1)
 
 
-## getname function
+# getname function
 
 
 def getname(func):
@@ -93,7 +93,7 @@ def getname(func):
     return name
 
 
-## start_new_thread function
+# start_new_thread function
 
 
 def start_new_thread(func, arglist, kwargs={}):
@@ -119,7 +119,7 @@ def start_new_thread(func, arglist, kwargs={}):
         time.sleep(3)
 
 
-## start_bot_cpmmand function
+# start_bot_cpmmand function
 
 
 def start_bot_command(func, arglist, kwargs={}):

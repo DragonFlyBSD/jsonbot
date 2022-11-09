@@ -4,21 +4,21 @@
 
 """ global aliases. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.datadir import getdatadir
 from jsb.utils.lazydict import LazyDict
 
-## basic imports
+# basic imports
 
 import os
 import logging
 
-## defines
+# defines
 
 aliases = LazyDict()
 
-## getaliases function
+# getaliases function
 
 
 def getaliases(ddir=None, force=True):

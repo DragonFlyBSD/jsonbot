@@ -12,7 +12,7 @@ this were adapted from that plugin
 http://inamidst.com/phenny/
 """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
@@ -20,18 +20,18 @@ from jsb.lib.persist import PlugPersist
 from jsb.lib.examples import examples
 from jsb.plugs.common.tinyurl import get_tinyurl
 
-## basic imports
+# basic imports
 
 import xmlrpc.client
 
 # import modules.activecollab
 
-## defines
+# defines
 
 rpc_clients = {}
 cfg = PlugPersist("confluence", {})
 
-## fetRpcClient function
+# fetRpcClient function
 
 
 def getRpcClient(sInfo):
@@ -47,7 +47,7 @@ def getRpcClient(sInfo):
     return rpc_clients[sInfo["name"]]
 
 
-## confluence-add_confluence_server command
+# confluence-add_confluence_server command
 
 
 def handle_add_confluence_server(bot, ievent):
@@ -136,7 +136,7 @@ examples.add(
     "confluence_enable_server confluenceserver",
 )
 
-## confluence-disable command
+# confluence-disable command
 
 
 def handle_confluence_disable(bot, ievent):
@@ -156,7 +156,7 @@ examples.add(
     "confluence_disable",
 )
 
-## wiki command
+# wiki command
 
 
 def handle_confluence_search(bot, ievent):

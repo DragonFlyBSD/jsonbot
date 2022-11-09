@@ -4,8 +4,9 @@
 
 """ provide handling of host/tasks/botevent tasks. """
 
-## jsb imports
+# jsb imports
 
+import logging
 from jsb.utils.exception import handle_exception
 from jsb.lib.tasks import taskmanager
 from jsb.lib.botbase import BotBase
@@ -14,17 +15,16 @@ from jsb.utils.lazydict import LazyDict
 from jsb.lib.factory import BotFactory
 from jsb.lib.callbacks import first_callbacks, callbacks, last_callbacks
 
-## simplejson imports
+# simplejson imports
 
 from jsb.imports import getjson
 
 json = getjson()
 
-## basic imports
+# basic imports
 
-import logging
 
-## boteventcb callback
+# boteventcb callback
 
 
 def boteventcb(inputdict, request, response):

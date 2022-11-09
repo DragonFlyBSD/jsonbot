@@ -4,7 +4,7 @@
 
 """ forward events occuring on a bot to another bot through xmpp. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.callbacks import (
@@ -24,20 +24,20 @@ from jsb.utils.exception import handle_exception
 from jsb.utils.locking import locked
 from jsb.utils.generic import strippedtxt, stripcolor
 
-## twitter plugin imports
+# twitter plugin imports
 
 from jsb.plugs.common.twitter import postmsg
 
-## xmpp import
+# xmpp import
 
 from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
 
-## basic imports
+# basic imports
 
 import logging
 import copy
 
-## defines
+# defines
 
 forward = PlugPersist("forward-core")
 if not forward.data.allowin:
@@ -51,7 +51,7 @@ if not forward.data.whitelist:
 
 cpy = copy.deepcopy
 
-## forward-precondition
+# forward-precondition
 
 
 def forwardoutpre(bot, event):
@@ -68,7 +68,7 @@ def forwardoutpre(bot, event):
     return False
 
 
-## forward-callback
+# forward-callback
 
 
 def forwardoutcb(bot, event):
@@ -122,7 +122,7 @@ first_callbacks.add("DISPATCH", forwardoutcb, forwardoutpre)
 first_callbacks.add("OUTPUT", forwardoutcb, forwardoutpre)
 first_callbacks.add("TORNADO", forwardoutcb, forwardoutpre)
 
-## forward-add command
+# forward-add command
 
 
 def handle_forwardadd(bot, event):
@@ -148,7 +148,7 @@ examples.add(
     "forward-add", "add a bot JID to forward to", "forward-add jsonbot@jsonbot.org"
 )
 
-## forward-del command
+# forward-del command
 
 
 def handle_forwarddel(bot, event):
@@ -173,7 +173,7 @@ examples.add(
     "forward-del", "delete an JID to forward to", "forward-del jsonbot@jsonbot.org"
 )
 
-## forward-allow command
+# forward-allow command
 
 
 def handle_forwardallow(bot, event):
@@ -194,7 +194,7 @@ examples.add(
     "forward-allow jsonbot@jsonbot.org",
 )
 
-## forward-list command
+# forward-list command
 
 
 def handle_forwardlist(bot, event):
@@ -210,7 +210,7 @@ def handle_forwardlist(bot, event):
 cmnds.add("forward-list", handle_forwardlist, ["OPER", "FORWARD"])
 examples.add("forward-list", "list all forwards of a channel", "forward-list")
 
-## forward command
+# forward command
 
 
 def handle_forward(bot, event):
@@ -234,7 +234,7 @@ examples.add(
     "forward", "forward a channel to provided JIDS", "forward jsonbot@jsonbot.org"
 )
 
-## forward-stop command
+# forward-stop command
 
 
 def handle_forwardstop(bot, event):

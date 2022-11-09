@@ -4,18 +4,18 @@
 
 """ provide formatting functions. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.name import stripname
 from jsb.utils.url import striphtml
 from jsb.utils.lazydict import LazyDict
 
-## basic imports
+# basic imports
 
 import logging
 from datetime import datetime
 
-## formats
+# formats
 # Formats are defined here. simple also provides default values if values
 # are not supplied by the format, as well as format 'simple'.
 # Parameters that should be supplied:
@@ -59,7 +59,7 @@ formats = {
 
 format = "%(message)s"
 
-## functions
+# functions
 
 
 def format_opt(name, format="log"):
@@ -72,7 +72,7 @@ def format_opt(name, format="log"):
     return opt
 
 
-## formatevent function
+# formatevent function
 
 
 def formatevent(bot, ievent, channels, forwarded=False):

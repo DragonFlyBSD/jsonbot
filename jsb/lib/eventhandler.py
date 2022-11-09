@@ -4,25 +4,25 @@
 
 """ event handler. use to dispatch function in main loop. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.utils.locking import lockdec
 from .threads import start_new_thread
 
-## basic imports
+# basic imports
 
 import queue
 import _thread
 import logging
 import time
 
-## locks
+# locks
 
 handlerlock = _thread.allocate_lock()
 locked = lockdec(handlerlock)
 
-## classes
+# classes
 
 
 class EventHandler(object):
@@ -99,6 +99,6 @@ class EventHandler(object):
             handle_exception()
 
 
-## handler to use in main prog
+# handler to use in main prog
 
 mainhandler = EventHandler()

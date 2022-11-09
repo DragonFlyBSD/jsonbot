@@ -4,10 +4,17 @@
 
 """ tinyurl.com feeder """
 
+import urllib.error
+import urllib.request
+import logging
+import re
+import urllib.parse
+from jsb.imports import getjson
+
 __author__ = "Wijnand 'tehmaze' Modderman - http://tehmaze.com"
 __license__ = "BSD"
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.utils.url import striphtml, useragent
@@ -15,7 +22,7 @@ from jsb.lib.examples import examples
 from jsb.utils.exception import handle_exception
 from jsb.lib.persistconfig import PersistConfig
 
-## google imports
+# google imports
 
 try:
     import waveapi
@@ -23,31 +30,25 @@ try:
 except ImportError:
     from jsb.lib.cache import get, set
 
-## plug config
+# plug config
 
 plugcfg = PersistConfig()
 plugcfg.define("url", "http://tinyurl.com/create.php")
 
-## simpljejson
+# simpljejson
 
-from jsb.imports import getjson
 
 json = getjson()
 
-## basic imports
+# basic imports
 
-import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
-import urllib.parse
-import re
-import logging
 
-## defines
+# defines
 
 re_url_match = re.compile("((?:http|https)://\S+)")
 urlcache = {}
 
-## functions
+# functions
 
 
 def valid_url(url):
@@ -65,7 +66,7 @@ def valid_url(url):
     return cleanurl
 
 
-## callbacks
+# callbacks
 
 
 def precb(bot, ievent):
@@ -125,7 +126,7 @@ def get_tinyurl(url):
     return urls
 
 
-## tinyurl command
+# tinyurl command
 
 
 def handle_tinyurl(bot, ievent):

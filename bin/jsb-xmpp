@@ -2,51 +2,49 @@
 #
 #
 
-## bootstrap
+# bootstrap
 
+import sys
+from jsb.version import getversion
+import os
+import jsb
+import jsb.lib.users as users
+from jsb.utils.exception import handle_exception
+from jsb.lib.exit import globalshutdown
+from jsb.lib.datadir import setdatadir, getdatadir
+from jsb.utils.opts import makesxmppopts, makesxmppconfig
+from jsb.utils.mainloop import mainloop
+from jsb.lib.fleet import getfleet
+from jsb.lib.errors import NoOwnerSet
+from jsb.lib.config import Config, getmainconfig
+from jsb.utils.log import setloglevel
+from jsb.lib.boot import plugin_packages, boot
+from jsb.drivers.xmpp.bot import SXMPPBot
+from jsb.lib.threads import start_new_thread
 import warnings
 
 warnings.simplefilter("ignore")
 
-import os, sys
 
 sys.path.insert(0, os.getcwd())
 
 
-## jsb impors
+# jsb impors
 
-from jsb.lib.threads import start_new_thread
-from jsb.drivers.xmpp.bot import SXMPPBot
-from jsb.lib.boot import plugin_packages, boot
-from jsb.utils.log import setloglevel
-from jsb.lib.config import Config, getmainconfig
-from jsb.lib.errors import NoOwnerSet
-from jsb.lib.fleet import getfleet
-from jsb.utils.mainloop import mainloop
-from jsb.utils.opts import makesxmppopts, makesxmppconfig
-from jsb.lib.datadir import setdatadir, getdatadir
-from jsb.lib.exit import globalshutdown
-from jsb.utils.exception import handle_exception
-import jsb.lib.users as users
-import jsb
 
-## basic imports
+# basic imports
 
-import os
 
-## options parser
+# options parser
 
 opts = makesxmppopts()
 if opts.datadir:
     setdatadir(opts.datadir)
-from jsb.version import getversion
 
 print(getversion("SXMPP"))
 
-## loglevel
+# loglevel
 
-
-from jsb.utils.log import setloglevel
 
 setloglevel(opts.loglevel or "warn", not opts.nocolors)
 
@@ -74,7 +72,7 @@ if cfg.disabled:
 if got:
     cfg.save()
 
-## start bot
+# start bot
 
 boot(opts.datadir)
 

@@ -4,17 +4,17 @@
 
 """ a console event. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.eventbase import EventBase
 from jsb.lib.channelbase import ChannelBase
 from jsb.lib.errors import NoInput
 
-## basic imports
+# basic imports
 
 import getpass
 
-## ConsoleEvent class
+# ConsoleEvent class
 
 
 class ConsoleEvent(EventBase):

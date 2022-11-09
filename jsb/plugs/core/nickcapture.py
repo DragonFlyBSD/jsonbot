@@ -4,11 +4,11 @@
 
 """ nick recapture callback. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.callbacks import callbacks
 
-## callbacks
+# callbacks
 
 
 def ncaptest(bot, ievent):

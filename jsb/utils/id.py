@@ -4,15 +4,15 @@
 
 """ id related functions. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.generic import toenc
 
-## basic imports
+# basic imports
 
 import uuid
 
-## getrssid function
+# getrssid function
 
 
 def getrssid(url, time):

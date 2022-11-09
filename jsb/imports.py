@@ -4,15 +4,15 @@
 
 """ provide a import wrappers for the contrib packages. """
 
-## lib imports
+# lib imports
 
 from .lib.jsbimport import _import
 
-## basic imports
+# basic imports
 
 import logging
 
-## getdns function
+# getdns function
 
 
 def getdns():
@@ -33,7 +33,7 @@ def getwebapp2():
     return mod
 
 
-## getjson function
+# getjson function
 
 
 def getjson():
@@ -54,7 +54,7 @@ def getjson():
     return mod
 
 
-## getfeedparser function
+# getfeedparser function
 
 
 def getfeedparser():

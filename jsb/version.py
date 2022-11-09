@@ -4,20 +4,20 @@
 
 """ version related stuff. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.config import getmainconfig
 
-## basic imports
+# basic imports
 
 import binascii
 
-## defines
+# defines
 
 version = "0.84.4"
 __version__ = version
 
-## getversion function
+# getversion function
 
 
 def getversion(txt=""):

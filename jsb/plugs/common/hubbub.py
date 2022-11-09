@@ -8,8 +8,15 @@
 
 """
 
-## jsb imports
+# jsb imports
 
+import urllib.error
+import urllib.request
+import os
+import uuid
+import urllib.parse
+import logging
+import base64
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.persist import Persist, PlugPersist
@@ -31,16 +38,10 @@ from jsb.imports import getfeedparser
 
 feedparser = getfeedparser()
 
-## basic imports
+# basic imports
 
-import base64
-import logging
-import urllib.request, urllib.parse, urllib.error
-import urllib.parse
-import uuid
-import os
 
-## subscribe function
+# subscribe function
 
 
 def subscribe(url):
@@ -67,7 +68,7 @@ def subscribe(url):
     return response
 
 
-## tinyurl import
+# tinyurl import
 
 try:
     from jsb.plugs.common.tinyurl import get_tinyurl
@@ -79,7 +80,7 @@ except ImportError:
         ]
 
 
-## defines
+# defines
 
 allowedtokens = [
     "updated",
@@ -109,15 +110,14 @@ def find_self_url(links):
             return link.href
 
 
-## NoSuchFeed exception
+# NoSuchFeed exception
 
 
 class NoSuchFeed(Exception):
     """there is no such feed in the feed database."""
 
 
-
-## HubbubItem class
+# HubbubItem class
 
 
 class HubbubItem(Persist):
@@ -190,7 +190,7 @@ class HubbubItem(Persist):
         return result.entries
 
 
-## HubbubWatcher class
+# HubbubWatcher class
 
 
 class HubbubWatcher(PlugPersist):
@@ -588,7 +588,7 @@ class HubbubWatcher(PlugPersist):
         return feeds
 
 
-## work function
+# work function
 
 
 def work(botname, type, channel, result, item, *args, **kwargs):
@@ -596,11 +596,11 @@ def work(botname, type, channel, result, item, *args, **kwargs):
     watcher.work(botname, type, channel, result, item, *args, **kwargs)
 
 
-## the watcher object
+# the watcher object
 
 watcher = HubbubWatcher("hubbub")
 
-## size function
+# size function
 
 
 def size():
@@ -608,7 +608,7 @@ def size():
     return watcher.size()
 
 
-## hb-subscribe command
+# hb-subscribe command
 
 
 def handle_hubbubsubscribe(bot, event):
@@ -645,7 +645,7 @@ examples.add(
     "hb-subscribe jsb-hg http://code.google.com/feeds/p/jsb/hgchanges/basi",
 )
 
-## hb-clone command
+# hb-clone command
 
 
 def handle_hubbubclone(bot, event):
@@ -661,7 +661,7 @@ def handle_hubbubclone(bot, event):
 cmnds.add("hb-clone", handle_hubbubclone, "USER")
 examples.add("hb-clone", "clone feeds into new channel", "hb-clone #dunkbots")
 
-## hb-cloneurl command
+# hb-cloneurl command
 
 
 def handle_hubbubcloneurl(bot, event):
@@ -669,7 +669,9 @@ def handle_hubbubcloneurl(bot, event):
     if not event.rest:
         event.missing("<url>")
         return
-    import urllib.request, urllib.error, urllib.parse
+    import urllib.request
+    import urllib.error
+    import urllib.parse
 
     try:
         feeds = watcher.cloneurl(event.rest, event.auth)
@@ -683,7 +685,7 @@ examples.add(
     "hb-cloneurl", "clone feeds from remote url", "hb-cloneurl http://jsonbot.org/feeds"
 )
 
-## hb-add command
+# hb-add command
 
 
 def handle_hubbubadd(bot, ievent):
@@ -708,7 +710,7 @@ examples.add(
     "hb-add jsb-hg http://code.google.com/feeds/p/jsb/hgchanges/basic",
 )
 
-## hb-watch command
+# hb-watch command
 
 
 def handle_hubbubwatch(bot, ievent):
@@ -746,7 +748,7 @@ examples.add(
     "hb-watch gozerbot",
 )
 
-## hubbub-start command
+# hubbub-start command
 
 
 def handle_hubbubstart(bot, ievent):
@@ -792,7 +794,7 @@ examples.add(
     "hb-start gozerbot",
 )
 
-## hb-stop command
+# hb-stop command
 
 
 def handle_hubbubstop(bot, ievent):
@@ -827,7 +829,7 @@ examples.add(
     "hb-stop gozerbot",
 )
 
-## hb-stopall command
+# hb-stopall command
 
 
 def handle_hubbubstopall(bot, ievent):
@@ -857,7 +859,7 @@ examples.add(
     "hb-stopall",
 )
 
-## hb-channels command
+# hb-channels command
 
 
 def handle_hubbubchannels(bot, ievent):
@@ -891,7 +893,7 @@ examples.add(
     "hb-channels", "hb-channels <name> .. show channels", "hb-channels gozerbot"
 )
 
-## hb-addchannel
+# hb-addchannel
 
 
 def handle_hubbubaddchannel(bot, ievent):
@@ -948,7 +950,7 @@ examples.add(
     "1) hb-addchannel gozerbot #dunkbots 2) hb-addchannel gozerbot main #dunkbots",
 )
 
-## hb-setitems command
+# hb-setitems command
 
 
 def handle_hubbubsetitems(bot, ievent):
@@ -975,7 +977,7 @@ examples.add(
     "hb-setitems gozerbot author author link pubDate",
 )
 
-## hb-additem command
+# hb-additem command
 
 
 def handle_hubbubadditem(bot, ievent):
@@ -1005,7 +1007,7 @@ examples.add(
     "hb-additem gozerbot link",
 )
 
-## hb-delitem command
+# hb-delitem command
 
 
 def handle_hubbubdelitem(bot, ievent):
@@ -1036,7 +1038,7 @@ examples.add(
     "hb-delitem gozerbot link",
 )
 
-## hb-markuplist command
+# hb-markuplist command
 
 
 def handle_hubbubmarkuplist(bot, ievent):
@@ -1047,7 +1049,7 @@ def handle_hubbubmarkuplist(bot, ievent):
 cmnds.add("hb-markuplist", handle_hubbubmarkuplist, ["USER", "GUEST"])
 examples.add("hb-markuplist", "show possible markup entries", "hb-markuplist")
 
-## hb-markup command
+# hb-markup command
 
 
 def handle_hubbubmarkup(bot, ievent):
@@ -1073,7 +1075,7 @@ examples.add(
     "hb-markup", "show markup list for a feed (per user/channel)", "hb-markup gozerbot"
 )
 
-## hb-addmarkup command
+# hb-addmarkup command
 
 
 def handle_hubbubaddmarkup(bot, ievent):
@@ -1107,7 +1109,7 @@ examples.add(
     "hb-addmarkup gozerbot all-lines 1",
 )
 
-## hb-delmarkup command
+# hb-delmarkup command
 
 
 def handle_hubbubdelmarkup(bot, ievent):
@@ -1138,7 +1140,7 @@ examples.add(
     "hb-delmarkup gozerbot all-lines",
 )
 
-## hb-delchannel command
+# hb-delchannel command
 
 
 def handle_hubbubdelchannel(bot, ievent):
@@ -1188,7 +1190,7 @@ examples.add(
     "1) hb-delchannel gozerbot #dunkbots 2) hb-delchannel gozerbot main #dunkbots",
 )
 
-## hb-stopwatch command
+# hb-stopwatch command
 
 
 def handle_hubbubstopwatch(bot, ievent):
@@ -1221,7 +1223,7 @@ examples.add(
     "hb-stopwatch gozerbot",
 )
 
-## hb-get command
+# hb-get command
 
 
 def handle_hubbubget(bot, ievent):
@@ -1253,7 +1255,7 @@ def handle_hubbubget(bot, ievent):
 cmnds.add("hb-get", handle_hubbubget, ["HUBBUB", "USER"], threaded=True)
 examples.add("hb-get", "hubbub-get <name> .. get data from <name>", "hb-get gozerbot")
 
-## hb-running command
+# hb-running command
 
 
 def handle_hubbubrunning(bot, ievent):
@@ -1272,7 +1274,7 @@ def handle_hubbubrunning(bot, ievent):
 cmnds.add("hb-running", handle_hubbubrunning, ["HUBBUB", "USER"])
 examples.add("hb-running", "hubbub-running .. get running feeds", "hb-running")
 
-## hb-list command
+# hb-list command
 
 
 def handle_hubbublist(bot, ievent):
@@ -1288,7 +1290,7 @@ def handle_hubbublist(bot, ievent):
 cmnds.add("hb-list", handle_hubbublist, ["GUEST", "USER"])
 examples.add("hb-list", "get list of hubbub items", "hb-list")
 
-## hb-url command
+# hb-url command
 
 
 def handle_hubbuburl(bot, ievent):
@@ -1324,7 +1326,7 @@ cmnds.add(
 )
 examples.add("hb-url", "hb-url <name> .. get url from hubbub item", "hb-url gozerbot")
 
-## hb-itemslist command
+# hb-itemslist command
 
 
 def handle_hubbubitemslist(bot, ievent):
@@ -1353,7 +1355,7 @@ examples.add(
     "hb-itemslist gozerbot",
 )
 
-## hb-scan command
+# hb-scan command
 
 
 def handle_hubbubscan(bot, ievent):
@@ -1385,7 +1387,7 @@ examples.add(
     "hb-scan", "hb-scan <name> .. get possible items of <name> ", "hb-scan gozerbot"
 )
 
-## hb-feeds command
+# hb-feeds command
 
 
 def handle_hubbubfeeds(bot, ievent):

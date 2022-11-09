@@ -4,7 +4,7 @@
 
 """ convore bot. """
 
-## jsb import
+# jsb import
 
 from jsb.lib.botbase import BotBase
 from jsb.lib.errors import NotConnected
@@ -13,18 +13,20 @@ from jsb.utils.lazydict import LazyDict
 from jsb.utils.exception import handle_exception
 from jsb.imports import getjson, getrequests
 
-## basic imports
+# basic imports
 
 import logging
 import time
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.error
+import urllib.parse
 
-## defines
+# defines
 
 json = getjson()
 requests = getrequests()
 
-## ConvoreBot
+# ConvoreBot
 
 
 class ConvoreBot(BotBase):

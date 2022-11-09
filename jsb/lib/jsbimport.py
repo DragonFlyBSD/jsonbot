@@ -4,7 +4,7 @@
 
 """ use the imp module to import modules. """
 
-## basic imports
+# basic imports
 
 import sys
 import imp
@@ -12,7 +12,7 @@ import os
 import _thread
 import logging
 
-## _import function
+# _import function
 
 
 def _import(name):
@@ -29,7 +29,7 @@ def _import(name):
     return sys.modules[name]
 
 
-## force_import function
+# force_import function
 
 
 def force_import(name):

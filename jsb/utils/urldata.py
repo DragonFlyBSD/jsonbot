@@ -4,17 +4,17 @@
 
 """ hold data of a html page. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.name import stripname
 from jsb.lib.persist import Persist, PersistCollection
 from jsb.lib.datadir import getdatadir
 
-## basic imports
+# basic imports
 
 import os
 
-## UrlData class
+# UrlData class
 
 
 class UrlData(Persist):
@@ -35,7 +35,7 @@ class UrlData(Persist):
         self.data.txt = txt or self.data.txt or ""
 
 
-## UrlDataCollection class
+# UrlDataCollection class
 
 
 def UrlDataCollection(PersistCollection):

@@ -4,8 +4,15 @@
 
 """ config module. config is stored as item = JSON pairs. """
 
-## jsb imports
+# jsb imports
 
+import time
+import copy
+import uuid
+import logging
+import _thread
+import os
+import sys
 from jsb.utils.trace import whichmodule, calledfrom
 from jsb.utils.lazydict import LazyDict
 from jsb.utils.exception import handle_exception
@@ -14,33 +21,25 @@ from .datadir import getdatadir
 from .errors import CantSaveConfig, NoSuchFile
 from jsb.utils.locking import lockdec
 
-## simplejson imports
+# simplejson imports
 
 from jsb.imports import getjson
 
 json = getjson()
 
-## basic imports
+# basic imports
 
-import sys
-import os
-import _thread
-import logging
-import uuid
-import _thread
-import copy
-import time
 
-## locks
+# locks
 
 savelock = _thread.allocate_lock()
 savelocked = lockdec(savelock)
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## classes
+# classes
 
 
 class Config(LazyDict):

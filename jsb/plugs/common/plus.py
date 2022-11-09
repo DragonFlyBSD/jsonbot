@@ -4,8 +4,11 @@
 
 """ plugin to query the Google+ API. """
 
-## jsb imports
+# jsb imports
 
+import uuid
+import logging
+import os
 from jsb.utils.exception import handle_exception
 from jsb.utils.lazydict import LazyDict
 from jsb.utils.url import geturl2
@@ -21,13 +24,10 @@ from jsb.imports import getjson
 
 json = getjson()
 
-## basic imports
+# basic imports
 
-import os
-import logging
-import uuid
 
-## defines
+# defines
 
 cfg = PersistConfig()
 cfg.define("enable", 0)
@@ -38,7 +38,7 @@ state.define("seen", {})
 
 teller = 0
 
-## getplus function
+# getplus function
 
 
 def getplus(target):
@@ -58,7 +58,7 @@ def getplus(target):
     return res
 
 
-## PlusLoop class
+# PlusLoop class
 
 
 @minutely
@@ -97,7 +97,7 @@ def plusscan(skip=False):
     state.save()
 
 
-## plus command
+# plus command
 
 
 def handle_plus(bot, event):
@@ -122,7 +122,7 @@ examples.add(
     "plus", "query activities of a userid on google+", "plus 115623252983295760522"
 )
 
-## plus-start command
+# plus-start command
 
 
 def handle_plusstart(bot, event):
@@ -155,7 +155,7 @@ examples.add(
     "plus-start 115623252983295760522",
 )
 
-## plus-stop command
+# plus-stop command
 
 
 def handle_plusstop(bot, event):

@@ -4,15 +4,15 @@
 
 """ main db package """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 
-## basic imports
+# basic imports
 
 import logging
 
-## gotsqlite function
+# gotsqlite function
 
 
 def gotsqlite():
@@ -29,7 +29,7 @@ def gotsqlite():
             return False
 
 
-## getmaindb function
+# getmaindb function
 
 db = None
 

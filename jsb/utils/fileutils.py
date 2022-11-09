@@ -7,11 +7,11 @@
 
 """ provide file related helpers. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.generic import istr
 
-## basic imports
+# basic imports
 
 import tarfile
 import os
@@ -19,7 +19,7 @@ import io
 import bz2
 import gzip
 
-## tarextract function
+# tarextract function
 
 
 def tarextract(package, fileobj=None, prefix=None, base=None):
@@ -57,7 +57,7 @@ def tarextract(package, fileobj=None, prefix=None, base=None):
     return extracted
 
 
-## unzip functions
+# unzip functions
 
 
 def bunzip2(fileobj):
@@ -72,7 +72,7 @@ def gunzip(fileobj):
     return gzip.GzipFile(mode="rb", fileobj=fileobj).read()
 
 
-## mtime functions
+# mtime functions
 
 
 def mtime(path):

@@ -8,7 +8,7 @@ __copyright__ = "this file is in the public domain"
 __author__ = "Bas van Oostveen"
 __status__ = "seen"
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.exception import handle_exception
 from jsb.utils.url import geturl2
@@ -17,16 +17,18 @@ from jsb.lib.aliases import aliases
 from jsb.lib.examples import examples
 from jsb.lib.persistconfig import PersistConfig
 
-## basic imports
+# basic imports
 
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import simplejson as json
 
-## defines
+# defines
 
 url = "http://www.urbandictionary.com/iphone/search/define?term="
 
-## urban command
+# urban command
 
 
 def handle_urban(bot, ievent):
@@ -60,5 +62,5 @@ examples.add(
     "1) urban bot 2) urban shizzle",
 )
 
-#### BHJTW 23-01-2012
-#### BHJTW 10-03-2012
+# BHJTW 23-01-2012
+# BHJTW 10-03-2012

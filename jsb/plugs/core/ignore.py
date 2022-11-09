@@ -2,14 +2,14 @@
 #
 #
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.users import getusers
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.utils.generic import getwho
 
-## ignore command
+# ignore command
 
 
 def handle_ignore(bot, event):
@@ -33,7 +33,7 @@ def handle_ignore(bot, event):
 cmnds.add("ignore", handle_ignore, ["OPER", "IGNORE"])
 examples.add("ignore", "ignore a user or userhost (JID)", "ignore dunker")
 
-## unignore command
+# unignore command
 
 
 def handle_unignore(bot, event):

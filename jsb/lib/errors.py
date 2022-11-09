@@ -4,14 +4,14 @@
 
 """ jsb exceptions. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.trace import calledfrom
 
-## basic imports
+# basic imports
 
 
-## exceptions
+# exceptions
 
 
 class JsonBotError(Exception):

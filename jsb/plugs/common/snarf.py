@@ -13,7 +13,7 @@ __depend__ = [
     "url",
 ]
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
@@ -24,15 +24,19 @@ from jsb.lib.persist import Persist, PlugPersist
 from jsb.lib.persistconfig import PersistConfig
 from jsb.lib.plugins import plugs as plugins
 
-## basic imports
+# basic imports
 
-import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.parse
+import urllib.error
+import urllib.request
+import urllib.error
+import urllib.parse
 import urllib.parse
 import re
 import socket
 
-## defines
+# defines
 
 cfg = PlugPersist("snarf.cfg")
 pcfg = PersistConfig()
@@ -65,14 +69,14 @@ re_html_valid = {
 urlvalidate = "http://validator.w3.org/check?charset=%%28\
 detect+automatically%%29&doctype=Inline&verbose=1&%s"
 
-## SnarfException class
+# SnarfException class
 
 
 class SnarfException(Exception):
     pass
 
 
-## geturl_title function
+# geturl_title function
 
 
 def geturl_title(url):
@@ -104,7 +108,7 @@ def geturl_title(url):
     return False
 
 
-## geturl_validate function
+# geturl_validate function
 
 
 def geturl_validate(url):
@@ -131,7 +135,7 @@ def geturl_validate(url):
     return results
 
 
-## valid_url function
+# valid_url function
 
 
 def valid_url(url):
@@ -157,7 +161,7 @@ def valid_url(url):
     return cleanurl
 
 
-## snarf command
+# snarf command
 
 
 def handle_snarf(bot, ievent, direct=True):
@@ -212,7 +216,7 @@ cmnds.add("snarf", handle_snarf, "USER", threaded=True)
 cmnds.add("@", handle_snarf, "USER", threaded=True)
 examples.add("snarf", "fetch the title from an URL", "snarf http://gozerbot.org")
 
-## snarf-enable command
+# snarf-enable command
 
 
 def handle_snarf_enable(bot, ievent):
@@ -227,7 +231,7 @@ def handle_snarf_enable(bot, ievent):
 cmnds.add("snarf-enable", handle_snarf_enable, "OPER")
 examples.add("snarf-enable", "enable snarfing in the channel", "snarf-enable")
 
-## snarf-disable command
+# snarf-disable command
 
 
 def handle_snarf_disable(bot, ievent):
@@ -243,7 +247,7 @@ def handle_snarf_disable(bot, ievent):
 cmnds.add("snarf-disable", handle_snarf_disable, "OPER")
 examples.add("snarf-disable", "disable snarfing in the channel", "snarf-disable")
 
-## snarf-list command
+# snarf-list command
 
 
 def handle_snarf_list(bot, ievent):
@@ -264,7 +268,7 @@ def handle_snarf_list(bot, ievent):
 cmnds.add("snarf-list", handle_snarf_list, "OPER")
 examples.add("snarf-list", "show in which channels snarfing is enabled", "snarf-list")
 
-## validate command
+# validate command
 
 
 def handle_validate(bot, ievent):

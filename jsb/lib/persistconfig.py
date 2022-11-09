@@ -18,7 +18,7 @@ usage:
 __copyright__ = "this file is in the public domain"
 __author__ = "Bas van Oostveen"
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.lazydict import LazyDict
 from jsb.utils.trace import calledfrom, whichplugin
@@ -27,26 +27,26 @@ from jsb.lib.persist import Persist
 from jsb.lib.config import Config
 from jsb.imports import getjson
 
-## basic imports
+# basic imports
 
 import os
 import logging
 
-## PersistConfigError exception
+# PersistConfigError exception
 
 
 class PersistConfigError(Exception):
     pass
 
 
-## class Option .. is for gozerbot compat
+# class Option .. is for gozerbot compat
 
 
 class Option(object):
     pass
 
 
-## PersistConfig class
+# PersistConfig class
 
 
 class PersistConfig(Config):
@@ -88,7 +88,7 @@ class PersistConfig(Config):
             cmndnamesave, "save %s configuration" % self.plugname, cmndnamesave
         )
 
-    ## cmnds
+    # cmnds
 
     def show_cfg(self, bot, ievent):
         """show config options."""
@@ -226,7 +226,7 @@ class PersistConfig(Config):
 
         return func
 
-    ### plugin api
+    # plugin api
 
     def define(
         self,

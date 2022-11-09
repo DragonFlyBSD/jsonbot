@@ -4,7 +4,7 @@
 
 """ information items .. keyword/description pairs """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
@@ -14,22 +14,22 @@ from jsb.lib.callbacks import callbacks
 from jsb.lib.users import users
 from jsb.lib.config import getmainconfig
 
-## basic imports
+# basic imports
 
 import _thread
 import time
 import logging
 
-## locks
+# locks
 
 infolock = _thread.allocate_lock()
 locked = lockdec(infolock)
 
-## defines
+# defines
 
 db = None
 
-## InfoItemsDb class
+# InfoItemsDb class
 
 
 class InfoItemsDb(object):
@@ -119,11 +119,11 @@ class InfoItemsDb(object):
         return result
 
 
-## defines
+# defines
 
 info = InfoItemsDb()
 
-## size function
+# size function
 
 
 def size():
@@ -131,7 +131,7 @@ def size():
     return info.size()
 
 
-## info callbacks
+# info callbacks
 
 
 def infopre(bot, ievent):
@@ -154,7 +154,7 @@ def infocb(bot, ievent):
 
 callbacks.add("PRIVMSG", infocb, infopre)
 
-## info-size command
+# info-size command
 
 
 def handle_infosize(bot, ievent):
@@ -165,7 +165,7 @@ def handle_infosize(bot, ievent):
 cmnds.add("info-size", handle_infosize, ["USER", "WEB", "ANON"])
 examples.add("info-size", "show number of infoitems", "info-size")
 
-## addinfoitem RE
+# addinfoitem RE
 
 
 def handle_addinfoitem(bot, ievent):
@@ -186,7 +186,7 @@ def handle_addinfoitem(bot, ievent):
 cmnds.add("^(.+?)\s+=\s+(.+)$", handle_addinfoitem, ["USER", "INFOADD"], regex=True)
 examples.add("=", "add description to item", "dunk = top")
 
-## question RE
+# question RE
 
 
 def handle_question(bot, ievent):
@@ -211,7 +211,7 @@ cmnds.add("^(.+)\?$", handle_question, ["USER", "WEB", "JCOLL", "ANON"], regex=T
 cmnds.add("^\?(.+)$", handle_question, ["USER", "WEB", "JCOLL", "ANON"], regex=True)
 examples.add("?", "show infoitems of <what>", "1) test? 2) ?test")
 
-## info-forget command
+# info-forget command
 
 
 def handle_forget(bot, ievent):
@@ -241,7 +241,7 @@ def handle_forget(bot, ievent):
 cmnds.add("info-forget", handle_forget, ["FORGET", "OPER"])
 examples.add("info-forget", "forget <item> containing <txt>", "info-forget dunk bla")
 
-## info-sd command
+# info-sd command
 
 
 def handle_searchdescr(bot, ievent):
@@ -267,7 +267,7 @@ examples.add(
     "info-sd", "info-sd <txt> ..  search description of infoitems", "info-sd http"
 )
 
-## info-si command
+# info-si command
 
 
 def handle_searchitem(bot, ievent):
@@ -291,7 +291,7 @@ def handle_searchitem(bot, ievent):
 cmnds.add("info-si", handle_searchitem, ["USER", "WEB", "ANON"])
 examples.add("info-si", "info-si <txt> ..  search the infoitems keys", "info-si test")
 
-## plugin initialisation
+# plugin initialisation
 
 
 def init():

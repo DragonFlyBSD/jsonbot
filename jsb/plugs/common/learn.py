@@ -4,7 +4,7 @@
 
 """ learn information items .. facts .. factoids. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
@@ -12,10 +12,10 @@ from jsb.lib.examples import examples
 from jsb.utils.lazydict import LazyDict
 from jsb.lib.persist import PlugPersist, GlobalPersist
 
-## basic imports
+# basic imports
 
 
-## learn command
+# learn command
 
 
 def handle_learn(bot, event):
@@ -45,7 +45,7 @@ examples.add(
     "learn", "learn the bot a description of an item.", "learn dunk is botpapa"
 )
 
-## learn-chan command
+# learn-chan command
 
 
 def handle_learnchan(bot, event):
@@ -77,7 +77,7 @@ examples.add(
     "learn-chan dunk is botpapa",
 )
 
-## forget command
+# forget command
 
 
 def handle_forget(bot, event):
@@ -106,7 +106,7 @@ def handle_forget(bot, event):
 cmnds.add("forget", handle_forget, ["OPER", "USER"])
 examples.add("forget", "forget a description of an item.", "forget dunk and botpapa")
 
-## forget-chan command
+# forget-chan command
 
 
 def handle_forgetchan(bot, event):
@@ -139,7 +139,7 @@ examples.add(
     "forget-chan dunk and botpapa",
 )
 
-## whatis command
+# whatis command
 
 
 def handle_whatis(bot, event):
@@ -161,7 +161,7 @@ def handle_whatis(bot, event):
 cmnds.add("whatis", handle_whatis, ["OPER", "USER", "GUEST"])
 examples.add("whatis", "whatis learned about a subject", "whatis jsb")
 
-## items command
+# items command
 
 
 def handle_items(bot, event):
@@ -195,7 +195,7 @@ def handle_searchitems(bot, event):
 cmnds.add("searchitems", handle_searchitems, ["OPER", "USER", "GUEST"])
 examples.add("searchitems", "search the items the bot knows", "searchitems jsonbot")
 
-## learn-toglobal command
+# learn-toglobal command
 
 
 def handle_learntoglobal(bot, event):
@@ -223,7 +223,7 @@ examples.add(
     "learn-toglobal",
 )
 
-## callbacks
+# callbacks
 
 
 def prelearn(bot, event):

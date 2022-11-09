@@ -4,22 +4,23 @@
 
 """ do a tour of the bot. """
 
+import time
+from jsb.lib.examples import examples
+from jsb.lib.commands import cmnds
+
 eventlist = [
     "!welcome",
     "JSONBOT provides functionality through the use of plugins, you can use the !list comamnd to see what plugins are available =>",
     "!list",
 ]
 
-## jsb imports
+# jsb imports
 
-from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
 
-## basic imports
+# basic imports
 
-import time
 
-## dotour command
+# dotour command
 
 
 def handle_dotour(bot, event):

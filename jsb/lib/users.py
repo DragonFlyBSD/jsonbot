@@ -4,7 +4,7 @@
 
 """ bot's users in JSON file.  NOT USED AT THE MOMENT. """
 
-## lib imports
+# lib imports
 
 from jsb.utils.exception import handle_exception, exceptionmsg
 from jsb.utils.generic import stripped
@@ -16,17 +16,17 @@ from .datadir import getdatadir
 from .errors import NoSuchUser
 from .config import Config, getmainconfig
 
-## basic imports
+# basic imports
 
 import os
 import logging
 import copy
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## JsonUser class
+# JsonUser class
 
 
 class JsonUser(Persist):
@@ -47,7 +47,7 @@ class JsonUser(Persist):
         self.state = UserState(name)
 
 
-## Users class
+# Users class
 
 
 class Users(Persist):
@@ -120,7 +120,7 @@ class Users(Persist):
         except KeyError:
             logging.debug("can't find %s in names cache" % userhost)
 
-    ## Check functions
+    # Check functions
 
     def exist(self, name):
         """see if user with <name> exists"""
@@ -190,7 +190,7 @@ class Users(Persist):
         user = self.byname(name)
         return status.upper() in user.data.status
 
-    ## Get Functions
+    # Get Functions
 
     def getname(self, userhost):
         """get name of user belonging to <userhost>"""
@@ -279,7 +279,7 @@ class Users(Persist):
                 result.append(user.data.name.lower())
         return result
 
-    ## Set Functions
+    # Set Functions
 
     def setemail(self, name, email):
         """set email of user."""
@@ -294,7 +294,7 @@ class Users(Persist):
             return True
         return False
 
-    ## Add functions
+    # Add functions
 
     def add(self, name, userhosts, perms):
         """add an user."""
@@ -419,7 +419,7 @@ class Users(Persist):
             user.data.perms.append(perm.upper())
             user.save()
 
-    ## Delete functions
+    # Delete functions
 
     def delemail(self, userhost, email):
         """delete email from userhost."""
@@ -563,11 +563,11 @@ class Users(Persist):
                     )
 
 
-## global users object
+# global users object
 
 users = None
 
-## users_boot function
+# users_boot function
 
 
 def users_boot():

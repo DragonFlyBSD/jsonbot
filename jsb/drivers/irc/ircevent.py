@@ -5,22 +5,22 @@
 
 """ an ircevent is extracted from the IRC string received from the server. """
 
-## jsb imports
+# jsb imports
 
 from jsb.utils.generic import toenc, fromenc, strippedtxt, fix_format
 from jsb.lib.eventbase import EventBase
 
-## basic imports
+# basic imports
 
 import re
 import copy
 import logging
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## Ircevent class
+# Ircevent class
 
 
 class IrcEvent(EventBase):
@@ -165,7 +165,7 @@ class IrcEvent(EventBase):
         return self
 
 
-## postfix count - how many arguments
+# postfix count - how many arguments
 
 pfc = {}
 pfc["NICK"] = 0

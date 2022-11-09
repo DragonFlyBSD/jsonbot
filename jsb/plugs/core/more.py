@@ -4,16 +4,16 @@
 
 """ access the output cache. """
 
-## jsb imports
+# jsb imports
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.less import outcache
 
-## basic imports
+# basic imports
 
 
-## more command
+# more command
 
 
 def handle_more(bot, ievent):
