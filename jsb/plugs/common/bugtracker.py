@@ -58,7 +58,7 @@ class BugTrackerNotSupported(Exception):
 
 class BugTracker:
 
-    bugurls = []  # regexp patterns that could match a bugtracker url
+    bugurls: typing.List[str] = []  # regexp patterns that could match a bugtracker url
     bugtags = re.compile("(?:bug|ticket)*\s?#(\d+)", re.I)
 
     def __init__(self, baseUrl, autoshow):
@@ -621,7 +621,7 @@ class BugManager(Pdod):
         "mantis": Mantis,
         "trac": Trac,
     }
-    instances = {}
+    instances: typing.Dict[str, typing.Dict[str, BugTracker]] = {}
 
     def __init__(self):
         Pdod.__init__(

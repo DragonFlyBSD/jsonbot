@@ -90,10 +90,6 @@ class CantSaveConfig(JsonBotError):
     pass
 
 
-class NoOwnerSet(JsonBotError):
-    pass
-
-
 class NameNotSet(JsonBotError):
     pass
 

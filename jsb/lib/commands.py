@@ -84,7 +84,10 @@ class Commands(LazyDict):
 
     """
 
-    regex = []
+    regex: typing.List[str] = []
+
+    def __init__(self):
+        LazyDict.__init__(self)
 
     def add(
         self,

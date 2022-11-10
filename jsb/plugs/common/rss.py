@@ -942,13 +942,6 @@ etags = PlugPersist("etags")
 
 assert watcher
 
-# size function
-
-
-def size():
-    return "%s (feeds)" % watcher.size()
-
-
 # dosync function
 
 

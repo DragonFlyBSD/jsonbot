@@ -487,8 +487,12 @@ def savecallbacktable(modname=None):
         target = LazyDict(callbacktable.data)
     else:
         target = LazyDict()
-    from jsb.lib.callbacks import (callbacks, first_callbacks, last_callbacks,
-                                   remote_callbacks)
+    from jsb.lib.callbacks import (
+        callbacks,
+        first_callbacks,
+        last_callbacks,
+        remote_callbacks,
+    )
 
     for cb in [first_callbacks, callbacks, last_callbacks, remote_callbacks]:
         for type, cbs in cb.cbs.items():
@@ -510,8 +514,12 @@ def removecallbacks(modname):
     """remove callbacks belonging to modname form cmndtable."""
     global callbacktable
     assert callbacktable
-    from jsb.lib.callbacks import (callbacks, first_callbacks, last_callbacks,
-                                   remote_callbacks)
+    from jsb.lib.callbacks import (
+        callbacks,
+        first_callbacks,
+        last_callbacks,
+        remote_callbacks,
+    )
 
     for cb in [first_callbacks, callbacks, last_callbacks, remote_callbacks]:
         for type, cbs in cb.cbs.items():

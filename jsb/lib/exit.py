@@ -6,7 +6,6 @@
 
 # jsb imports
 
-import atexit
 import logging
 import os
 import sys
@@ -15,11 +14,9 @@ import time
 from jsb.lib.boot import ongae
 from jsb.lib.persist import cleanup
 from jsb.memcached import killmcdaemon
-from jsb.utils.exception import handle_exception
 from jsb.utils.locking import globallocked
-from jsb.utils.trace import whichmodule
 
-from .runner import callbackrunner, cmndrunner, defaultrunner, waitrunner
+from .runner import callbackrunner, cmndrunner, waitrunner
 
 # basic imports
 
