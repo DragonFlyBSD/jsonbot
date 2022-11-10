@@ -5,19 +5,19 @@
 """ provide partyline functionality .. manage dcc sockets. """
 
 
+import _thread
 import logging
 import socket
-import _thread
 
 __copyright__ = "this file is in the public domain"
 __author__ = "Aim"
 
 # jsb imports
 
-from jsb.lib.fleet import getfleet
-from jsb.utils.exception import handle_exception
-from jsb.lib.threads import start_new_thread
 from jsb.imports import getjson
+from jsb.lib.fleet import getfleet
+from jsb.lib.threads import start_new_thread
+from jsb.utils.exception import handle_exception
 
 json = getjson()
 

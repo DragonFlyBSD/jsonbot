@@ -6,17 +6,18 @@
 
 # jsb imports
 
-from jsb.utils.url import geturl, striphtml
-from jsb.utils.generic import splittxt, handle_exception, fromenc
+import logging
+import re
+from urllib.parse import quote
+
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
+from jsb.utils.generic import fromenc, handle_exception, splittxt
 from jsb.utils.rsslist import rsslist
+from jsb.utils.url import geturl, striphtml
 
 # generic imports
 
-from urllib.parse import quote
-import re
-import logging
 
 # defines
 

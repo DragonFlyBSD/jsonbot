@@ -8,23 +8,24 @@
 
 # jsb imports
 
-from jsb.utils.exception import handle_exception
-from jsb.utils.trace import whichmodule
-from jsb.utils.generic import toenc, fromenc, jabberstrip
-from jsb.utils.locking import lockdec
-from jsb.lib.eventbase import EventBase
+import _thread
+import logging
+import time
+
 from jsb.lib.errors import BotNotSetInEvent
+from jsb.lib.eventbase import EventBase
 from jsb.lib.gozerevent import GozerEvent
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import fromenc, jabberstrip, toenc
+from jsb.utils.locking import lockdec
+from jsb.utils.trace import whichmodule
+from xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # xmpp import
 
-from xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # basic imports
 
-import time
-import _thread
-import logging
 
 # locks
 

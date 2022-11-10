@@ -6,12 +6,12 @@
 
 __version__ = "0.1"
 
-from jsb.lib.callbacks import api_callbacks
-
-import urllib.request
-import urllib.parse
-import urllib.error
 import logging
+import urllib.error
+import urllib.parse
+import urllib.request
+
+from jsb.lib.callbacks import api_callbacks
 
 
 class APIHooks(object):

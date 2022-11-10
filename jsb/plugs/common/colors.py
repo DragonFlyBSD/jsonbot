@@ -6,17 +6,18 @@
 
 # jsb imports
 
+import logging
+
+from jsb.lib.boot import ongae
+from jsb.lib.callbacks import first_callbacks
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
-from jsb.lib.callbacks import first_callbacks
 from jsb.lib.morphs import outputmorphs
 from jsb.lib.persiststate import PlugState
 from jsb.utils.lazydict import LazyDict
-from jsb.lib.boot import ongae
 
 # basic imports
 
-import logging
 
 # defines
 

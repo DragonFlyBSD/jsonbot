@@ -6,19 +6,20 @@
 
 # jsb imports
 
-from jsb.lib.commands import cmnds
+import logging
+from copy import deepcopy as cpy
+
 from jsb.lib.callbacks import first_callbacks
-from jsb.lib.persist import PlugPersist
+from jsb.lib.commands import cmnds
+from jsb.lib.errors import NoSuchWave
 from jsb.lib.examples import examples
 from jsb.lib.fleet import getfleet
-from jsb.lib.errors import NoSuchWave
+from jsb.lib.persist import PlugPersist
 from jsb.utils.exception import handle_exception
 from jsb.utils.generic import stripcolor
 
 # basic imports
 
-import logging
-from copy import deepcopy as cpy
 
 # plugin state .. this is where the relay plugin data lives. It's JSON string
 # put into the database with memcache in between. The data is accessible

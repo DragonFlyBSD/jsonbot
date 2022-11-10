@@ -10,24 +10,27 @@
 
 # jsb imports
 
-from .threads import start_new_thread, start_bot_command
-from jsb.utils.xmpp import stripped
-from jsb.utils.trace import calledfrom, whichmodule
+import copy
+import logging
+import re
+import sys
+import typing
+
 from jsb.utils.exception import handle_exception
 from jsb.utils.lazydict import LazyDict
+from jsb.utils.trace import calledfrom, whichmodule
+from jsb.utils.xmpp import stripped
+
+from .aliases import aliascheck, getaliases
+from .boot import getcmndperms
 from .errors import NoSuchCommand, NoSuchUser
+from .floodcontrol import floodcontrol
 from .persiststate import UserState
 from .runner import cmndrunner
-from .boot import getcmndperms
-from .floodcontrol import floodcontrol
-from .aliases import getaliases, aliascheck
+from .threads import start_bot_command, start_new_thread
 
 # basic imports
 
-import logging
-import sys
-import copy
-import re
 
 # defines
 
@@ -341,8 +344,7 @@ class Commands(LazyDict):
         reload the plugin.
 
         """
-        from .boot import getcmndtable
-        from .boot import plugblacklist
+        from .boot import getcmndtable, plugblacklist
 
         plugloaded = None
         plugin = None

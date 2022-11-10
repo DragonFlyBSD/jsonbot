@@ -6,18 +6,19 @@
 
 # jsb imports
 
-from jsb.utils.name import stripname
-from jsb.utils.lazydict import LazyDict
-from jsb.lib.persist import Persist
+import logging
+import os
+import time
+
 from jsb.lib.datadir import getdatadir
-from jsb.utils.trace import whichmodule
 from jsb.lib.errors import NoChannelProvided, NoChannelSet
+from jsb.lib.persist import Persist
+from jsb.utils.lazydict import LazyDict
+from jsb.utils.name import stripname
+from jsb.utils.trace import whichmodule
 
 # basic imports
 
-import time
-import os
-import logging
 
 # classes
 

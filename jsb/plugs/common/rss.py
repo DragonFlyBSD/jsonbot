@@ -15,32 +15,33 @@
 
 """
 
-# jsb imports
-
-from jsb.lib.persist import Persist, PlugPersist
-from jsb.utils.url import geturl2, useragent
-from jsb.utils.exception import handle_exception
-from jsb.utils.generic import fromenc, jsonstring, getnick
-from jsb.utils.lazydict import LazyDict
-from jsb.utils.statdict import StatDict
-from jsb.lib.examples import examples
-from jsb.utils.pdod import Pdod
-from jsb.utils.pdol import Pdol
-from jsb.lib.tasks import taskmanager
-from jsb.lib.callbacks import callbacks
-from jsb.lib.fleet import getfleet
-from jsb.lib.threads import start_new_thread
-from jsb.lib.datadir import getdatadir
-from jsb.lib.channelbase import ChannelBase
 from jsb.imports import getfeedparser, getjson
 from jsb.lib.boot import ongae
+from jsb.lib.callbacks import callbacks
+from jsb.lib.channelbase import ChannelBase
+# jsb imports
+from jsb.lib.commands import cmnds
+from jsb.lib.datadir import getdatadir
+from jsb.lib.errors import NameNotSet
+from jsb.lib.examples import examples
+from jsb.lib.fleet import getfleet
+from jsb.lib.persist import Persist, PlugPersist
+from jsb.lib.tasks import taskmanager
+from jsb.lib.threads import start_new_thread
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import fromenc, getnick, jsonstring
+from jsb.utils.lazydict import LazyDict
+from jsb.utils.pdod import Pdod
+from jsb.utils.pdol import Pdol
+from jsb.utils.statdict import StatDict
+from jsb.utils.url import geturl2, useragent
 
 # google imports
 
 try:
-    from google.appengine.api.memcache import get, set, delete
+    from google.appengine.api.memcache import delete, get, set
 except ImportError:
-    from jsb.lib.cache import get, set, delete
+    from jsb.lib.cache import delete, get, set
 
 # tinyurl import
 
@@ -56,12 +57,12 @@ except ImportError:
 
 # basic imports
 
-import time
-import os
-import logging
-import hashlib
 import copy
+import hashlib
+import logging
+import os
 import re
+import time
 
 # exceptions
 

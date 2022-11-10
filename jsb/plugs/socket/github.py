@@ -1,11 +1,12 @@
-from jsb.utils.exception import handle_exception
-from jsb.lib.callbacks import callbacks
-from jsb.lib.commands import cmnds
-from jsb.lib.persist import PlugPersist
-from jsb.lib.examples import examples
-from jsb.plugs.common.tinyurl import get_tinyurl
 import logging
 import re
+
+from jsb.lib.callbacks import callbacks
+from jsb.lib.commands import cmnds
+from jsb.lib.examples import examples
+from jsb.lib.persist import PlugPersist
+from jsb.plugs.common.tinyurl import get_tinyurl
+from jsb.utils.exception import handle_exception
 
 gitHashRule = re.compile(r".*\b([0-9a-f]{7,40})\b.*")
 

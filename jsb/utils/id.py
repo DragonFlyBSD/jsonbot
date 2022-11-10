@@ -6,11 +6,12 @@
 
 # jsb imports
 
+import uuid
+
 from jsb.utils.generic import toenc
 
 # basic imports
 
-import uuid
 
 # getrssid function
 

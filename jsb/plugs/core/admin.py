@@ -6,32 +6,25 @@
 
 # jsb imports
 
-from jsb.lib.eventhandler import mainhandler
-from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
-from jsb.lib.persist import Persist
-from jsb.lib.boot import (
-    savecmndtable,
-    savepluginlist,
-    boot,
-    plugin_packages,
-    clear_tables,
-    getcmndtable,
-    getcallbacktable,
-)
-from jsb.lib.plugins import plugs
-from jsb.lib.botbase import BotBase
-from jsb.lib.exit import globalshutdown
-from jsb.lib.config import getmainconfig
-from jsb.utils.generic import stringsed, getwho
-from jsb.utils.exception import handle_exception
+import logging
+
 from jsb.lib.aliases import setalias
+from jsb.lib.boot import (boot, clear_tables, getcallbacktable, getcmndtable,
+                          plugin_packages, savecmndtable, savepluginlist)
+from jsb.lib.botbase import BotBase
+from jsb.lib.commands import cmnds
+from jsb.lib.config import getmainconfig
+from jsb.lib.eventhandler import mainhandler
+from jsb.lib.examples import examples
+from jsb.lib.exit import globalshutdown
 from jsb.lib.fleet import getfleet
+from jsb.lib.persist import Persist
 from jsb.lib.plugins import plugs
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import getwho, stringsed
 
 # basic imports
 
-import logging
 
 # admin-save command
 
@@ -298,7 +291,7 @@ examples.add("admin-reloadconfig", "reload mainconfig", "admin-reloadconfig")
 
 def handle_adminexceptions(bot, event):
     """no arguments - show exceptions raised in the bot."""
-    from jsb.utils.exception import exceptionlist, exceptionevents
+    from jsb.utils.exception import exceptionevents, exceptionlist
 
     for e, ex in exceptionevents:
         logging.warn("%s - exceptions raised is %s" % (e.bot.cfg.name, ex))

@@ -6,18 +6,19 @@
 
 # jsb imports
 
+import os
+
 from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
-from jsb.lib.persist import PersistCollection, Persist
 from jsb.lib.datadir import getdatadir
-from jsb.utils.name import stripname
+from jsb.lib.examples import examples
+from jsb.lib.persist import Persist, PersistCollection
 from jsb.utils.exception import handle_exception
+from jsb.utils.name import stripname
 from jsb.utils.statdict import StatDict
 from jsb.utils.urldata import UrlData
 
 # basic imports
 
-import os
 
 # searchobj function
 

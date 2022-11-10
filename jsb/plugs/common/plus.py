@@ -6,21 +6,22 @@
 
 # jsb imports
 
-import uuid
 import logging
 import os
+import uuid
+
+from jsb.imports import getjson
+from jsb.lib.commands import cmnds
+from jsb.lib.datadir import getdatadir
+from jsb.lib.examples import examples
+from jsb.lib.fleet import getfleet
+from jsb.lib.jsbimport import _import_byfile
+from jsb.lib.periodical import minutely, periodical
+from jsb.lib.persistconfig import PersistConfig
+from jsb.lib.persiststate import PlugState
 from jsb.utils.exception import handle_exception
 from jsb.utils.lazydict import LazyDict
 from jsb.utils.url import geturl2
-from jsb.lib.persistconfig import PersistConfig
-from jsb.lib.persiststate import PlugState
-from jsb.lib.jsbimport import _import_byfile
-from jsb.lib.datadir import getdatadir
-from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
-from jsb.lib.fleet import getfleet
-from jsb.lib.periodical import minutely, periodical
-from jsb.imports import getjson
 
 json = getjson()
 

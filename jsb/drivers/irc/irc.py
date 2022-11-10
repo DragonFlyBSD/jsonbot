@@ -10,33 +10,34 @@
 
 # jsb imports
 
-from jsb.utils.exception import handle_exception
-from jsb.utils.generic import toenc, fromenc
-from jsb.utils.generic import getrandomnick, strippedtxt
-from jsb.utils.generic import fix_format, splittxt, uniqlist
-from jsb.utils.locking import lockdec, lock_object, release_object
-from jsb.lib.botbase import BotBase
-from jsb.lib.threads import start_new_thread, threaded
-from jsb.utils.pdod import Pdod
-from jsb.lib.channelbase import ChannelBase
-from jsb.lib.morphs import inputmorphs, outputmorphs
-from jsb.lib.exit import globalshutdown
-from jsb.lib.config import Config, getmainconfig
+import _thread
+import logging
+import os
+import random
+import select
+import socket
+import time
+import traceback
 
-# jsb.irc imports
+from jsb.lib.botbase import BotBase
+from jsb.lib.channelbase import ChannelBase
+from jsb.lib.config import Config, getmainconfig
+from jsb.lib.exit import globalshutdown
+from jsb.lib.morphs import inputmorphs, outputmorphs
+from jsb.lib.threads import start_new_thread, threaded
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import (fix_format, fromenc, getrandomnick, splittxt,
+                               strippedtxt, toenc, uniqlist)
+from jsb.utils.locking import lock_object, lockdec, release_object
+from jsb.utils.pdod import Pdod
 
 from .ircevent import IrcEvent
 
+# jsb.irc imports
+
+
 # basic imports
 
-import traceback
-import time
-import _thread
-import socket
-import os
-import random
-import logging
-import select
 
 # locks
 

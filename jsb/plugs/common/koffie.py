@@ -6,12 +6,13 @@
 
 # jsb imports
 
+import random
+
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
 # basic imports
 
-import random
 
 # defines
 

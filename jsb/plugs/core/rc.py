@@ -6,16 +6,17 @@
 
 # jsb imports
 
+import copy
+
 from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
-from jsb.utils.url import geturl2
-from jsb.utils.exception import handle_exception
-from jsb.utils.generic import waitforqueue, waitevents
 from jsb.lib.config import getmainconfig
+from jsb.lib.examples import examples
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import waitevents, waitforqueue
+from jsb.utils.url import geturl2
 
 # basic imports
 
-import copy
 
 # defines
 

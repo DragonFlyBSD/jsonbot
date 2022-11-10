@@ -6,29 +6,31 @@
 
 # jsb imports
 
+import _thread
+import copy
+import importlib
+import logging
+import os
+import time
 from _thread import start_new_thread
-from .commands import cmnds
-from .callbacks import callbacks, remote_callbacks, first_callbacks, last_callbacks
-from .eventbase import EventBase
-from .persist import Persist
-from jsb.utils.lazydict import LazyDict
+
 from jsb.utils.exception import handle_exception
-from .boot import cmndtable, plugin_packages, default_plugins
-from .errors import NoSuchPlugin, URLNotEnabled, RequireError
+from jsb.utils.lazydict import LazyDict
 from jsb.utils.locking import lockdec
-from .jsbimport import force_import, _import
-from .morphs import outputmorphs, inputmorphs
+
+from .boot import cmndtable, default_plugins, plugblacklist, plugin_packages
+from .callbacks import (callbacks, first_callbacks, last_callbacks,
+                        remote_callbacks)
+from .commands import cmnds
+from .errors import NoSuchPlugin, RequireError, URLNotEnabled
+from .eventbase import EventBase
+from .jsbimport import _import, force_import
+from .morphs import inputmorphs, outputmorphs
+from .persist import Persist
 from .wait import waiter
-from .boot import plugblacklist
 
 # basic imports
 
-import os
-import logging
-import copy
-import _thread
-import time
-import importlib
 
 # defines
 

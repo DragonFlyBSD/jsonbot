@@ -6,34 +6,35 @@
 
 # jsb imports
 
-from jsb.utils.exception import handle_exception
+import logging
+import os
+import urllib.error
+import urllib.parse
+import urllib.request
+
+import tweepy
 from jsb.lib.commands import cmnds
+from jsb.lib.datadir import getdatadir
 from jsb.lib.examples import examples
+from jsb.lib.jsbimport import _import_byfile
+from jsb.lib.persist import PlugPersist
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import splittxt, strippedtxt, waitforqueue
 from jsb.utils.pdol import Pdol
 from jsb.utils.textutils import html_unescape
-from jsb.utils.generic import waitforqueue, strippedtxt, splittxt
-from jsb.lib.persist import PlugPersist
 from jsb.utils.twitter import twitterapi, twittertoken
-from jsb.lib.datadir import getdatadir
-from jsb.lib.jsbimport import _import_byfile
+from tweepy import oauth
+from tweepy.api import API
+from tweepy.auth import OAuthHandler
+from tweepy.error import TweepError
+from tweepy.models import Status, User
 
 # tweppy imports
 
-from tweepy.auth import OAuthHandler
-from tweepy.api import API
-from tweepy import oauth
-from tweepy.error import TweepError
-from tweepy.models import Status, User
-import tweepy
 
 
 # basic imports
 
-import os
-import urllib.request
-import urllib.error
-import urllib.parse
-import logging
 
 # credentials
 

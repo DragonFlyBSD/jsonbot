@@ -6,11 +6,12 @@
 
 # lib imports
 
+import logging
+
 from .lib.jsbimport import _import
 
 # basic imports
 
-import logging
 
 # getdns function
 

@@ -6,14 +6,15 @@
 
 # jsb imports
 
-from jsb.lib.commands import cmnds
-from jsb.lib.outputcache import get, set, clear
+import logging
+
 from jsb.lib.callbacks import callbacks
+from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
+from jsb.lib.outputcache import clear, get, set
 
 # basic imports
 
-import logging
 
 # outputcache command
 

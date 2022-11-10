@@ -6,16 +6,17 @@
 
 # jsb imports
 
+import copy
+import logging
+
+from jsb.lib.callbacks import last_callbacks
+from jsb.lib.commands import cmnds
+from jsb.lib.errors import NoSuchCommand, NoSuchUser
 from jsb.utils.exception import handle_exception
 from jsb.utils.generic import waitforqueue
-from jsb.lib.callbacks import last_callbacks
-from jsb.lib.errors import NoSuchCommand, NoSuchUser
-from jsb.lib.commands import cmnds
 
 # basic logging
 
-import logging
-import copy
 
 # defines
 

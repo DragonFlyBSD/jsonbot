@@ -10,31 +10,31 @@
 
 # jsb imports
 
-import urllib.error
-import urllib.request
-import os
-import uuid
-import urllib.parse
-import logging
 import base64
+import logging
+import os
+import urllib.error
+import urllib.parse
+import urllib.request
+import uuid
+
+from jsb.imports import getfeedparser
+from jsb.lib.channelbase import ChannelBase
 from jsb.lib.commands import cmnds
+from jsb.lib.datadir import getdatadir
+from jsb.lib.errors import NoSuchBotType
 from jsb.lib.examples import examples
+from jsb.lib.fleet import getfleet
+from jsb.lib.jsbimport import _import_byfile
 from jsb.lib.persist import Persist, PlugPersist
-from jsb.utils.pdol import Pdol
-from jsb.utils.pdod import Pdod
+from jsb.lib.threads import start_new_thread
+from jsb.utils.exception import handle_exception
 from jsb.utils.generic import jsonstring
 from jsb.utils.lazydict import LazyDict
-from jsb.utils.url import useragent, geturl2
+from jsb.utils.pdod import Pdod
+from jsb.utils.pdol import Pdol
 from jsb.utils.statdict import StatDict
-from jsb.utils.exception import handle_exception
-from jsb.lib.fleet import getfleet
-from jsb.lib.channelbase import ChannelBase
-from jsb.utils.url import posturl
-from jsb.lib.errors import NoSuchBotType
-from jsb.lib.threads import start_new_thread
-from jsb.lib.datadir import getdatadir
-from jsb.lib.jsbimport import _import_byfile
-from jsb.imports import getfeedparser
+from jsb.utils.url import geturl2, posturl, useragent
 
 feedparser = getfeedparser()
 
@@ -669,9 +669,9 @@ def handle_hubbubcloneurl(bot, event):
     if not event.rest:
         event.missing("<url>")
         return
-    import urllib.request
     import urllib.error
     import urllib.parse
+    import urllib.request
 
     try:
         feeds = watcher.cloneurl(event.rest, event.auth)

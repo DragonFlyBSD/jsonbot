@@ -6,18 +6,19 @@
 
 # jsb imports
 
-from jsb.utils.name import stripname
+import logging
+import re
+
 from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.persist import PlugPersist, PlugPersistCollection
-from jsb.utils.statdict import StatDict
 from jsb.lib.persistconfig import PersistConfig
+from jsb.utils.name import stripname
+from jsb.utils.statdict import StatDict
 
 # basic imports
 
-import logging
-import re
 
 # defines
 

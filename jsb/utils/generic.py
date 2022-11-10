@@ -8,16 +8,18 @@
 
 import io
 import logging
-import random
-import os.path
 import os
+import os.path
+import random
 import re
 import time
-from stat import ST_UID, ST_MODE, S_IMODE
-from .exception import handle_exception
-from .trace import calledfrom, whichmodule
-from .lazydict import LazyDict
+from stat import S_IMODE, ST_MODE, ST_UID
+
 from jsb.imports import getjson
+
+from .exception import handle_exception
+from .lazydict import LazyDict
+from .trace import calledfrom, whichmodule
 
 json = getjson()
 

@@ -6,16 +6,18 @@
 
 # jsb imports
 
+import logging
+import os
+import sys
+
+from jsb.lib.datadir import getdatadir
 from jsb.utils.name import stripname
 from jsb.utils.trace import calledfrom
+
 from .persist import Persist
-from jsb.lib.datadir import getdatadir
 
 # basic imports
 
-import os
-import sys
-import logging
 
 # PersistState classes
 

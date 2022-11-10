@@ -6,23 +6,24 @@
 
 # jsb imports
 
-from jsb.utils.generic import checkpermissions, isdebian, botuser
-from jsb.lib.persist import Persist
-from jsb.lib.aliases import savealiases
-from jsb.utils.exception import handle_exception
-from jsb.lib.datadir import makedirs, getdatadir
-from jsb.lib.config import Config, getmainconfig
-from jsb.lib.jsbimport import _import
-from jsb.utils.lazydict import LazyDict
-from jsb.memcached import startmcdaemon
-
-# basic imports
-
+import copy
+import importlib
 import logging
 import os
 import sys
-import copy
-import importlib
+
+from jsb.lib.aliases import savealiases
+from jsb.lib.config import Config, getmainconfig
+from jsb.lib.datadir import getdatadir, makedirs
+from jsb.lib.jsbimport import _import
+from jsb.lib.persist import Persist
+from jsb.memcached import startmcdaemon
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import botuser, checkpermissions, isdebian
+from jsb.utils.lazydict import LazyDict
+
+# basic imports
+
 
 # paths
 
@@ -486,12 +487,8 @@ def savecallbacktable(modname=None):
         target = LazyDict(callbacktable.data)
     else:
         target = LazyDict()
-    from jsb.lib.callbacks import (
-        first_callbacks,
-        callbacks,
-        last_callbacks,
-        remote_callbacks,
-    )
+    from jsb.lib.callbacks import (callbacks, first_callbacks, last_callbacks,
+                                   remote_callbacks)
 
     for cb in [first_callbacks, callbacks, last_callbacks, remote_callbacks]:
         for type, cbs in cb.cbs.items():
@@ -513,12 +510,8 @@ def removecallbacks(modname):
     """remove callbacks belonging to modname form cmndtable."""
     global callbacktable
     assert callbacktable
-    from jsb.lib.callbacks import (
-        first_callbacks,
-        callbacks,
-        last_callbacks,
-        remote_callbacks,
-    )
+    from jsb.lib.callbacks import (callbacks, first_callbacks, last_callbacks,
+                                   remote_callbacks)
 
     for cb in [first_callbacks, callbacks, last_callbacks, remote_callbacks]:
         for type, cbs in cb.cbs.items():

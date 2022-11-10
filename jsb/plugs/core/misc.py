@@ -6,15 +6,16 @@
 
 # jsb imports
 
-from jsb.utils.exception import handle_exception
+import _thread
+import copy
+
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.persiststate import UserState
+from jsb.utils.exception import handle_exception
 
 # basic imports
 
-import _thread
-import copy
 
 # defines
 

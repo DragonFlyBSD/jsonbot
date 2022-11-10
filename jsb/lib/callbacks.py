@@ -10,19 +10,21 @@
 
 # jsb imports
 
-from .threads import getname, start_new_thread
-from jsb.utils.locking import lockdec
-from jsb.utils.exception import handle_exception
-from jsb.utils.trace import calledfrom, whichplugin, callstack
+import _thread
+import copy
+import logging
+import sys
+import time
+
 from jsb.utils.dol import Dol
+from jsb.utils.exception import handle_exception
+from jsb.utils.locking import lockdec
+from jsb.utils.trace import calledfrom, callstack, whichplugin
+
+from .threads import getname, start_new_thread
 
 # basic imports
 
-import sys
-import copy
-import _thread
-import logging
-import time
 
 # locks
 

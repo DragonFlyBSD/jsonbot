@@ -6,33 +6,29 @@
 
 # jsb imports
 
+import _thread
+import logging
+import os
+import time
+
+from jsb.lib.callbacks import (callbacks, first_callbacks, last_callbacks,
+                               remote_callbacks)
 from jsb.lib.commands import cmnds
-from jsb.lib.callbacks import (
-    callbacks,
-    remote_callbacks,
-    last_callbacks,
-    first_callbacks,
-)
-from jsb.lib.persistconfig import PersistConfig
-from jsb.utils.locking import lockdec
-from jsb.utils.timeutils import hourmin
-from jsb.lib.examples import examples
-from jsb.utils.exception import handle_exception
-from jsb.utils.lazydict import LazyDict
 from jsb.lib.datadir import getdatadir
-from jsb.utils.name import stripname
-from jsb.utils.url import striphtml
-from jsb.utils.format import formatevent, format_opt
+from jsb.lib.examples import examples
+from jsb.lib.persistconfig import PersistConfig
+from jsb.utils.exception import handle_exception
+from jsb.utils.format import format_opt, formatevent
+from jsb.utils.lazydict import LazyDict
+from jsb.utils.locking import lockdec
 from jsb.utils.log import init
+from jsb.utils.name import stripname
 from jsb.utils.statdict import StatDict
-from jsb.utils.timeutils import striptime, strtotime2
+from jsb.utils.timeutils import hourmin, striptime, strtotime2
+from jsb.utils.url import striphtml
 
 # basic imports
 
-import time
-import os
-import logging
-import _thread
 
 # locks
 

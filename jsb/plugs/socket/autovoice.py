@@ -6,8 +6,8 @@
 
 __copyright__ = "this file is in the public domain"
 
-from jsb.lib.commands import cmnds
 from jsb.lib.callbacks import callbacks
+from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
 

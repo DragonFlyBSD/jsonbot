@@ -7,9 +7,9 @@
 # jsb imports
 
 from jsb.lib.commands import cmnds
+from jsb.lib.errors import NoSuchUser
 from jsb.lib.examples import examples
 from jsb.lib.persiststate import UserState
-from jsb.lib.errors import NoSuchUser
 
 # set command
 

@@ -9,36 +9,37 @@
 
 # jsb imports
 
-from jsb.lib.errors import CannotAuth, StreamError
-from jsb.lib.eventbase import EventBase
-from jsb.lib.config import Config
-from jsb.utils.generic import toenc, jabberstrip, fromenc
-from jsb.utils.lazydict import LazyDict
-from jsb.utils.exception import handle_exception
-from jsb.utils.locking import lockdec
-from jsb.lib.threads import start_new_thread
-from jsb.utils.trace import whichmodule
-from jsb.lib.gozerevent import GozerEvent
-from jsb.lib.fleet import getfleet
+import _thread
+import base64
+import hashlib
+import logging
+import random
+import re
+import socket
+import sys
+import time
+import xml
+
 from digestmd5 import makeresp
 from jsb.imports import getdns
+from jsb.lib.config import Config
+from jsb.lib.errors import CannotAuth, StreamError
+from jsb.lib.eventbase import EventBase
+from jsb.lib.fleet import getfleet
+from jsb.lib.gozerevent import GozerEvent
+from jsb.lib.threads import start_new_thread
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import fromenc, jabberstrip, toenc
+from jsb.utils.lazydict import LazyDict
+from jsb.utils.locking import lockdec
+from jsb.utils.trace import whichmodule
+from xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # xmpp import
 
-from xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # basic imports
 
-import socket
-import time
-import logging
-import _thread
-import xml
-import re
-import hashlib
-import sys
-import base64
-import random
 
 # python 2.5 shim
 

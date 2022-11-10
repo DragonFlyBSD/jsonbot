@@ -8,21 +8,22 @@ __version__ = "1"
 
 # jsb imports
 
+import hashlib
+import hmac
+import time
+import uuid
+
+from xmlstream import NodeBuilder, XMLescape, XMLunescape
+from jsb.imports import getjson
+from jsb.lib.gozerevent import GozerEvent
 from jsb.lib.persist import Persist
 from jsb.utils.name import stripname
-from jsb.lib.gozerevent import GozerEvent
-from jsb.imports import getjson
 
 # xmpp import
 
-from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # basic imports
 
-import hmac
-import uuid
-import time
-import hashlib
 
 # defines
 

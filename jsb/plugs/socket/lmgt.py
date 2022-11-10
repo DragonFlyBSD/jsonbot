@@ -1,6 +1,7 @@
+from urllib.parse import quote
+
 from jsb.lib.commands import cmnds
 from jsb.plugs.common.tinyurl import get_tinyurl
-from urllib.parse import quote
 
 
 def handle_lmgt(bot, ievent):

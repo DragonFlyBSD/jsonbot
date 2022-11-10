@@ -6,45 +6,46 @@
 
 # jsb imports
 
+import _thread
+import copy
+import logging
+import queue
+import time
+
+from digestmd5 import makeresp
+from jsb.lib.botbase import BotBase
+from jsb.lib.callbacks import callbacks, remote_callbacks
+from jsb.lib.channelbase import ChannelBase
 from jsb.lib.errors import CannotAuth, CantLogon, NoUserProvided
+from jsb.lib.exit import globalshutdown
+from jsb.lib.fleet import getfleet
+from jsb.lib.less import Less
+from jsb.lib.threads import start_new_thread
 from jsb.lib.users import users
+from jsb.utils.dol import Dol
 from jsb.utils.exception import handle_exception
-from jsb.utils.trace import whichmodule
+from jsb.utils.generic import (fromenc, getrandomnick, jabberstrip, stripcolor,
+                               stripped, toenc, waitforqueue)
 from jsb.utils.locking import lockdec
 from jsb.utils.pdod import Pdod
-from jsb.utils.dol import Dol
-from jsb.utils.generic import stripcolor, toenc, fromenc, stripped
-from jsb.lib.less import Less
-from jsb.lib.callbacks import callbacks, remote_callbacks
-from jsb.lib.threads import start_new_thread
-from jsb.lib.botbase import BotBase
-from jsb.lib.exit import globalshutdown
-from jsb.lib.channelbase import ChannelBase
-from jsb.lib.fleet import getfleet
-from digestmd5 import makeresp
+from jsb.utils.trace import whichmodule
+from xmlstream import XMLescape, XMLunescape
+
+from .core import XMLStream
+from .errors import xmpperrors
+from .iq import Iq
+from .jid import JID, InvalidJID
+from .message import Message
+from .presence import Presence
 
 # jsb.socket imports
 
-from jsb.utils.generic import waitforqueue, jabberstrip, getrandomnick, toenc, fromenc
 
 # xmpp imports
 
-from xmlstream import XMLescape, XMLunescape
-from .presence import Presence
-from .message import Message
-from .iq import Iq
-from .core import XMLStream
-from .jid import JID, InvalidJID
-from .errors import xmpperrors
 
 # basic imports
 
-import time
-import copy
-import time
-import queue
-import _thread
-import logging
 
 # defines
 

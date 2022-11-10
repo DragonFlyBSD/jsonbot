@@ -11,22 +11,29 @@
 
 # jsb imports
 
-from jsb.utils.exception import handle_exception
-from jsb.utils.generic import waitforqueue, uniqlist, strippedtxt
-from jsb.lib.commands import cmnds
+import logging
+import queue
+import re
+import socket
+import struct
+import time
+
+from jsb.lib.botbase import BotBase
 from jsb.lib.callbacks import callbacks
+from jsb.lib.channelbase import ChannelBase
+from jsb.lib.commands import cmnds
+from jsb.lib.errors import NoSuchCommand
+from jsb.lib.eventbase import EventBase
+from jsb.lib.exit import globalshutdown
+from jsb.lib.partyline import partyline
+from jsb.lib.persiststate import PersistState
 from jsb.lib.plugins import plugs as plugins
 from jsb.lib.threads import start_new_thread, threaded
-from jsb.utils.dol import Dol
-from jsb.utils.pdod import Pdod
-from jsb.lib.persiststate import PersistState
-from jsb.lib.errors import NoSuchCommand
-from jsb.lib.channelbase import ChannelBase
-from jsb.lib.exit import globalshutdown
-from jsb.lib.botbase import BotBase
-from jsb.lib.eventbase import EventBase
-from jsb.lib.partyline import partyline
 from jsb.lib.wait import waiter
+from jsb.utils.dol import Dol
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import strippedtxt, uniqlist, waitforqueue
+from jsb.utils.pdod import Pdod
 
 from .channels import Channels
 from .irc import Irc
@@ -34,12 +41,6 @@ from .ircevent import IrcEvent
 
 # basic imports
 
-import re
-import socket
-import struct
-import queue
-import time
-import logging
 
 # defines
 

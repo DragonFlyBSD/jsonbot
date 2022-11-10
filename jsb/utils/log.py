@@ -6,14 +6,15 @@
 
 # jsb import
 
-from jsb.lib.datadir import getdatadir
-
-# basic imports
-
 import logging
 import logging.handlers
 import os
 import os.path
+
+from jsb.lib.datadir import getdatadir
+
+# basic imports
+
 
 # defines
 

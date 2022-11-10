@@ -7,17 +7,19 @@
 # jsb imports
 
 import logging
-import tornado
-from jsb.lib.eventbase import EventBase
-from jsb.utils.generic import splittxt, fromenc, toenc
-from jsb.utils.xmpp import stripped
-from jsb.lib.outputcache import add
-from jsb.utils.url import getpostdata
-from jsb.utils.exception import handle_exception
-from jsb.lib.channelbase import ChannelBase
+
 from jsb.imports import getjson
-from jsb.utils.lazydict import LazyDict
+from jsb.lib.channelbase import ChannelBase
 from jsb.lib.errors import NoInput
+from jsb.lib.eventbase import EventBase
+from jsb.lib.outputcache import add
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import fromenc, splittxt, toenc
+from jsb.utils.lazydict import LazyDict
+from jsb.utils.url import getpostdata
+from jsb.utils.xmpp import stripped
+
+import tornado
 
 json = getjson()
 

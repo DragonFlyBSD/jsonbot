@@ -6,11 +6,11 @@
 
 # basic imports
 
-import sys
-import imp
-import os
 import _thread
+import imp
 import logging
+import os
+import sys
 
 # _import function
 

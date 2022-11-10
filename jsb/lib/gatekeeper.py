@@ -6,13 +6,14 @@
 
 # jsb imports
 
-from jsb.lib.persist import Persist
+import logging
+import os
+
 from jsb.lib.datadir import getdatadir
+from jsb.lib.persist import Persist
 
 # basic imports
 
-import logging
-import os
 
 # GateKeeper class
 

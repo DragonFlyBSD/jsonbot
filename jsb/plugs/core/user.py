@@ -6,16 +6,17 @@
 
 # jsb imports
 
-from jsb.utils.generic import getwho
-from jsb.utils.exception import handle_exception
-from jsb.utils.name import stripname
-from jsb.lib.users import users
+import logging
+
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
+from jsb.lib.users import users
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import getwho
+from jsb.utils.name import stripname
 
 # basic imports
 
-import logging
 
 # user-whoami command
 

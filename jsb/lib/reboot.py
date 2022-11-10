@@ -6,13 +6,14 @@
 
 # jsb imports
 
-import time
 import logging
-import tempfile
-import sys
 import os
-from jsb.lib.fleet import getfleet
+import sys
+import tempfile
+import time
+
 from jsb.imports import getjson
+from jsb.lib.fleet import getfleet
 
 json = getjson()
 

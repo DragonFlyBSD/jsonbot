@@ -10,26 +10,27 @@
 
 # jsb imports
 
+import _thread
+import copy
+import logging
+import os
+import time
+
+from jsb.lib.commands import cmnds
+from jsb.lib.datadir import datadir
+from jsb.lib.examples import examples
+from jsb.lib.fleet import getfleet
+from jsb.lib.nextid import nextid
+from jsb.lib.periodical import periodical
+from jsb.lib.persist import Persist
 from jsb.utils.exception import handle_exception
-from jsb.utils.timeutils import strtotime, striptime
 from jsb.utils.generic import jsonstring
 from jsb.utils.lazydict import LazyDict
-from jsb.lib.persist import Persist
-from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
 from jsb.utils.locking import lockdec
-from jsb.lib.fleet import getfleet
-from jsb.lib.datadir import datadir
-from jsb.lib.periodical import periodical
-from jsb.lib.nextid import nextid
+from jsb.utils.timeutils import striptime, strtotime
 
 # basic imports
 
-import time
-import os
-import _thread
-import logging
-import copy
 
 # defines
 

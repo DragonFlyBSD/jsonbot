@@ -6,19 +6,20 @@
 
 # jsb imports
 
-from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
-from jsb.lib.datadir import datadir
-from jsb.utils.locking import lockdec
+import _thread
+import logging
+import time
+
 from jsb.lib.callbacks import callbacks
-from jsb.lib.users import users
+from jsb.lib.commands import cmnds
 from jsb.lib.config import getmainconfig
+from jsb.lib.datadir import datadir
+from jsb.lib.examples import examples
+from jsb.lib.users import users
+from jsb.utils.locking import lockdec
 
 # basic imports
 
-import _thread
-import time
-import logging
 
 # locks
 

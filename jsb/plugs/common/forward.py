@@ -6,36 +6,33 @@
 
 # jsb imports
 
+import copy
+import logging
+
+from jsb.lib.callbacks import (callbacks, first_callbacks, last_callbacks,
+                               remote_callbacks)
 from jsb.lib.commands import cmnds
-from jsb.lib.callbacks import (
-    callbacks,
-    remote_callbacks,
-    last_callbacks,
-    first_callbacks,
-)
-from jsb.lib.eventbase import EventBase
-from jsb.lib.persist import PlugPersist
-from jsb.utils.lazydict import LazyDict
-from jsb.lib.examples import examples
-from jsb.lib.fleet import getfleet
 from jsb.lib.container import Container
 from jsb.lib.errors import NoProperDigest
+from jsb.lib.eventbase import EventBase
+from jsb.lib.examples import examples
+from jsb.lib.fleet import getfleet
+from jsb.lib.persist import PlugPersist
+from jsb.plugs.common.twitter import postmsg
 from jsb.utils.exception import handle_exception
+from jsb.utils.generic import stripcolor, strippedtxt
+from jsb.utils.lazydict import LazyDict
 from jsb.utils.locking import locked
-from jsb.utils.generic import strippedtxt, stripcolor
+from xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # twitter plugin imports
 
-from jsb.plugs.common.twitter import postmsg
 
 # xmpp import
 
-from xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # basic imports
 
-import logging
-import copy
 
 # defines
 

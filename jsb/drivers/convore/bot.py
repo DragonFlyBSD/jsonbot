@@ -6,20 +6,21 @@
 
 # jsb import
 
+import logging
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+
+from jsb.drivers.convore.event import ConvoreEvent
+from jsb.imports import getjson, getrequests
 from jsb.lib.botbase import BotBase
 from jsb.lib.errors import NotConnected
-from jsb.drivers.convore.event import ConvoreEvent
-from jsb.utils.lazydict import LazyDict
 from jsb.utils.exception import handle_exception
-from jsb.imports import getjson, getrequests
+from jsb.utils.lazydict import LazyDict
 
 # basic imports
 
-import logging
-import time
-import urllib.request
-import urllib.error
-import urllib.parse
 
 # defines
 

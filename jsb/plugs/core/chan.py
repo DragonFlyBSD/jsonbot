@@ -6,18 +6,19 @@
 
 # jsb imports
 
-from jsb.lib.persist import Persist
-from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
+import logging
+import os
+
 from jsb.lib.callbacks import callbacks
 from jsb.lib.channelbase import ChannelBase
+from jsb.lib.commands import cmnds
 from jsb.lib.datadir import getdatadir
+from jsb.lib.examples import examples
+from jsb.lib.persist import Persist
 from jsb.utils.exception import handle_exception
 
 # basic imports
 
-import os
-import logging
 
 # chan-token command
 

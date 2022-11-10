@@ -34,19 +34,20 @@ __version__ = "2007111601"
 
 # jsb imports
 
+import os
+import socket
+import time
+
 from jsb.lib.commands import cmnds
 from jsb.lib.datadir import getdatadir
 from jsb.lib.examples import examples
 from jsb.lib.fleet import fleet
-from jsb.utils.pdod import Pdod
 from jsb.lib.persistconfig import PersistConfig
 from jsb.lib.threads import start_new_thread
+from jsb.utils.pdod import Pdod
 
 # basic imports
 
-import os
-import socket
-import time
 
 # defines
 

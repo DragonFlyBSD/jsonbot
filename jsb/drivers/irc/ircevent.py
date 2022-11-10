@@ -7,14 +7,15 @@
 
 # jsb imports
 
-from jsb.utils.generic import toenc, fromenc, strippedtxt, fix_format
+import copy
+import logging
+import re
+
 from jsb.lib.eventbase import EventBase
+from jsb.utils.generic import fix_format, fromenc, strippedtxt, toenc
 
 # basic imports
 
-import re
-import copy
-import logging
 
 # defines
 

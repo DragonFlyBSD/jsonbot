@@ -4,11 +4,12 @@
 
 """ tinyurl.com feeder """
 
-import urllib.error
-import urllib.request
 import logging
 import re
+import urllib.error
 import urllib.parse
+import urllib.request
+
 from jsb.imports import getjson
 
 __author__ = "Wijnand 'tehmaze' Modderman - http://tehmaze.com"
@@ -17,10 +18,10 @@ __license__ = "BSD"
 # jsb imports
 
 from jsb.lib.commands import cmnds
-from jsb.utils.url import striphtml, useragent
 from jsb.lib.examples import examples
-from jsb.utils.exception import handle_exception
 from jsb.lib.persistconfig import PersistConfig
+from jsb.utils.exception import handle_exception
+from jsb.utils.url import striphtml, useragent
 
 # google imports
 

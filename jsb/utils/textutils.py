@@ -5,8 +5,8 @@
 # basic imports
 
 import cgi
-import re
 import html.entities
+import re
 
 # unescape_charref function
 

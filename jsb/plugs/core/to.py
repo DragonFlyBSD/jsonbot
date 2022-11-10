@@ -6,13 +6,14 @@
 
 # jsb imports
 
+import time
+
 from jsb.lib.commands import cmnds
-from jsb.utils.generic import getwho, waitforqueue
 from jsb.lib.examples import examples
+from jsb.utils.generic import getwho, waitforqueue
 
 # basic imports
 
-import time
 
 # to command
 

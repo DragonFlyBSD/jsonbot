@@ -6,17 +6,18 @@
 
 # jsb imports
 
-from jsb.utils.timeutils import elapsedstring
-from jsb.utils.generic import getwho
-from jsb.lib.commands import cmnds
+import logging
+import time
+
 from jsb.lib.callbacks import callbacks
+from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.persist import PlugPersist
+from jsb.utils.generic import getwho
+from jsb.utils.timeutils import elapsedstring
 
 # basic imports
 
-import time
-import logging
 
 # defines
 

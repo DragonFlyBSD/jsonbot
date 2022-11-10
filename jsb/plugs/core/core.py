@@ -6,39 +6,35 @@
 
 # jsb imports
 
+import copy
+import functools
+import logging
+import os
+import sys
+import time
+
 from jsb.lib.aliases import setalias
-from jsb.lib.config import getmainconfig
-from jsb.utils.statdict import StatDict
-from jsb.utils.log import setloglevel, getloglevel
-from jsb.utils.timeutils import elapsedstring
-from jsb.utils.exception import handle_exception
+from jsb.lib.boot import (boot, getcmndtable, getpluginlist, plugin_packages,
+                          whatcommands)
 from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
-from jsb.lib.plugins import plugs
-from jsb.lib.boot import (
-    plugin_packages,
-    getpluginlist,
-    boot,
-    getcmndtable,
-    whatcommands,
-)
-from jsb.lib.persist import Persist
-from jsb.lib.reboot import reboot, reboot_stateful
+from jsb.lib.config import getmainconfig
+from jsb.lib.errors import NoSuchPlugin
 from jsb.lib.eventhandler import mainhandler
+from jsb.lib.examples import examples
+from jsb.lib.exit import globalshutdown
 from jsb.lib.fleet import getfleet
 from jsb.lib.partyline import partyline
-from jsb.lib.exit import globalshutdown
-from jsb.lib.runner import defaultrunner, cmndrunner, longrunner
-from jsb.lib.errors import NoSuchPlugin
+from jsb.lib.persist import Persist
+from jsb.lib.plugins import plugs
+from jsb.lib.reboot import reboot, reboot_stateful
+from jsb.lib.runner import cmndrunner, defaultrunner, longrunner
+from jsb.utils.exception import handle_exception
+from jsb.utils.log import getloglevel, setloglevel
+from jsb.utils.statdict import StatDict
+from jsb.utils.timeutils import elapsedstring
 
 # basic imports
 
-import time
-import sys
-import os
-import copy
-import logging
-import functools
 
 # defines
 

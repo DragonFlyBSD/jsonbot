@@ -6,14 +6,15 @@
 
 # jsb imports
 
-from jsb.utils.locking import lockdec
-from jsb.lib.wait import Wait
+import _thread
+import logging
+
 import jsb.lib.threads as thr
+from jsb.lib.wait import Wait
+from jsb.utils.locking import lockdec
 
 # basic imports
 
-import _thread
-import logging
 
 # locks
 

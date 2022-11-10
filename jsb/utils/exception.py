@@ -6,12 +6,11 @@
 
 # basic imports
 
+import _thread
+import logging
+import os
 import sys
 import traceback
-import logging
-import _thread
-import os
-import logging
 
 # defines
 

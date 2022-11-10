@@ -6,8 +6,8 @@
 
 # jsb imports
 
-from jsb.utils.lazydict import LazyDict
 from jsb.lib.persist import Persist
+from jsb.utils.lazydict import LazyDict
 
 # Pdod class
 

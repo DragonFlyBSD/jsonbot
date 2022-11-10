@@ -4,23 +4,24 @@
 
 # jsb imports
 
-from jsb.utils.exception import handle_exception, exceptionmsg
-from jsb.utils.trace import calledfrom
+import logging
+import select
+import socket
+import sys
+import time
+from asyncore import dispatcher
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from socketserver import BaseServer, ThreadingMixIn
+from urllib.parse import unquote_plus
+
 from jsb.lib.persiststate import ObjectState
 from jsb.lib.threads import start_new_thread
+from jsb.utils.exception import exceptionmsg, handle_exception
+from jsb.utils.trace import calledfrom
 from jsb.version import version
 
 # basic imports
 
-from socketserver import BaseServer, ThreadingMixIn
-from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import unquote_plus
-from asyncore import dispatcher
-import time
-import sys
-import select
-import socket
-import logging
 
 # RestServerBase class
 

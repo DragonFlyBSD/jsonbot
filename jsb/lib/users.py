@@ -6,21 +6,23 @@
 
 # lib imports
 
-from jsb.utils.exception import handle_exception, exceptionmsg
+import copy
+import logging
+import os
+
+from jsb.utils.exception import exceptionmsg, handle_exception
 from jsb.utils.generic import stripped
-from jsb.utils.name import stripname
-from .persiststate import UserState
-from .persist import Persist
 from jsb.utils.lazydict import LazyDict
+from jsb.utils.name import stripname
+
+from .config import Config, getmainconfig
 from .datadir import getdatadir
 from .errors import NoSuchUser
-from .config import Config, getmainconfig
+from .persist import Persist
+from .persiststate import UserState
 
 # basic imports
 
-import os
-import logging
-import copy
 
 # defines
 

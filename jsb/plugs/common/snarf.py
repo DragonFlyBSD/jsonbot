@@ -15,26 +15,23 @@ __depend__ = [
 
 # jsb imports
 
+import re
+import socket
+import urllib.error
+import urllib.parse
+import urllib.request
+
 from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
-from jsb.utils.url import decode_html_entities, get_encoding, geturl, geturl2
-from jsb.utils.exception import handle_exception
 from jsb.lib.persist import Persist, PlugPersist
 from jsb.lib.persistconfig import PersistConfig
 from jsb.lib.plugins import plugs as plugins
+from jsb.utils.exception import handle_exception
+from jsb.utils.url import decode_html_entities, get_encoding, geturl, geturl2
 
 # basic imports
 
-import urllib.request
-import urllib.parse
-import urllib.error
-import urllib.request
-import urllib.error
-import urllib.parse
-import urllib.parse
-import re
-import socket
 
 # defines
 

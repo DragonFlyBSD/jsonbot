@@ -6,14 +6,15 @@
 
 # jsb imports
 
+import logging
+import os
+import os.path
+import shutil
+
 from jsb.utils.source import getsource
 
 # basic imports
 
-import os
-import shutil
-import logging
-import os.path
 
 # the global datadir
 

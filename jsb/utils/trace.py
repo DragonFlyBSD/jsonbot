@@ -6,8 +6,8 @@
 
 # basic imports
 
-import sys
 import os
+import sys
 
 # defines
 

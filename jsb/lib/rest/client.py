@@ -6,21 +6,22 @@
 
 # jsb imports
 
+import _thread
+import asynchat
+import logging
+import socket
+import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-import logging
-import _thread
-import sys
-import asynchat
-import socket
 from urllib.parse import urlparse
-from jsb.utils.url import geturl4, posturl, deleteurl, useragent
-from jsb.utils.generic import toenc
-from jsb.utils.exception import handle_exception, exceptionmsg
-from jsb.utils.locking import lockdec
-from jsb.utils.lazydict import LazyDict
+
 from jsb.imports import getjson
+from jsb.utils.exception import exceptionmsg, handle_exception
+from jsb.utils.generic import toenc
+from jsb.utils.lazydict import LazyDict
+from jsb.utils.locking import lockdec
+from jsb.utils.url import deleteurl, geturl4, posturl, useragent
 
 json = getjson()
 

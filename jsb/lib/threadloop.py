@@ -6,14 +6,16 @@
 
 # lib imports
 
+import logging
+import queue
+import time
+
 from jsb.utils.exception import handle_exception
-from .threads import start_new_thread, getname
+
+from .threads import getname, start_new_thread
 
 # basic imports
 
-import queue
-import time
-import logging
 
 # ThreadLoop class
 

@@ -6,19 +6,20 @@
 
 # jsb imports
 
+import _thread
+import logging
+import time
+
+from jsb.lib.aliases import setalias
 from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
 from jsb.lib.datadir import getdatadir
+from jsb.lib.examples import examples
 from jsb.utils.exception import handle_exception
 from jsb.utils.locking import lockdec
 from jsb.utils.statdict import StatDict
-from jsb.lib.aliases import setalias
 
 # basic imports
 
-import _thread
-import time
-import logging
 
 # defines
 

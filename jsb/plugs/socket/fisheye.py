@@ -6,18 +6,19 @@
 
 # jsb imports
 
-from jsb.utils.exception import handle_exception
+import logging
+import re
+import xmlrpc.client
+
 from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
-from jsb.lib.persist import PlugPersist
 from jsb.lib.examples import examples
+from jsb.lib.persist import PlugPersist
 from jsb.plugs.common.tinyurl import get_tinyurl
+from jsb.utils.exception import handle_exception
 
 # basic imports
 
-import logging
-import xmlrpc.client
-import re
 
 # defines
 

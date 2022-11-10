@@ -4,9 +4,9 @@
 
 # jsb imports
 
-from jsb.lib.users import getusers
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
+from jsb.lib.users import getusers
 from jsb.utils.generic import getwho
 
 # ignore command

@@ -7,15 +7,16 @@
 
 # jsb imports
 
+import urllib.error
+import urllib.parse
+import urllib.request
+
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.utils.url import useragent
 
 # basic imports
 
-import urllib.request
-import urllib.error
-import urllib.parse
 
 # gcalc command
 

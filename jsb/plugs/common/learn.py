@@ -9,8 +9,8 @@
 from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
+from jsb.lib.persist import GlobalPersist, PlugPersist
 from jsb.utils.lazydict import LazyDict
-from jsb.lib.persist import PlugPersist, GlobalPersist
 
 # basic imports
 

@@ -7,8 +7,8 @@
 # jsb imports
 
 from jsb.lib.commands import cmnds
-from jsb.utils.generic import waitforqueue
 from jsb.lib.examples import examples
+from jsb.utils.generic import waitforqueue
 
 # basic imports
 

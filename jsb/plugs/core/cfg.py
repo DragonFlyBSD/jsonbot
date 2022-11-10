@@ -4,10 +4,10 @@
 
 """ this plugin manages various configuration settings. """
 
-from jsb.lib.commands import cmnds
-from jsb.lib.users import getusers
-from jsb.lib.config import getmainconfig
 from jsb.lib.aliases import setalias
+from jsb.lib.commands import cmnds
+from jsb.lib.config import getmainconfig
+from jsb.lib.users import getusers
 
 allowset = ["timesleep", "dbenable"]
 

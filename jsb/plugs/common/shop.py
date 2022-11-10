@@ -6,10 +6,10 @@
 
 # jsb imports
 
-from jsb.utils.generic import getwho, jsonstring
-from jsb.lib.users import users
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
+from jsb.lib.users import users
+from jsb.utils.generic import getwho, jsonstring
 from jsb.utils.pdol import Pdol
 
 # basic imports

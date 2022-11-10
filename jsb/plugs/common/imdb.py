@@ -6,10 +6,10 @@
 
 # jsb imports
 
-from jsb.lib.examples import examples
-from jsb.lib.commands import cmnds
-from jsb.utils.url import geturl2, striphtml, decode_html_entities
 from jsb.imports import getjson
+from jsb.lib.commands import cmnds
+from jsb.lib.examples import examples
+from jsb.utils.url import decode_html_entities, geturl2, striphtml
 
 # basic imports
 

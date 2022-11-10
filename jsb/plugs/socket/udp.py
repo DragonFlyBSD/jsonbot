@@ -29,23 +29,24 @@
 
 # jsb imports
 
+import logging
+import queue
+import re
+import socket
+import time
+
+from jsb.lib.callbacks import first_callbacks
 from jsb.lib.fleet import getfleet
+from jsb.lib.partyline import partyline
+from jsb.lib.persistconfig import PersistConfig
+from jsb.lib.threads import start_new_thread
 from jsb.utils.exception import handle_exception
 from jsb.utils.generic import strippedtxt
 from jsb.utils.locking import lockdec
-from jsb.lib.partyline import partyline
-from jsb.lib.threads import start_new_thread
 from rijndael import rijndael
-from jsb.lib.persistconfig import PersistConfig
-from jsb.lib.callbacks import first_callbacks
 
 # basic imports
 
-import socket
-import re
-import time
-import queue
-import logging
 
 # defines
 

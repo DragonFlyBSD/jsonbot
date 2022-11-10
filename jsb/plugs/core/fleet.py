@@ -10,18 +10,19 @@
 
 # jsb imports
 
-from jsb.lib.config import Config
-from jsb.lib.threads import start_new_thread
-from jsb.lib.fleet import getfleet, FleetBotAlreadyExists
+import copy
+import os
+
 from jsb.lib.commands import cmnds
+from jsb.lib.config import Config
 from jsb.lib.examples import examples
-from jsb.utils.name import stripname
+from jsb.lib.fleet import FleetBotAlreadyExists, getfleet
+from jsb.lib.threads import start_new_thread
 from jsb.utils.generic import waitforqueue
+from jsb.utils.name import stripname
 
 # basic imports
 
-import os
-import copy
 
 # defines
 

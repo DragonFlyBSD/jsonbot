@@ -10,27 +10,28 @@
 
 # jsb imports
 
-import sys
-import copy
-import os.path
-import os
-import logging
 import _thread
+import copy
+import logging
+import os
+import os.path
+import sys
 from collections import deque
-from jsb.utils.trace import whichmodule, calledfrom, callstack, where
-from jsb.utils.lazydict import LazyDict
-from jsb.utils.exception import handle_exception
-from jsb.utils.name import stripname
-from jsb.utils.locking import lockdec
-from jsb.utils.timeutils import elapsedstring
+
+from jsb.imports import getjson
 from jsb.lib.callbacks import callbacks
-from jsb.lib.errors import MemcachedCounterError, JSONParseError
+from jsb.lib.errors import JSONParseError, MemcachedCounterError
+from jsb.utils.exception import handle_exception
+from jsb.utils.lazydict import LazyDict
+from jsb.utils.locking import lockdec
+from jsb.utils.name import stripname
+from jsb.utils.timeutils import elapsedstring
+from jsb.utils.trace import calledfrom, callstack, where, whichmodule
 
 from .datadir import getdatadir
 
 # simplejson imports
 
-from jsb.imports import getjson
 
 json = getjson()
 
@@ -49,7 +50,7 @@ persistlocked = lockdec(persistlock)
 
 # global list to keeptrack of what persist objects need to be saved
 
-needsaving = deque()
+needsaving: deque = deque()
 
 
 def cleanup(bot=None, event=None):
@@ -74,11 +75,13 @@ def cleanup(bot=None, event=None):
 # try google first
 
 try:
-    from google.appengine.ext.db.metadata import Kind
-    from google.appengine.ext import db
     import google.appengine.api.memcache as mc
-    from google.appengine.api.datastore_errors import Timeout, TransactionFailedError
-    from .cache import get, set, delete
+    from google.appengine.api.datastore_errors import (Timeout,
+                                                       TransactionFailedError)
+    from google.appengine.ext import db
+    from google.appengine.ext.db.metadata import Kind
+
+    from .cache import delete, get, set
 
     logging.debug("using BigTable based Persist")
 

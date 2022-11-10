@@ -7,15 +7,16 @@
 
 # jsb imports
 
-from jsb.utils.exception import handle_exception
+import logging
+
+from jsb.db.direct import Db
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.users import getusers
-from jsb.db.direct import Db
+from jsb.utils.exception import handle_exception
 
 # basic imports
 
-import logging
 
 # defines
 

@@ -23,25 +23,24 @@ __copyright__ = "this file is in the public domain"
 __author__ = "Bas van Oostveen"
 __coauthor__ = "Bart Thate <bthate@gmail.com>"
 
-from jsb.lib.datadir import getdatadir
-from jsb.utils.url import geturl, striphtml
-from jsb.utils.generic import jsonstring
-from jsb.lib.persist import PlugPersist
-from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
-from jsb.lib.callbacks import callbacks
-from jsb.lib.plugins import plugs as plugins
-from jsb.lib.threads import start_new_thread
-from jsb.utils.limlist import Limlist
-from jsb.lib.persist import PersistCollection, Persist
-from jsb.utils.exception import handle_exception
-import time
-import re
-import random
 import logging
 import os
+import random
+import re
+import time
 
+from jsb.lib.callbacks import callbacks
+from jsb.lib.commands import cmnds
+from jsb.lib.datadir import getdatadir
+from jsb.lib.examples import examples
+from jsb.lib.persist import Persist, PersistCollection, PlugPersist
 from jsb.lib.persistconfig import PersistConfig
+from jsb.lib.plugins import plugs as plugins
+from jsb.lib.threads import start_new_thread
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import jsonstring
+from jsb.utils.limlist import Limlist
+from jsb.utils.url import geturl, striphtml
 
 cfg = PersistConfig()
 cfg.define("enable", [])

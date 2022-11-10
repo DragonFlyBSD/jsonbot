@@ -6,13 +6,14 @@
 
 # tweepy imports
 
-from tweepy.auth import OAuthHandler
-from tweepy.api import API
+import logging
+
 from tweepy import oauth
+from tweepy.api import API
+from tweepy.auth import OAuthHandler
 
 # basic imports
 
-import logging
 
 # defines
 

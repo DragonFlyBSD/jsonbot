@@ -6,28 +6,30 @@
 
 # jsb imports
 
-from .channelbase import ChannelBase
-from jsb.utils.lazydict import LazyDict
-from jsb.utils.generic import splittxt, stripped, waitforqueue
-from .errors import NoSuchUser, NoSuchCommand, RequireError
-from jsb.utils.opts import makeeventopts
-from jsb.utils.trace import whichmodule
-from jsb.utils.exception import handle_exception
-from jsb.utils.locking import lockdec
-from jsb.lib.config import Config, getmainconfig
-from jsb.lib.users import getusers
-from jsb.lib.commands import cmnds
-from jsb.lib.floodcontrol import floodcontrol
-
-# basic imports
-
-from collections import deque
+import _thread
 import copy
 import logging
 import threading
 import time
-import _thread
 import uuid
+from collections import deque
+
+from jsb.lib.commands import cmnds
+from jsb.lib.config import Config, getmainconfig
+from jsb.lib.floodcontrol import floodcontrol
+from jsb.lib.users import getusers
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import splittxt, stripped, waitforqueue
+from jsb.utils.lazydict import LazyDict
+from jsb.utils.locking import lockdec
+from jsb.utils.opts import makeeventopts
+from jsb.utils.trace import whichmodule
+
+from .channelbase import ChannelBase
+from .errors import NoSuchCommand, NoSuchUser, RequireError
+
+# basic imports
+
 
 # defines
 

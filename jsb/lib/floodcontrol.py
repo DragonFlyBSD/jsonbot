@@ -6,14 +6,15 @@
 
 # jsb imports
 
-from jsb.utils.statdict import StatDict
-from jsb.utils.lazydict import LazyDict
+import logging
+import time
+
 from jsb.lib.config import getmainconfig
+from jsb.utils.lazydict import LazyDict
+from jsb.utils.statdict import StatDict
 
 # basic imports
 
-import logging
-import time
 
 ##
 

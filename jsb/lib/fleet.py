@@ -6,29 +6,30 @@
 
 # jsb imports
 
-from jsb.utils.locking import lockdec
-import copy
 import _thread
-import threading
+import copy
 import logging
-import time
 import os
-from jsb.utils.exception import handle_exception
-from jsb.utils.generic import waitforqueue
-from jsb.utils.trace import whichmodule
-from .config import Config, getmainconfig
-from .datadir import getdatadir
-from .users import users
-from .plugins import plugs
-from .persist import Persist
-from .errors import NoSuchBotType, BotNotEnabled
-from .threads import start_new_thread
-from .eventhandler import mainhandler
-from jsb.utils.name import stripname
-from jsb.lib.factory import BotFactory
-from jsb.utils.lazydict import LazyDict  # simplejson imports
+import threading
+import time
 
 from jsb.imports import getjson
+from jsb.lib.factory import BotFactory
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import waitforqueue
+from jsb.utils.lazydict import LazyDict  # simplejson imports
+from jsb.utils.locking import lockdec
+from jsb.utils.name import stripname
+from jsb.utils.trace import whichmodule
+
+from .config import Config, getmainconfig
+from .datadir import getdatadir
+from .errors import BotNotEnabled, NoSuchBotType
+from .eventhandler import mainhandler
+from .persist import Persist
+from .plugins import plugs
+from .threads import start_new_thread
+from .users import users
 
 json = getjson()
 

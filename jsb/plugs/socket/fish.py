@@ -14,43 +14,43 @@
 
  """
 
-import time
-import struct
-from os import urandom
-from math import log
-import hashlib
 import base64
+import hashlib
+import struct
+import time
+from math import log
+from os import urandom
 
 __author__ = "Frank Spijkerman"
 
 # jsb imports
 
-from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
+import logging
+import os
+import pickle
+
 from jsb.lib.callbacks import callbacks
-from jsb.lib.morphs import outputmorphs
-from jsb.lib.morphs import inputmorphs
-from jsb.lib.persiststate import PlugState
-from jsb.utils.lazydict import LazyDict
-from jsb.lib.persist import Persist
-from jsb.utils.name import stripname
+from jsb.lib.commands import cmnds
 from jsb.lib.datadir import getdatadir
-from jsb.utils.generic import getwho
-from jsb.lib.users import getusers
 from jsb.lib.errors import RequireError
+from jsb.lib.examples import examples
+from jsb.lib.morphs import inputmorphs, outputmorphs
+from jsb.lib.persist import Persist
 from jsb.lib.persistconfig import PersistConfig
+from jsb.lib.persiststate import PlugState
+from jsb.lib.users import getusers
+from jsb.utils.generic import getwho
+from jsb.utils.lazydict import LazyDict
+from jsb.utils.name import stripname
 
 # basic imports
 
-import os
-import logging
-import pickle
 
 # check for pycrypto dependancy
 
 try:
-    import Crypto.Cipher.Blowfish
     import Crypto.Cipher.AES
+    import Crypto.Cipher.Blowfish
 except ImportError:
     raise RequireError(
         "PyCrypto is required for FiSH. Please install this library if you want to use this plug"
@@ -373,8 +373,8 @@ ___version__ = "0.1.1"
 
 
 try:
-    import Crypto.Cipher.Blowfish
     import Crypto.Cipher.AES
+    import Crypto.Cipher.Blowfish
 except ImportError:
     print("This module requires PyCrypto / The Python Cryptographic Toolkit.")
     print("Get it from http://www.dlitz.net/software/pycrypto/.")

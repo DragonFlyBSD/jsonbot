@@ -6,29 +6,30 @@
 
 # jsb imports
 
+import gzip
+import io
+import logging
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
-import gzip
-import io
-import time
-import logging
-from jsb.utils.exception import handle_exception
-from jsb.utils.lazydict import LazyDict
-from jsb.utils.url import geturl2, striphtml, re_url_match
-from jsb.utils.generic import splittxt
-from jsb.utils.timeutils import today
-from jsb.lib.persistconfig import PersistConfig
-from jsb.lib.persiststate import PlugState
-from jsb.lib.jsbimport import _import_byfile
-from jsb.lib.datadir import getdatadir
+
+from jsb.imports import getjson
 from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
+from jsb.lib.datadir import getdatadir
+from jsb.lib.errors import URLNotEnabled
 from jsb.lib.examples import examples
 from jsb.lib.fleet import getfleet
+from jsb.lib.jsbimport import _import_byfile
 from jsb.lib.periodical import minutely, periodical
-from jsb.lib.errors import URLNotEnabled
-from jsb.imports import getjson
+from jsb.lib.persistconfig import PersistConfig
+from jsb.lib.persiststate import PlugState
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import splittxt
+from jsb.utils.lazydict import LazyDict
+from jsb.utils.timeutils import today
+from jsb.utils.url import geturl2, re_url_match, striphtml
 
 json = getjson()
 

@@ -11,10 +11,11 @@ go = False
 # basic imports
 
 try:
-    from subprocess import Popen, PIPE
-    from .locking import lockdec
     import _thread
     import io
+    from subprocess import PIPE, Popen
+
+    from .locking import lockdec
 
     go = True
 except:

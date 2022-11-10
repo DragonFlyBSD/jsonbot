@@ -6,13 +6,14 @@
 
 # jsb imports
 
+import time
+
 from jsb.lib.eventbase import EventBase
-from jsb.utils.trace import whichmodule
 from jsb.lib.gozerevent import GozerEvent
+from jsb.utils.trace import whichmodule
 
 # basic imports
 
-import time
 
 # classes
 

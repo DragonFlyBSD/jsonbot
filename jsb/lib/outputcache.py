@@ -4,16 +4,18 @@
 
 # jsb imports
 
-from .persist import Persist
+import logging
+import os
+import time
+
 from jsb.utils.name import stripname
-from .datadir import getdatadir
 from jsb.utils.timeutils import hourmin
+
+from .datadir import getdatadir
+from .persist import Persist
 
 # basic imports
 
-import os
-import logging
-import time
 
 # clear function
 

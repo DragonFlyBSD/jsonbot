@@ -20,17 +20,18 @@ __author__ = "Bas van Oostveen"
 
 # jsb imports
 
-from jsb.utils.lazydict import LazyDict
-from jsb.utils.trace import calledfrom, whichplugin
+import logging
+import os
+
+from jsb.imports import getjson
+from jsb.lib.config import Config
 from jsb.lib.examples import examples
 from jsb.lib.persist import Persist
-from jsb.lib.config import Config
-from jsb.imports import getjson
+from jsb.utils.lazydict import LazyDict
+from jsb.utils.trace import calledfrom, whichplugin
 
 # basic imports
 
-import os
-import logging
 
 # PersistConfigError exception
 
@@ -64,7 +65,7 @@ class PersistConfig(Config):
         logging.debug(
             "persistconfig - added command %s (%s)" % (cmndname, self.plugname)
         )
-        from jsb.lib.commands import cmnds, Command
+        from jsb.lib.commands import Command, cmnds
 
         cmnds[cmndname] = Command(
             self.modname,

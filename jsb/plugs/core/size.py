@@ -6,13 +6,14 @@
 
 # jsb imports
 
-from jsb.utils.exception import handle_exception
+import sys
+
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
+from jsb.utils.exception import handle_exception
 
 # basic imports
 
-import sys
 
 # size command
 

@@ -6,13 +6,14 @@
 
 # jsb imports
 
+import logging
+import os
+
 from jsb.lib.datadir import getdatadir
 from jsb.utils.lazydict import LazyDict
 
 # basic imports
 
-import os
-import logging
 
 # defines
 

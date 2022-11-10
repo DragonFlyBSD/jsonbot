@@ -6,23 +6,24 @@
 
 # jsb imports
 
-from jsb.utils.lazydict import LazyDict
-from jsb.utils.generic import fromenc
-from jsb.utils.exception import handle_exception
-from jsb.lib.callbacks import callbacks, remote_callbacks, first_callbacks
-from jsb.lib.container import Container
-from jsb.lib.eventbase import EventBase
-from jsb.lib.errors import NoProperDigest
+import copy
+import hashlib
+import hmac
+import logging
+
+from jsb.lib.callbacks import callbacks, first_callbacks, remote_callbacks
 from jsb.lib.commands import cmnds
+from jsb.lib.container import Container
+from jsb.lib.errors import NoProperDigest
+from jsb.lib.eventbase import EventBase
 from jsb.lib.examples import examples
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import fromenc
+from jsb.utils.lazydict import LazyDict
 from xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # basic imports
 
-import logging
-import copy
-import hmac
-import hashlib
 
 # defines
 

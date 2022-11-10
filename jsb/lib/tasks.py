@@ -4,13 +4,14 @@
 
 # jsb imports
 
-from jsb.utils.trace import calledfrom
+import logging
+import sys
+
 from jsb.lib.plugins import plugs
+from jsb.utils.trace import calledfrom
 
 # basic imports
 
-import logging
-import sys
 
 # TaskManager class
 

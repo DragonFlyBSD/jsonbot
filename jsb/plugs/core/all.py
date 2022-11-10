@@ -7,8 +7,8 @@
 # jsb imports
 
 from jsb.lib.commands import cmnds
-from jsb.lib.less import outcache
 from jsb.lib.examples import examples
+from jsb.lib.less import outcache
 
 # all command
 

@@ -6,13 +6,14 @@
 
 # jsb imports
 
-from jsb.utils.name import stripname
-from jsb.lib.persist import Persist, PersistCollection
+import os
+
 from jsb.lib.datadir import getdatadir
+from jsb.lib.persist import Persist, PersistCollection
+from jsb.utils.name import stripname
 
 # basic imports
 
-import os
 
 # UrlData class
 

@@ -6,13 +6,14 @@
 
 # jsb imports
 
-from jsb.utils.generic import waitforqueue
+import time
+
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
+from jsb.utils.generic import waitforqueue
 
 # basic imports
 
-import time
 
 # tail command
 

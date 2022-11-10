@@ -6,16 +6,18 @@
 
 # jsb imports
 
+import _thread
+import logging
+import queue
+import time
+
 from jsb.utils.exception import handle_exception
 from jsb.utils.locking import lockdec
+
 from .threads import start_new_thread
 
 # basic imports
 
-import queue
-import _thread
-import logging
-import time
 
 # locks
 

@@ -7,8 +7,8 @@
 # jsb imports
 
 from jsb.lib.aliases import setalias
-from jsb.lib.config import getmainconfig
 from jsb.lib.commands import cmnds
+from jsb.lib.config import getmainconfig
 from jsb.lib.examples import examples
 
 # data-event command

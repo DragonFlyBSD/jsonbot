@@ -6,12 +6,12 @@
 
 # jsb imports
 
-from jsb.utils.lazydict import LazyDict
+import logging
 
+from jsb.utils.lazydict import LazyDict
 
 # basic imports
 
-import logging
 
 # defines
 

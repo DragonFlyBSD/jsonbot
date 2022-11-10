@@ -6,22 +6,23 @@
 
 # jsb imports
 
-from jsb.lib.persist import Persist
-from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
-from jsb.lib.datadir import datadir
-from jsb.utils.locking import lockdec
-from jsb.db.direct import Db
-from jsb.lib.plugins import plugs
-from jsb.lib.aliases import setalias
-
-# basic imports
-
+import _thread
+import logging
 import random
 import re
 import time
-import _thread
-import logging
+
+from jsb.db.direct import Db
+from jsb.lib.aliases import setalias
+from jsb.lib.commands import cmnds
+from jsb.lib.datadir import datadir
+from jsb.lib.examples import examples
+from jsb.lib.persist import Persist
+from jsb.lib.plugins import plugs
+from jsb.utils.locking import lockdec
+
+# basic imports
+
 
 # main db
 

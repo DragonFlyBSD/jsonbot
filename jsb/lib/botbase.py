@@ -6,53 +6,43 @@
 
 import traceback
 
-# jsb imports
-
+from jsb.lib.threads import threaded
+from jsb.lib.users import getusers
 from jsb.utils.exception import handle_exception
-from .runner import defaultrunner, callbackrunner, waitrunner
-from .eventhandler import mainhandler
+from jsb.utils.generic import (fromenc, splittxt, stripcolor, strippedtxt,
+                               toenc, waitevents, waitforqueue)
 from jsb.utils.lazydict import LazyDict
-from .plugins import plugs as coreplugs
-from .callbacks import callbacks, first_callbacks, last_callbacks, remote_callbacks
-from .eventbase import EventBase
-from .errors import (
-    NoSuchCommand,
-    PlugsNotConnected,
-    NoOwnerSet,
-    NameNotSet,
-    NoEventProvided,
-)
+from jsb.utils.locking import lock_object, lockdec, release_object
+from jsb.utils.name import stripname
+from jsb.utils.pdod import Pdod
+from jsb.utils.trace import whichmodule
+from jsb.utils.url import decode_html_entities
+
+from .aliases import getaliases
+from .boot import boot, default_plugins, getcmndperms
+from .callbacks import (callbacks, first_callbacks, last_callbacks,
+                        remote_callbacks)
+from .channelbase import ChannelBase
 from .commands import Commands, cmnds
 from .config import Config, getmainconfig
-from jsb.utils.pdod import Pdod
-from .channelbase import ChannelBase
-from .less import Less, outcache
-from .boot import boot, getcmndperms, default_plugins
-from jsb.utils.locking import lockdec
+from .errors import (NameNotSet, NoEventProvided, NoOwnerSet, NoSuchCommand,
+                     PlugsNotConnected)
+from .eventbase import EventBase
+from .eventhandler import mainhandler
 from .exit import globalshutdown
-from jsb.utils.generic import (
-    splittxt,
-    toenc,
-    fromenc,
-    waitforqueue,
-    strippedtxt,
-    waitevents,
-    stripcolor,
-)
-from jsb.utils.trace import whichmodule
-from .fleet import getfleet
-from .aliases import getaliases
-from jsb.utils.name import stripname
-from .tick import tickloop
-from .threads import start_new_thread, threaded
-from .morphs import inputmorphs, outputmorphs
-from .gatekeeper import GateKeeper
-from .wait import waiter
 from .factory import bot_factory
-from jsb.lib.threads import threaded
-from jsb.utils.locking import lock_object, release_object
-from jsb.utils.url import decode_html_entities
-from jsb.lib.users import getusers
+from .fleet import getfleet
+from .gatekeeper import GateKeeper
+from .less import Less, outcache
+from .morphs import inputmorphs, outputmorphs
+from .plugins import plugs as coreplugs
+from .runner import callbackrunner, defaultrunner, waitrunner
+from .threads import start_new_thread, threaded
+from .tick import tickloop
+from .wait import waiter
+
+# jsb imports
+
 
 try:
     import wave
@@ -64,14 +54,14 @@ except ImportError:
 
 # basic imports
 
-import time
-import logging
-import copy
-import os
 import _thread
-import threading
+import copy
+import logging
+import os
 import queue
 import re
+import threading
+import time
 
 # defines
 

@@ -6,15 +6,16 @@
 
 # jsb imports
 
+import _thread
+import logging
+import re
+import threading
+import time
+
 from jsb.utils.exception import handle_exception
 
 # basic imports
 
-import threading
-import re
-import time
-import _thread
-import logging
 
 # defines
 

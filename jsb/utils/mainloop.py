@@ -6,13 +6,14 @@
 
 # jsb imports
 
-from jsb.utils.exception import handle_exception
+import time
+
 from jsb.lib.eventhandler import mainhandler
 from jsb.lib.exit import globalshutdown
+from jsb.utils.exception import handle_exception
 
 # basic imports
 
-import time
 
 # mainloop function
 

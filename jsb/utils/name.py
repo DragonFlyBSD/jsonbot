@@ -17,14 +17,15 @@ google requirements on file names:
 
 # jsb imports
 
-from jsb.utils.generic import toenc, fromenc
+import os
+import re
+import string
+
 from jsb.lib.errors import NameNotSet
+from jsb.utils.generic import fromenc, toenc
 
 # basic imports
 
-import string
-import os
-import re
 
 # defines
 

@@ -5,27 +5,24 @@
 
 """ test plugin. """
 
-from jsb.utils.exception import (
-    exceptionmsg,
-    handle_exception,
-    exceptionevents,
-    exceptionlist,
-)
+import copy
+import logging
+import random
+import time
+
 from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
-from jsb.lib.eventbase import EventBase
-from jsb.lib.users import users
-from jsb.lib.threads import start_new_thread
-from jsb.utils.generic import waitforqueue, waitevents
-from jsb.lib.runner import cmndrunner, defaultrunner
 from jsb.lib.errors import NoSuchCommand
+from jsb.lib.eventbase import EventBase
+from jsb.lib.examples import examples
+from jsb.lib.runner import cmndrunner, defaultrunner
+from jsb.lib.threads import start_new_thread
+from jsb.lib.users import users
+from jsb.utils.exception import (exceptionevents, exceptionlist, exceptionmsg,
+                                 handle_exception)
+from jsb.utils.generic import waitevents, waitforqueue
 
 # basic imports
 
-import time
-import random
-import copy
-import logging
 
 # defines
 

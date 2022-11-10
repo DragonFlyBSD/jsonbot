@@ -6,16 +6,17 @@
 
 # jsb imports
 
+import copy
+import logging
+import time
+import uuid
+
 from jsb.lib.runner import waitrunner
-from jsb.utils.trace import whichmodule
 from jsb.utils.exception import handle_exception
+from jsb.utils.trace import whichmodule
 
 # basic imports
 
-import logging
-import copy
-import time
-import uuid
 
 # defines
 

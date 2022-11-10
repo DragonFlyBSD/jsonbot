@@ -6,15 +6,17 @@
 
 # jsb imports
 
-from .exception import handle_exception
-from .trace import whichmodule
-from .lockmanager import lockmanager, rlockmanager
+import _thread
+import logging
+
 from jsb.lib.threads import getname
+
+from .exception import handle_exception
+from .lockmanager import lockmanager, rlockmanager
+from .trace import whichmodule
 
 # generic imports
 
-import logging
-import _thread
 
 # Locked-class
 

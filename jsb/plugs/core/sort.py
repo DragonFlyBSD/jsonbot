@@ -9,14 +9,15 @@ __license__ = "BSD"
 
 # jsb imports
 
+import optparse
+import time
+
 from jsb.lib.commands import cmnds
-from jsb.utils.generic import waitforqueue
 from jsb.lib.examples import examples
+from jsb.utils.generic import waitforqueue
 
 # basic imports
 
-import optparse
-import time
 
 # SortError exception
 

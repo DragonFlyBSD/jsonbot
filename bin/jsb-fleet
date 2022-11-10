@@ -3,29 +3,28 @@
 #
 
 """ run multiple bot instances in 1 program. """
-
 # bootstrap
 
-import sys
+import logging
 import os
-from jsb.utils.log import setloglevel
-from jsb.lib.fleet import getfleet
+import signal
+import sys
+import time
+import warnings
+
 import jsb
-from jsb.utils.exception import handle_exception
+from jsb.lib.boot import boot
+from jsb.lib.datadir import getdatadir, makedirs, setdatadir
+from jsb.lib.exit import globalshutdown
+from jsb.lib.fleet import getfleet
+from jsb.lib.partyline import partyline
 from jsb.lib.threads import start_new_thread
 from jsb.lib.users import users_boot
+from jsb.utils.exception import handle_exception
+from jsb.utils.log import setloglevel
 from jsb.utils.mainloop import mainloop
-from jsb.lib.exit import globalshutdown
-from jsb.lib.boot import boot
-from jsb.lib.datadir import makedirs
-from jsb.lib.partyline import partyline
-from jsb.version import getversion
-from jsb.lib.datadir import setdatadir, getdatadir
 from jsb.utils.opts import makefleetopts
-import signal
-import time
-import logging
-import warnings
+from jsb.version import getversion
 
 warnings.simplefilter("ignore")
 

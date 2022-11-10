@@ -6,13 +6,14 @@
 
 # jsb imports
 
-from jsb.lib.eventbase import EventBase
+import getpass
+
 from jsb.lib.channelbase import ChannelBase
 from jsb.lib.errors import NoInput
+from jsb.lib.eventbase import EventBase
 
 # basic imports
 
-import getpass
 
 # ConsoleEvent class
 

@@ -8,17 +8,18 @@
 
 """ nick tracking. """
 
+import os
+import time
+
 from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
 from jsb.lib.datadir import getdatadir
-from jsb.utils.pdod import Pdod
-from jsb.lib.persistconfig import PersistConfig
 from jsb.lib.examples import examples
+from jsb.lib.persistconfig import PersistConfig
+from jsb.utils.pdod import Pdod
 
 # basic imports
 
-import os
-import time
 
 # defines
 

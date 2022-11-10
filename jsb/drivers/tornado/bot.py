@@ -6,22 +6,24 @@
 
 # jsb imports
 
-import tornado.web
-import tornado.ioloop
-import functools
 import copy
-import time
+import functools
 import logging
-from jsb.lib.botbase import BotBase
-from jsb.lib.outputcache import add
-from jsb.utils.generic import toenc, fromenc, strippedtxt, stripcolor
-from jsb.utils.url import re_url_match
-from jsb.utils.timeutils import hourmin
-from jsb.lib.channelbase import ChannelBase
+import time
+
 from jsb.imports import getjson
+from jsb.lib.botbase import BotBase
+from jsb.lib.channelbase import ChannelBase
 from jsb.lib.container import Container
-from jsb.utils.exception import handle_exception
 from jsb.lib.eventbase import EventBase
+from jsb.lib.outputcache import add
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import fromenc, stripcolor, strippedtxt, toenc
+from jsb.utils.timeutils import hourmin
+from jsb.utils.url import re_url_match
+
+import tornado.ioloop
+import tornado.web
 
 json = getjson()
 

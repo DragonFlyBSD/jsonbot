@@ -6,24 +6,26 @@
 
 # jsb imports
 
-import time
-import copy
-import uuid
-import logging
 import _thread
+import copy
+import logging
 import os
 import sys
-from jsb.utils.trace import whichmodule, calledfrom
-from jsb.utils.lazydict import LazyDict
+import time
+import uuid
+
+from jsb.imports import getjson
 from jsb.utils.exception import handle_exception
+from jsb.utils.lazydict import LazyDict
+from jsb.utils.locking import lockdec
 from jsb.utils.name import stripname
+from jsb.utils.trace import calledfrom, whichmodule
+
 from .datadir import getdatadir
 from .errors import CantSaveConfig, NoSuchFile
-from jsb.utils.locking import lockdec
 
 # simplejson imports
 
-from jsb.imports import getjson
 
 json = getjson()
 

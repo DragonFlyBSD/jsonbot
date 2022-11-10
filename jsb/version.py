@@ -6,11 +6,12 @@
 
 # jsb imports
 
+import binascii
+
 from jsb.lib.config import getmainconfig
 
 # basic imports
 
-import binascii
 
 # defines
 

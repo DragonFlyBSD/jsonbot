@@ -6,17 +6,18 @@
 
 # jsb imports
 
-from jsb.lib.persist import Persist, PersistCollection
+import logging
+import os
+import time
+
 from jsb.lib.datadir import getdatadir
-from jsb.utils.statdict import StatDict
+from jsb.lib.persist import Persist, PersistCollection
 from jsb.utils.name import stripname
-from jsb.utils.url import striphtml, Url
+from jsb.utils.statdict import StatDict
+from jsb.utils.url import Url, striphtml
 
 # basic imports
 
-import time
-import logging
-import os
 
 # UrlStats class
 

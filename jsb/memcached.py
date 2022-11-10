@@ -6,14 +6,15 @@
 
 # jsb imports
 
-from jsb.lib.datadir import getdatadir
+import logging
+import os
+import os.path
+
 from jsb.lib.config import getmainconfig
+from jsb.lib.datadir import getdatadir
 
 # basic imports
 
-import os
-import os.path
-import logging
 
 mc = None
 

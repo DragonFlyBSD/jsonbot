@@ -9,20 +9,21 @@ __license__ = "BSD License"
 
 # jsb imports
 
+import _thread
+import datetime
+import logging
+import sys
+import time
+
+import jsb.lib.threads as thr
+from jsb.lib.callbacks import callbacks
 from jsb.utils.exception import handle_exception
-from jsb.utils.trace import calledfrom, whichmodule
 from jsb.utils.locking import lockdec
 from jsb.utils.timeutils import strtotime
-from jsb.lib.callbacks import callbacks
-import jsb.lib.threads as thr
+from jsb.utils.trace import calledfrom, whichmodule
 
 # basic imorts
 
-import datetime
-import sys
-import time
-import _thread
-import logging
 
 # locks
 

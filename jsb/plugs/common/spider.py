@@ -12,8 +12,8 @@
 
 """
 
-import time
 import logging
+import time
 
 __version__ = "0.2"
 __copyright__ = "CopyRight (C) 2008-2011 by James Mills"
@@ -24,18 +24,18 @@ __coauthor__ = "adapted for JSONBOT by Bart Thate <bthate@gmail.com>"
 
 # jsb imports
 
-from jsb.utils.name import stripname
-from jsb.utils.exception import handle_exception
-from jsb.utils.urldata import UrlData
-from jsb.utils.generic import waitforqueue
-from jsb.utils.url import geturl2, striphtml, Url
-from jsb.lib.datadir import getdatadir
-from jsb.lib.persist import PersistCollection
-from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
-from jsb.lib.threadloop import ThreadLoop
-from jsb.lib.callbacks import callbacks
 from jsb.imports import getBeautifulSoup
+from jsb.lib.callbacks import callbacks
+from jsb.lib.commands import cmnds
+from jsb.lib.datadir import getdatadir
+from jsb.lib.examples import examples
+from jsb.lib.persist import PersistCollection
+from jsb.lib.threadloop import ThreadLoop
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import waitforqueue
+from jsb.utils.name import stripname
+from jsb.utils.url import Url, geturl2, striphtml
+from jsb.utils.urldata import UrlData
 
 soup = getBeautifulSoup()
 

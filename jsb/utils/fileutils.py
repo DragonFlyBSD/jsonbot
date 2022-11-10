@@ -9,15 +9,16 @@
 
 # jsb imports
 
+import bz2
+import gzip
+import io
+import os
+import tarfile
+
 from jsb.utils.generic import istr
 
 # basic imports
 
-import tarfile
-import os
-import io
-import bz2
-import gzip
 
 # tarextract function
 

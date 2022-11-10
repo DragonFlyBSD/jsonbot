@@ -6,15 +6,16 @@
 
 # jsb imports
 
-from jsb.utils.generic import getwho
+import time
+
+from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
-from jsb.lib.callbacks import callbacks
 from jsb.lib.persist import PlugPersist
+from jsb.utils.generic import getwho
 
 # basic imports
 
-import time
 
 # Remind-class
 

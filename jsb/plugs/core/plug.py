@@ -6,17 +6,18 @@
 
 # jsb imports
 
+import logging
+
+from jsb.lib.boot import (default_plugins, plugdisable, plugenable,
+                          plugin_packages, remove_plugin, savecmndtable,
+                          savepluginlist, update_mod)
 from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
-from jsb.lib.boot import default_plugins, plugin_packages, remove_plugin, update_mod
-from jsb.utils.exception import handle_exception, exceptionmsg
-from jsb.lib.boot import savecmndtable, savepluginlist, update_mod
 from jsb.lib.errors import NoSuchPlugin, RequireError
-from jsb.lib.boot import plugenable, plugdisable
+from jsb.lib.examples import examples
+from jsb.utils.exception import exceptionmsg, handle_exception
 
 # basic imports
 
-import logging
 
 # plug-enable command
 

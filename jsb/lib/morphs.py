@@ -6,13 +6,14 @@
 
 # jsb imports
 
+import logging
+import sys
+
 from jsb.utils.exception import handle_exception
 from jsb.utils.trace import calledfrom
 
 # basic imports
 
-import sys
-import logging
 
 # Morph claas
 

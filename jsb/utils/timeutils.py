@@ -6,13 +6,14 @@
 
 # jsb imports
 
+import calendar
+import re
+import time
+
 from .exception import handle_exception
 
 # basic imports
 
-import time
-import re
-import calendar
 
 # defines
 

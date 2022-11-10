@@ -20,19 +20,20 @@ __license__ = "BSD"
 
 # jsb imports
 
-from jsb.utils.exception import handle_exception
-from jsb.lib.callbacks import callbacks
-from jsb.lib.commands import cmnds
-from jsb.lib.persist import PlugPersist
-from jsb.lib.examples import examples
-from jsb.plugs.common.tinyurl import get_tinyurl
-
-# basic import
-
+import logging
 import re
 import urllib.parse
 import xmlrpc.client
-import logging
+
+from jsb.lib.callbacks import callbacks
+from jsb.lib.commands import cmnds
+from jsb.lib.examples import examples
+from jsb.lib.persist import PlugPersist
+from jsb.plugs.common.tinyurl import get_tinyurl
+from jsb.utils.exception import handle_exception
+
+# basic import
+
 
 # defines
 

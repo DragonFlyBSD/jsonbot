@@ -6,8 +6,8 @@
 
 # basic imports
 
-import os
 import logging
+import os
 import sys
 
 # getsource function

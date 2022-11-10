@@ -6,12 +6,13 @@
 
 # jsb imports
 
-from jsb.utils.exception import handle_exception
+import logging
+
 from jsb.lib.errors import NoSuchBotType, NoUserProvided
+from jsb.utils.exception import handle_exception
 
 # basic imports
 
-import logging
 
 # Factory base class
 

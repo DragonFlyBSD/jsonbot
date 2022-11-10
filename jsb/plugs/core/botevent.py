@@ -7,17 +7,18 @@
 # jsb imports
 
 import logging
-from jsb.utils.exception import handle_exception
-from jsb.lib.tasks import taskmanager
+
+from jsb.imports import getjson
 from jsb.lib.botbase import BotBase
+from jsb.lib.callbacks import callbacks, first_callbacks, last_callbacks
 from jsb.lib.eventbase import EventBase
-from jsb.utils.lazydict import LazyDict
 from jsb.lib.factory import BotFactory
-from jsb.lib.callbacks import first_callbacks, callbacks, last_callbacks
+from jsb.lib.tasks import taskmanager
+from jsb.utils.exception import handle_exception
+from jsb.utils.lazydict import LazyDict
 
 # simplejson imports
 
-from jsb.imports import getjson
 
 json = getjson()
 

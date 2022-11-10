@@ -9,9 +9,9 @@ __author__ = "Hans van Kranenburg <hans@knorrie.org>"
 
 # jsb imports
 
-from jsb.utils.generic import waitforqueue
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
+from jsb.utils.generic import waitforqueue
 
 # basic imports
 

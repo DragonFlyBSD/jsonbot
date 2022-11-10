@@ -6,26 +6,27 @@
 
 # jsb imports
 
-from jsb.lib.datadir import getdatadir
-from jsb.utils.generic import waitforqueue
-from jsb.lib.errors import NoSuchCommand, NoInput
+import atexit
+import code
+import copy
+import logging
+import os
+import readline
+import sys
+
 from jsb.lib.botbase import BotBase
-from jsb.lib.exit import globalshutdown
-from jsb.utils.generic import strippedtxt, waitevents
-from jsb.utils.url import striphtml
-from jsb.utils.exception import handle_exception
+from jsb.lib.datadir import getdatadir
+from jsb.lib.errors import NoInput, NoSuchCommand
 from jsb.lib.eventhandler import mainhandler
+from jsb.lib.exit import globalshutdown
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import strippedtxt, waitevents, waitforqueue
+from jsb.utils.url import striphtml
+
 from .event import ConsoleEvent
 
 # basic imports
 
-import logging
-import sys
-import code
-import os
-import readline
-import atexit
-import copy
 
 # defines
 

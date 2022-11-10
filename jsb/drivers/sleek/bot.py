@@ -7,15 +7,17 @@
 # boty imports
 
 import logging
-from .presence import Presence
-from .message import Message
-from jsb.lib.eventhandler import mainhandler
-from jsb.lib.errors import NoUserProvided
+
 from jsb.drivers.xmpp.bot import SXMPPBot
-from jsb.lib.botbase import BotBase
-from jsb.utils.xmpp import stripped
-from jsb.lib.threads import start_new_thread
 from jsb.imports import getsleek
+from jsb.lib.botbase import BotBase
+from jsb.lib.errors import NoUserProvided
+from jsb.lib.eventhandler import mainhandler
+from jsb.lib.threads import start_new_thread
+from jsb.utils.xmpp import stripped
+
+from .message import Message
+from .presence import Presence
 
 sleekxmpp = getsleek()
 

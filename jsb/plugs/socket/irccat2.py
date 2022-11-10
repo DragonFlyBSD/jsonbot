@@ -28,22 +28,23 @@ BHJTW - 28-02-2012 .. move to irccat2.py to use the normal irccat-cfg functions
 
 # jsb imports
 
-from socketserver import ThreadingMixIn, StreamRequestHandler
+import logging
 import socketserver
-from jsb.utils.exception import handle_exception
-from jsb.lib.threads import start_new_thread
-from jsb.lib.persist import PlugPersist
-from jsb.lib.fleet import getfleet
+import time
+from socketserver import StreamRequestHandler, ThreadingMixIn
+
+from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
-from jsb.lib.callbacks import callbacks
+from jsb.lib.fleet import getfleet
+from jsb.lib.persist import PlugPersist
 from jsb.lib.persistconfig import PersistConfig
+from jsb.lib.threads import start_new_thread
+from jsb.utils.exception import handle_exception
 from jsb.utils.generic import fromenc, toenc
 
 # basic imports
 
-import logging
-import time
 
 # defines
 

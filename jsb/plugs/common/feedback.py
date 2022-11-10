@@ -8,10 +8,10 @@
 
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
-from jsb.lib.fleet import getfleet
 from jsb.lib.factory import bot_factory
-from jsb.utils.lazydict import LazyDict
+from jsb.lib.fleet import getfleet
 from jsb.utils.generic import waitforqueue
+from jsb.utils.lazydict import LazyDict
 
 # basic imports
 

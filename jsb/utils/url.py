@@ -6,29 +6,27 @@
 
 # jsb imports
 
-from .lazydict import LazyDict
-from .generic import fromenc, toenc
+# import sgmllib
+import _thread
+import cgi
+import html.entities
+import http.client
+import logging
+import re
+import sys
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+
 from jsb.lib.errors import URLNotEnabled
+
+from .generic import fromenc, toenc
+from .lazydict import LazyDict
 
 # basic imports
 
-import logging
-import time
-import sys
-import re
-import urllib.request
-import urllib.parse
-import urllib.error
-import urllib.request
-import urllib.error
-import urllib.parse
-import urllib.parse
 
-# import sgmllib
-import _thread
-import http.client
-import html.entities
-import cgi
 
 # defines
 

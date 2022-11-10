@@ -10,19 +10,20 @@ __status__ = "seen"
 
 # jsb imports
 
-from jsb.utils.exception import handle_exception
-from jsb.utils.url import geturl2
-from jsb.lib.commands import cmnds
+import urllib.error
+import urllib.parse
+import urllib.request
+
+import simplejson as json
 from jsb.lib.aliases import aliases
+from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.persistconfig import PersistConfig
+from jsb.utils.exception import handle_exception
+from jsb.utils.url import geturl2
 
 # basic imports
 
-import urllib.request
-import urllib.parse
-import urllib.error
-import simplejson as json
 
 # defines
 

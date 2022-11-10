@@ -9,17 +9,18 @@ __license__ = "BSD"
 
 # jsb imports
 
-from jsb.lib.examples import examples
+import logging
+import os
+
 from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
 from jsb.lib.datadir import getdatadir
+from jsb.lib.examples import examples
 from jsb.lib.fleet import getfleet
 from jsb.utils.pdod import Pdod
 
 # basic imports
 
-import os
-import logging
 
 # NSAuth class
 

@@ -6,11 +6,12 @@
 
 # jsb imports
 
+import logging
+
 from jsb.utils.exception import handle_exception
 
 # basic imports
 
-import logging
 
 # gotsqlite function
 

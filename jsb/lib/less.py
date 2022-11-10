@@ -13,9 +13,9 @@ from jsb.utils.limlist import Limlist
 
 try:
     import waveapi
-    from google.appengine.api.memcache import get, set, delete
+    from google.appengine.api.memcache import delete, get, set
 except ImportError:
-    from jsb.lib.cache import get, set, delete
+    from jsb.lib.cache import delete, get, set
 
 # basic imports
 

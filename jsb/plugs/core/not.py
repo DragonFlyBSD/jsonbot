@@ -6,15 +6,16 @@
 
 # jsb imports
 
-from jsb.lib.examples import examples
+import getopt
+import re
+import time
+
 from jsb.lib.commands import cmnds
+from jsb.lib.examples import examples
 from jsb.utils.generic import waitforqueue
 
 # basic imports
 
-import getopt
-import re
-import time
 
 ## not command
 

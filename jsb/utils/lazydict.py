@@ -6,15 +6,16 @@
 
 # jsb imports
 
+import copy
+import logging
 import threading
 import types
-import logging
-import copy
-from jsb.utils.locking import lockdec
-from jsb.utils.exception import handle_exception
-from jsb.utils.trace import whichmodule, where
-from jsb.lib.errors import PropertyIgnored
+
 from jsb.imports import getjson
+from jsb.lib.errors import PropertyIgnored
+from jsb.utils.exception import handle_exception
+from jsb.utils.locking import lockdec
+from jsb.utils.trace import where, whichmodule
 
 json = getjson()
 

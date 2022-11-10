@@ -6,16 +6,17 @@
 
 # jsb imports
 
-from jsb.utils.generic import getwho
+import logging
+import queue
+
+from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
-from jsb.lib.callbacks import callbacks
 from jsb.lib.wait import waiter
+from jsb.utils.generic import getwho
 
 # basic imports
 
-import queue
-import logging
 
 # defines
 

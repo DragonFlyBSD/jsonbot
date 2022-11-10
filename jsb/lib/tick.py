@@ -6,10 +6,10 @@
 
 # jsb imports
 
-from jsb.lib.threadloop import TimedLoop
-from jsb.lib.eventbase import EventBase
 from jsb.lib.callbacks import callbacks
 from jsb.lib.config import getmainconfig
+from jsb.lib.eventbase import EventBase
+from jsb.lib.threadloop import TimedLoop
 
 # TickLoop class
 

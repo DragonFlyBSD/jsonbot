@@ -6,15 +6,16 @@
 
 # jsb imports
 
-from jsb.utils.locking import lockdec
+import _thread
+import logging
+
+from jsb.imports import getjson
 from jsb.lib.eventbase import EventBase
 from jsb.utils.lazydict import LazyDict
-from jsb.imports import getjson
+from jsb.utils.locking import lockdec
 
 # basic imports
 
-import logging
-import _thread
 
 # defines
 

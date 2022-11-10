@@ -6,29 +6,26 @@
 
 # jsb imports
 
+import copy
+import logging
+
+from jsb.lib.callbacks import (callbacks, first_callbacks, last_callbacks,
+                               remote_callbacks)
 from jsb.lib.commands import cmnds
-from jsb.lib.callbacks import (
-    callbacks,
-    remote_callbacks,
-    last_callbacks,
-    first_callbacks,
-)
-from jsb.lib.persist import PlugPersist
-from jsb.lib.fleet import getfleet
-from jsb.utils.exception import handle_exception
-from jsb.lib.examples import examples
-from jsb.utils.locking import locked
-from jsb.utils.generic import stripcolor
 from jsb.lib.eventbase import EventBase
+from jsb.lib.examples import examples
+from jsb.lib.fleet import getfleet
+from jsb.lib.persist import PlugPersist
+from jsb.utils.exception import handle_exception
+from jsb.utils.format import formatevent
+from jsb.utils.generic import stripcolor
+from jsb.utils.locking import locked
 
 # plugin imports
 
-from jsb.utils.format import formatevent
 
 # basic imports
 
-import copy
-import logging
 
 # defines
 

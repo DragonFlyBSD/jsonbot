@@ -6,11 +6,12 @@
 
 # jsb imports
 
+import xml.dom.minidom
+
 from .exception import handle_exception
 
 # basic imports
 
-import xml.dom.minidom
 
 # gettext function
 

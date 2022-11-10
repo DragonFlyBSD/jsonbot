@@ -9,23 +9,24 @@
 
 # jsb imports
 
-from jsb.utils.url import striphtml
+import logging
+
+from xmlstream import NodeBuilder, XMLescape, XMLunescape
+from jsb.drivers.xmpp.namespace import attributes, subelements
 from jsb.lib.eventbase import EventBase
+from jsb.utils.url import striphtml
 
 # dom imports
 
-from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # for exceptions
 
 
 # xmpp imports
 
-from jsb.drivers.xmpp.namespace import attributes, subelements
 
 # basic imports
 
-import logging
 
 # GozerEvent class
 

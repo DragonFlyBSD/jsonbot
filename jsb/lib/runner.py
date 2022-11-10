@@ -6,22 +6,23 @@
 
 # jsb imports
 
-from jsb.lib.threads import getname, start_new_thread, start_bot_command
-from jsb.utils.exception import handle_exception
-from jsb.utils.locking import locked, lockdec
-from jsb.utils.lockmanager import rlockmanager, lockmanager
-from jsb.utils.generic import waitevents
-from jsb.utils.trace import callstack, whichmodule
-from jsb.lib.threadloop import RunnerLoop
+import _thread
+import logging
+import random
+import time
+
 from jsb.lib.callbacks import callbacks
 from jsb.lib.errors import URLNotEnabled
+from jsb.lib.threadloop import RunnerLoop
+from jsb.lib.threads import getname, start_bot_command, start_new_thread
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import waitevents
+from jsb.utils.locking import lockdec, locked
+from jsb.utils.lockmanager import lockmanager, rlockmanager
+from jsb.utils.trace import callstack, whichmodule
 
 # basic imports
 
-import time
-import _thread
-import random
-import logging
 
 # Runner class
 

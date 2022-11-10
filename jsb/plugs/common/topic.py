@@ -6,12 +6,13 @@
 
 # jsb imports
 
+import time
+
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 
 # basic imports
 
-import time
 
 # checktopicmode function
 

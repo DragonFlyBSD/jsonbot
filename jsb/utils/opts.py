@@ -6,15 +6,16 @@
 
 # jsb imports
 
-from jsb.lib.errors import NameNotSet, NoUserProvided, NoOwnerSet
-from jsb.version import version
+import logging
+import optparse
+import os
+
+from jsb.lib.errors import NameNotSet, NoOwnerSet, NoUserProvided
 from jsb.utils.name import stripname
+from jsb.version import version
 
 # basic imports
 
-import os
-import logging
-import optparse
 
 # EventOptionParser class
 

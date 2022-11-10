@@ -6,15 +6,16 @@
 
 # jsb imports
 
-from jsb.lib.commands import cmnds
+import logging
+
 from jsb.lib.callbacks import callbacks
-from jsb.lib.persist import PlugPersist
+from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.fleet import getfleet
+from jsb.lib.persist import PlugPersist
 
 # basic imports
 
-import logging
 
 # defines
 

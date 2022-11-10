@@ -7,8 +7,8 @@
 # basic imports
 
 import _thread
-import threading
 import logging
+import threading
 
 # LockManager class
 

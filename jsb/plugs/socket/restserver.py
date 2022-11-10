@@ -6,19 +6,20 @@
 
 # jsb imports
 
+import logging
+import socket
+
 from jsb.lib.callbacks import callbacks
-from jsb.utils.url import posturl, getpostdata
-from jsb.lib.persistconfig import PersistConfig
 from jsb.lib.commands import cmnds
-from jsb.lib.rest.server import RestServer, RestRequestHandler
 from jsb.lib.eventbase import EventBase
-from jsb.utils.exception import handle_exception
 from jsb.lib.examples import examples
+from jsb.lib.persistconfig import PersistConfig
+from jsb.lib.rest.server import RestRequestHandler, RestServer
+from jsb.utils.exception import handle_exception
+from jsb.utils.url import getpostdata, posturl
 
 # basic imports
 
-import socket
-import logging
 
 # defines
 

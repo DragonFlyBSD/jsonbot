@@ -8,18 +8,19 @@ __copyright__ = "this file is in the public domain"
 
 # jsb imports
 
+import _thread
+import logging
+import os
+import time
+
 from jsb.lib.config import getmainconfig
-from jsb.utils.locking import lockdec
-from jsb.utils.generic import tolatin1
-from jsb.utils.exception import handle_exception
 from jsb.lib.datadir import getdatadir
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import tolatin1
+from jsb.utils.locking import lockdec
 
 # basic imports
 
-import _thread
-import os
-import time
-import logging
 
 # locks
 

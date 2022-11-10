@@ -6,14 +6,15 @@
 
 # jsb imports
 
+import logging
+from datetime import datetime
+
+from jsb.utils.lazydict import LazyDict
 from jsb.utils.name import stripname
 from jsb.utils.url import striphtml
-from jsb.utils.lazydict import LazyDict
 
 # basic imports
 
-import logging
-from datetime import datetime
 
 # formats
 # Formats are defined here. simple also provides default values if values

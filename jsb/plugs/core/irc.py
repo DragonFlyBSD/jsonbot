@@ -6,18 +6,19 @@
 
 # jsb imports
 
+import time
+
+import jsb.lib.threads as thr
+import sets
 from jsb.lib.callbacks import callbacks
-from jsb.lib.partyline import partyline
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
 from jsb.lib.fleet import getfleet
+from jsb.lib.partyline import partyline
 from jsb.lib.wait import waiter
-import jsb.lib.threads as thr
 
 # basic imports
 
-import sets
-import time
 
 # define
 
