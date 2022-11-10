@@ -26,7 +26,6 @@ from jsb.lib.persistconfig import PersistConfig
 from jsb.lib.users import getusers
 from jsb.utils.exception import handle_exception
 from jsb.imports import getfeedparser, getjson
-from jsb.utils.lazydict import LazyDict
 
 import copy
 import os

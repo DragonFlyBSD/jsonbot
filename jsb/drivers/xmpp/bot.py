@@ -21,7 +21,7 @@ from jsb.lib.botbase import BotBase
 from jsb.lib.exit import globalshutdown
 from jsb.lib.channelbase import ChannelBase
 from jsb.lib.fleet import getfleet
-from jsb.contrib.digestmd5 import makeresp
+from digestmd5 import makeresp
 
 # jsb.socket imports
 
@@ -29,7 +29,7 @@ from jsb.utils.generic import waitforqueue, jabberstrip, getrandomnick, toenc, f
 
 # xmpp imports
 
-from jsb.contrib.xmlstream import XMLescape, XMLunescape
+from xmlstream import XMLescape, XMLunescape
 from .presence import Presence
 from .message import Message
 from .iq import Iq

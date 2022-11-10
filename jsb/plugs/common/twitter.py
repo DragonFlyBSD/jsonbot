@@ -19,12 +19,12 @@ from jsb.lib.jsbimport import _import_byfile
 
 # tweppy imports
 
-from jsb.contrib.tweepy.auth import OAuthHandler
-from jsb.contrib.tweepy.api import API
-from jsb.contrib.tweepy import oauth
-from jsb.contrib.tweepy.error import TweepError
-from jsb.contrib.tweepy.models import Status, User
-from jsb.contrib import tweepy
+from tweepy.auth import OAuthHandler
+from tweepy.api import API
+from tweepy import oauth
+from tweepy.error import TweepError
+from tweepy.models import Status, User
+import tweepy
 
 
 # basic imports

@@ -35,7 +35,7 @@ def getsource(mod):
             )
         except ImportError:
             try:
-                import jsb.contrib.pkg_resources as pkg_resources
+                import pkg_resources as pkg_resources
 
                 source = pkg_resources.resource_filename(
                     ".".join(splitted[: len(splitted) - 1]), splitted[-1]

@@ -35,7 +35,7 @@ from jsb.utils.generic import strippedtxt
 from jsb.utils.locking import lockdec
 from jsb.lib.partyline import partyline
 from jsb.lib.threads import start_new_thread
-from jsb.contrib.rijndael import rijndael
+from rijndael import rijndael
 from jsb.lib.persistconfig import PersistConfig
 from jsb.lib.callbacks import first_callbacks
 

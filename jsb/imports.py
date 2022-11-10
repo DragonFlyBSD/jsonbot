@@ -28,7 +28,7 @@ def getwebapp2():
     try:
         mod = _import("webapp2")
     except:
-        mod = _import("jsb.contrib.webapp2")
+        mod = _import("webapp2")
     logging.debug("webapp2 module is %s" % str(mod))
     return mod
 
@@ -40,7 +40,7 @@ def getjson():
     try:
         pass
 
-        # mod = _import("jsb.contrib.simplejson")
+        # mod = _import("simplejson")
         mod = _import("json")
     except ImportError:
         try:
@@ -49,7 +49,7 @@ def getjson():
             try:
                 mod = _import("simplejson")
             except:
-                mod = _import("jsb.contrib.simplejson")
+                mod = _import("simplejson")
     logging.debug("json module is %s" % str(mod))
     return mod
 
@@ -61,7 +61,7 @@ def getfeedparser():
     try:
         mod = _import("feedparser")
     except:
-        mod = _import("jsb.contrib.feedparser")
+        mod = _import("feedparser")
     logging.info("feedparser module is %s" % str(mod))
     return mod
 
@@ -70,7 +70,7 @@ def getoauth():
     try:
         mod = _import("oauth")
     except:
-        mod = _import("jsb.contrib.oauth")
+        mod = _import("oauth")
     logging.info("oauth module is %s" % str(mod))
     return mod
 
@@ -88,7 +88,7 @@ def gettornado():
     try:
         mod = _import("tornado")
     except:
-        mod = _import("jsb.contrib.tornado")
+        mod = _import("tornado")
     logging.info("tornado module is %s" % str(mod))
     return mod
 
@@ -97,7 +97,7 @@ def getBeautifulSoup():
     try:
         mod = _import("BeautifulSoup")
     except:
-        mod = _import("jsb.contrib.BeautifulSoup")
+        mod = _import("BeautifulSoup")
     logging.info("BeautifulSoup module is %s" % str(mod))
     return mod
 
@@ -106,6 +106,6 @@ def getsleek():
     try:
         mod = _import("sleekxmpp")
     except:
-        mod = _import("jsb.contrib.sleekxmpp")
+        mod = _import("sleekxmpp")
     logging.info("sleek module is %s" % str(mod))
     return mod

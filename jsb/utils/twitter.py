@@ -6,9 +6,9 @@
 
 # tweepy imports
 
-from jsb.contrib.tweepy.auth import OAuthHandler
-from jsb.contrib.tweepy.api import API
-from jsb.contrib.tweepy import oauth
+from tweepy.auth import OAuthHandler
+from tweepy.api import API
+from tweepy import oauth
 
 # basic imports
 

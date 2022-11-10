@@ -34,7 +34,7 @@ def mcboot():
         return
     logging.warn("memcached is enabled")
     try:
-        import jsb.contrib.memcache as memcache
+        import memcache as memcache
 
         rundir = getdatadir() + os.sep + "run"
         sock = os.path.abspath(rundir + os.sep + "memcached.socket")

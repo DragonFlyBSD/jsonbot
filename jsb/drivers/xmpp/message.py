@@ -18,7 +18,7 @@ from jsb.lib.gozerevent import GozerEvent
 
 # xmpp import
 
-from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
+from xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # basic imports
 

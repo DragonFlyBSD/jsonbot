@@ -30,7 +30,7 @@ from jsb.plugs.common.twitter import postmsg
 
 # xmpp import
 
-from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
+from xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # basic imports
 

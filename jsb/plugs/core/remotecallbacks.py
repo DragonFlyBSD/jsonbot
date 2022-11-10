@@ -15,7 +15,7 @@ from jsb.lib.eventbase import EventBase
 from jsb.lib.errors import NoProperDigest
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
-from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
+from xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # basic imports
 

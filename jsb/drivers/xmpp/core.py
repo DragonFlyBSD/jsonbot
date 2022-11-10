@@ -20,12 +20,12 @@ from jsb.lib.threads import start_new_thread
 from jsb.utils.trace import whichmodule
 from jsb.lib.gozerevent import GozerEvent
 from jsb.lib.fleet import getfleet
-from jsb.contrib.digestmd5 import makeresp
+from digestmd5 import makeresp
 from jsb.imports import getdns
 
 # xmpp import
 
-from jsb.contrib.xmlstream import NodeBuilder, XMLescape, XMLunescape
+from xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # basic imports
 
