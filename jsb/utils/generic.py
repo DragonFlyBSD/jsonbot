@@ -137,7 +137,7 @@ def splittxt(what, l=375):
     start = 0
     end = l
     length = len(what)
-    for i in range(length / end + 1):
+    for i in range(length // end + 1):
         starttag = what.find("</", end)
         if starttag != -1:
             endword = what.find(">", end) + 1
