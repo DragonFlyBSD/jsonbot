@@ -19,6 +19,9 @@ from jsb.utils.url import geturl2
 
 # basic imports
 
+raise ImportError(
+    "This module relies on http://geoip.pidgets.com/?ip=%s&format=json which no longer works. Find an alternative backend"
+)
 
 # defines
 

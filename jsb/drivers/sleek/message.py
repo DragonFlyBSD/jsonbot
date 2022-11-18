@@ -19,7 +19,6 @@ from jsb.utils.exception import handle_exception
 from jsb.utils.generic import fromenc, jabberstrip, toenc
 from jsb.utils.locking import lockdec
 from jsb.utils.trace import whichmodule
-from xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # xmpp import
 

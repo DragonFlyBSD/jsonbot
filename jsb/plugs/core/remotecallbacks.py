@@ -3,7 +3,9 @@
 #
 
 """ dispatch remote events. """
-
+raise ImportError(
+    "This module requires xmlstream which is not supported for python3. If you wish to use it, please rewrite the code to use a different XML library"
+)
 # jsb imports
 
 import copy

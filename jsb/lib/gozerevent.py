@@ -11,7 +11,6 @@
 
 import logging
 
-from xmlstream import NodeBuilder, XMLescape, XMLunescape
 from jsb.drivers.xmpp.namespace import attributes, subelements
 from jsb.lib.eventbase import EventBase
 from jsb.utils.url import striphtml
@@ -65,6 +64,11 @@ class GozerEvent(EventBase):
 
     def tojabber(self):
         """convert the dictionary to xml."""
+        raise ImportError(
+            "This module requires XML library. It used to use xmlstream which is no longer maintained. Please find an alternative library and refactor this function"
+        )
+        from xmlstream import NodeBuilder, XMLescape, XMLunescape
+
         res = dict(self)
         if not res:
             raise Exception("%s .. toxml() can't convert empty dict" % self.name)

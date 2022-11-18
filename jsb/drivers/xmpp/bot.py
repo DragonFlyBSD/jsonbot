@@ -6,6 +6,10 @@
 
 # jsb imports
 
+raise ImportError(
+    "This module relies on xmlstream which no longer works on python3. Please find a modern XML library and refactor this code"
+)
+
 import _thread
 import copy
 import logging
@@ -24,8 +28,15 @@ from jsb.lib.threads import start_new_thread
 from jsb.lib.users import users
 from jsb.utils.dol import Dol
 from jsb.utils.exception import handle_exception
-from jsb.utils.generic import (fromenc, getrandomnick, jabberstrip, stripcolor,
-                               stripped, toenc, waitforqueue)
+from jsb.utils.generic import (
+    fromenc,
+    getrandomnick,
+    jabberstrip,
+    stripcolor,
+    stripped,
+    toenc,
+    waitforqueue,
+)
 from jsb.utils.locking import lockdec
 from jsb.utils.pdod import Pdod
 from jsb.utils.trace import whichmodule

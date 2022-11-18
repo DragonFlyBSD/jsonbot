@@ -31,6 +31,8 @@ from jsb.utils.lazydict import LazyDict
 from jsb.utils.timeutils import today
 from jsb.utils.url import geturl2, re_url_match, striphtml
 
+raise ImportError("It doesn't work and I don't have API key to work with it")
+
 json = getjson()
 
 # basic imports

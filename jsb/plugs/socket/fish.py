@@ -48,12 +48,18 @@ from jsb.utils.name import stripname
 
 # check for pycrypto dependancy
 
+raise ImportError(
+    "FiSH was using PyCrypto which is no longer supported and is insecure."
+    "You need to rewrite this module to use a maintained cryptography library."
+)
+
 try:
     import Crypto.Cipher.AES
     import Crypto.Cipher.Blowfish
 except ImportError:
-    raise RequireError(
-        "PyCrypto is required for FiSH. Please install this library if you want to use this plug"
+    raise ImportError(
+        "FiSH was using PyCrypto which is no longer supported and is insecure."
+        "You need to rewrite this module to use a maintained cryptography library."
     )
 
 # defines

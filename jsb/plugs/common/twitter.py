@@ -6,6 +6,10 @@
 
 # jsb imports
 
+raise ImportError(
+    "This module broke down during 2to3 migration and I don't have twitter to fix it. Contributions welcome"
+)
+
 import logging
 import os
 import urllib.error
@@ -30,7 +34,6 @@ from tweepy.error import TweepError
 from tweepy.models import Status, User
 
 # tweppy imports
-
 
 
 # basic imports

@@ -6,7 +6,9 @@
     this module contains the core xmpp handling functions.
 
 """
-
+raise ImportError(
+    "This module relies on xmlstream which no longer works on python3. Please find a modern XML library and refactor this code"
+)
 # jsb imports
 
 import _thread

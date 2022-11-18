@@ -13,7 +13,6 @@ import hmac
 import time
 import uuid
 
-from xmlstream import NodeBuilder, XMLescape, XMLunescape
 from jsb.imports import getjson
 from jsb.lib.gozerevent import GozerEvent
 from jsb.lib.persist import Persist
