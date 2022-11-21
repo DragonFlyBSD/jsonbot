@@ -4,31 +4,49 @@
 
 """ provide a base class for channels. """
 
-## jsb imports
+# jsb imports
 
-from jsb.utils.name import stripname
-from jsb.utils.lazydict import LazyDict
-from jsb.lib.persist import Persist
-from jsb.lib.datadir import getdatadir
-from jsb.utils.trace import whichmodule
-from jsb.lib.errors import NoChannelProvided, NoChannelSet
-
-## basic imports
-
-import time
-import os
 import logging
+import os
+import time
 
-## classes
+from jsb.lib.datadir import getdatadir
+from jsb.lib.errors import NoChannelProvided, NoChannelSet
+from jsb.lib.persist import Persist
+from jsb.utils.lazydict import LazyDict
+from jsb.utils.name import stripname
+from jsb.utils.trace import whichmodule
+
+# basic imports
+
+
+# classes
+
 
 class ChannelBase(Persist):
 
-    """ Base class for all channel objects. """
+    """Base class for all channel objects."""
 
     def __init__(self, id, botname=None, type="notset"):
-        if not id: raise NoChannelSet()
-        if not botname: Persist.__init__(self, getdatadir() + os.sep + 'channels' + os.sep + stripname(id))
-        else: Persist.__init__(self, getdatadir() + os.sep + 'fleet' + os.sep + stripname(botname) + os.sep + 'channels' + os.sep + stripname(id))
+        if not id:
+            raise NoChannelSet()
+        if not botname:
+            Persist.__init__(
+                self, getdatadir() + os.sep + "channels" + os.sep + stripname(id)
+            )
+        else:
+            Persist.__init__(
+                self,
+                getdatadir()
+                + os.sep
+                + "fleet"
+                + os.sep
+                + stripname(botname)
+                + os.sep
+                + "channels"
+                + os.sep
+                + stripname(id),
+            )
         self.id = id
         self.type = type
         self.lastmodified = time.time()
@@ -52,42 +70,45 @@ class ChannelBase(Persist):
         self.data.webchannels = self.data.webchannels or []
 
     def setpass(self, type, key):
-        """ set channel password based on type. """
+        """set channel password based on type."""
         self.data.passwords[type] = key
         self.save()
 
-    def getpass(self, type='IRC'):
-        """ get password based of type. """
+    def getpass(self, type="IRC"):
+        """get password based of type."""
         try:
             return self.data.passwords[type]
-        except KeyError: return
+        except KeyError:
+            return
 
-    def delpass(self, type='IRC'):
-        """ delete password. """
+    def delpass(self, type="IRC"):
+        """delete password."""
         try:
             del self.data.passwords[type]
             self.save()
             return True
-        except KeyError: return
+        except KeyError:
+            return
 
     def parse(self, event, wavelet=None):
         """
-            parse an event for channel related data and constuct the 
-            channel with it. Overload this.
+        parse an event for channel related data and constuct the
+        channel with it. Overload this.
 
         """
-        pass
 
     def gae_create(self):
         try:
             from google.appengine.api import channel
+
             id = self.id.split("_", 1)[0]
-        except ImportError: return (None, None)
-        #webchan = id + "_" + str(time.time())
+        except ImportError:
+            return (None, None)
+        # webchan = id + "_" + str(time.time())
         webchan = id + "_" + str(time.time())
         logging.warn("trying to create channel for %s" % webchan)
         token = channel.create_channel(webchan)
-        #if token and token not in self.data.tokens:
+        # if token and token not in self.data.tokens:
         #    self.data.tokens.insert(0, token)
         #    self.data.tokens = self.data.tokens[:10]
         if webchan not in self.data.webchannels:

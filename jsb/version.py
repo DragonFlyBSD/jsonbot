@@ -4,22 +4,23 @@
 
 """ version related stuff. """
 
-## jsb imports
+# jsb imports
+
+import binascii
 
 from jsb.lib.config import getmainconfig
 
-## basic imports
+# basic imports
 
-import os
-import binascii
 
-## defines
+# defines
 
 version = "0.84.4"
 __version__ = version
 
-## getversion function
+# getversion function
+
 
 def getversion(txt=""):
-    """ return a version string. """
+    """return a version string."""
     return "JSONBOT %s RELEASE %s" % (version, txt)

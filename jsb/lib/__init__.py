@@ -7,4 +7,5 @@
 __version__ = "0.84"
 
 import warnings
-warnings.simplefilter('ignore')
+
+warnings.simplefilter("ignore")

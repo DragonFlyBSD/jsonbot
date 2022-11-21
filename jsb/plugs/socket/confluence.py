@@ -12,34 +12,33 @@ this were adapted from that plugin
 http://inamidst.com/phenny/
 """
 
-## jsb imports
+# jsb imports
+
+import xmlrpc.client
 
 from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
-from jsb.lib.persist import PlugPersist
 from jsb.lib.examples import examples
+from jsb.lib.persist import PlugPersist
 from jsb.plugs.common.tinyurl import get_tinyurl
 
-## basic imports
+# basic imports
 
-import logging
-import xmlrpclib
-import re
-import time
 
-#import modules.activecollab
+# import modules.activecollab
 
-## defines
+# defines
 
 rpc_clients = {}
-cfg = PlugPersist('confluence', {})
+cfg = PlugPersist("confluence", {})
 
-## fetRpcClient function
+# fetRpcClient function
+
 
 def getRpcClient(sInfo):
     if sInfo["name"] not in rpc_clients:
         base_url = "%s/rpc/xmlrpc" % sInfo["url"]
-        server = xmlrpclib.ServerProxy(base_url).confluence1
+        server = xmlrpc.client.ServerProxy(base_url).confluence1
 
         username, password = sInfo["username"], sInfo["password"]
         auth = server.login(username, password)
@@ -48,12 +47,16 @@ def getRpcClient(sInfo):
 
     return rpc_clients[sInfo["name"]]
 
-## confluence-add_confluence_server command
+
+# confluence-add_confluence_server command
+
 
 def handle_add_confluence_server(bot, ievent):
-    """ configure a new confluence server; syntax: add_confluence_server [server name] [url] [username] [password] """
+    """configure a new confluence server; syntax: add_confluence_server [server name] [url] [username] [password]"""
     if len(ievent.args) != 4:
-        ievent.reply("syntax: add_confluence_server [server name] [url] [username] [password]")
+        ievent.reply(
+            "syntax: add_confluence_server [server name] [url] [username] [password]"
+        )
         return
 
     server = {
@@ -65,23 +68,30 @@ def handle_add_confluence_server(bot, ievent):
         "serverInfo": {},
     }
 
-    if not cfg.data.has_key("servers"):
+    if "servers" not in cfg.data:
         cfg.data["servers"] = {}
     cfg.data["servers"][server["name"]] = server
     cfg.save()
 
     ievent.reply("Added confluence server %s" % server["name"])
+
+
 cmnds.add("add_confluence_server", handle_add_confluence_server, ["OPER"])
-examples.add("add_confluence_server", "add a confluence server", "add_confluence_server FireBreath http://confluence.firebreath.org myuser mypassword")
+examples.add(
+    "add_confluence_server",
+    "add a confluence server",
+    "add_confluence_server FireBreath http://confluence.firebreath.org myuser mypassword",
+)
+
 
 def handle_del_confluence_server(bot, ievent):
-    """ remove a confluence server; syntax: del_confluence_server """
+    """remove a confluence server; syntax: del_confluence_server"""
     if len(ievent.args) != 1:
         ievent.reply("syntax: del_confluence_server [server name]")
         return
 
     serverName = ievent.args[0]
-    if not cfg.data.has_key("servers"):
+    if "servers" not in cfg.data:
         cfg.data["servers"] = {}
     if serverName in cfg.data["servers"]:
         del cfg.data["servers"][serverName]
@@ -89,11 +99,18 @@ def handle_del_confluence_server(bot, ievent):
         ievent.reply("Deleted confluence server %s" % serverName)
     else:
         ievent.reply("Unknown confluence server %s" % serverName)
+
+
 cmnds.add("del_confluence_server", handle_del_confluence_server, ["OPER"])
-examples.add("del_confluence_server", "del a confluence server", "del_confluence_server FireBreath http://confluence.firebreath.org myuser mypassword")
+examples.add(
+    "del_confluence_server",
+    "del a confluence server",
+    "del_confluence_server FireBreath http://confluence.firebreath.org myuser mypassword",
+)
+
 
 def handle_confluence_enable_server(bot, ievent):
-    """ choose the confluence server for lookups in the current channel; syntax: handle_confluence_enable_server [server] """
+    """choose the confluence server for lookups in the current channel; syntax: handle_confluence_enable_server [server]"""
     if len(ievent.args) != 1:
         ievent.reply("syntax: handle_confluence_enable_server [server]")
         return
@@ -108,24 +125,40 @@ def handle_confluence_enable_server(bot, ievent):
 
     cfg.data["channels"][ievent.channel] = serverName
     cfg.save()
-    ievent.reply("enabled confluence searches from this channel for server %s" % serverName)
-cmnds.add("confluence_enable_server", handle_confluence_enable_server, ["OPER"])
-examples.add("confluence_enable_server", "enable searching confluence from the channel", "confluence_enable_server confluenceserver")
+    ievent.reply(
+        "enabled confluence searches from this channel for server %s" % serverName
+    )
 
-## confluence-disable command
+
+cmnds.add("confluence_enable_server", handle_confluence_enable_server, ["OPER"])
+examples.add(
+    "confluence_enable_server",
+    "enable searching confluence from the channel",
+    "confluence_enable_server confluenceserver",
+)
+
+# confluence-disable command
+
 
 def handle_confluence_disable(bot, ievent):
-    """ disable lookups for confluence in the current channel; syntax: confluence_disable """
+    """disable lookups for confluence in the current channel; syntax: confluence_disable"""
     if not "channels" in cfg.data or not ievent.channel in cfg.data["channels"]:
         ievent.reply("Confluence search was not enabled on this channel")
         return
 
     del cfg.data["channels"][ievent.channel]
     ievent.reply("disabled confluence searching from this channel")
-cmnds.add("confluence_disable", handle_confluence_disable, ["OPER"])
-examples.add("confluence_disable", "disable lookups for confluence in the current channel", "confluence_disable")
 
-## wiki command
+
+cmnds.add("confluence_disable", handle_confluence_disable, ["OPER"])
+examples.add(
+    "confluence_disable",
+    "disable lookups for confluence in the current channel",
+    "confluence_disable",
+)
+
+# wiki command
+
 
 def handle_confluence_search(bot, ievent):
 
@@ -151,7 +184,9 @@ def handle_confluence_search(bot, ievent):
     try:
         client, auth = getRpcClient(server)
         results = client.search(auth, query, maxResults)
-    except Exception, ex: ievent.reply("an error occured: %s" % str(ex)) ; return
+    except Exception as ex:
+        ievent.reply("an error occured: %s" % str(ex))
+        return
 
     ievent.reply("Displaying %s result(s) :" % min(maxResults, len(results)))
     for page in results[:maxResults]:
@@ -159,5 +194,10 @@ def handle_confluence_search(bot, ievent):
         tinyurl = tinyurl[0] if tinyurl else page["url"]
         ievent.reply('"%s": %s' % (page["title"], tinyurl))
 
+
 cmnds.add("wiki", handle_confluence_search, ["OPER", "USER", "GUEST"])
-examples.add("wiki", "perform a lookup in the selected confluence instance", "wiki #5 some search text")
+examples.add(
+    "wiki",
+    "perform a lookup in the selected confluence instance",
+    "wiki #5 some search text",
+)

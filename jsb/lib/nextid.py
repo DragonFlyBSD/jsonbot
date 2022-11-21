@@ -4,30 +4,30 @@
 
 """ provide increasing counters """
 
-## basic imports
+# basic imports
 
-import os
 
-## Nextid class
+# Nextid class
+
 
 class Nextid(object):
 
-    """ counters by name """
+    """counters by name"""
 
     def __init__(self, fname):
         self.data = {}
 
     def get(self, item):
-        """ get counter for item """
+        """get counter for item"""
         item = item.lower()
         try:
             result = self.data[item]
         except KeyError:
-            return None 
+            return None
         return result
 
     def set(self, item, number):
-        """ set counter of item to number """
+        """set counter of item to number"""
         item = item.lower()
         try:
             self.data[item] = int(number)
@@ -37,7 +37,7 @@ class Nextid(object):
         return 1
 
     def next(self, item):
-        """ get increment of item counter """
+        """get increment of item counter"""
         item = item.lower()
         try:
             self.data[item] += 1
@@ -47,14 +47,14 @@ class Nextid(object):
         return self.data[item]
 
     def nextlist(self, item, nr):
-        """ get increment of item counter """
+        """get increment of item counter"""
         item = item.lower()
         try:
             start = self.data[item] + 1
         except KeyError:
             start = 1
         stop = start + nr
-        l = range(start, stop)
+        l = list(range(start, stop))
         self.data[item] = stop - 1
         self.save()
         return l
@@ -62,4 +62,5 @@ class Nextid(object):
     def save(self):
         pass
 
-nextid = Nextid('notused')
+
+nextid = Nextid("notused")

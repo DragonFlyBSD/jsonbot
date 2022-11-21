@@ -4,191 +4,242 @@
 
 """ core bot commands. """
 
-## jsb imports
+# jsb imports
+
+import copy
+import functools
+import logging
+import os
+import sys
+import time
 
 from jsb.lib.aliases import setalias
-from jsb.lib.config import getmainconfig
-from jsb.utils.statdict import StatDict
-from jsb.utils.log import setloglevel, getloglevel
-from jsb.utils.timeutils import elapsedstring
-from jsb.utils.exception import handle_exception
+from jsb.lib.boot import (boot, getcmndtable, getpluginlist, plugin_packages,
+                          whatcommands)
 from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
-from jsb.lib.plugins import plugs
-from jsb.lib.boot import plugin_packages, getpluginlist, boot, getcmndtable, whatcommands
-from jsb.lib.persist import Persist
-from jsb.lib.reboot import reboot, reboot_stateful
+from jsb.lib.config import getmainconfig
+from jsb.lib.errors import NoSuchPlugin
 from jsb.lib.eventhandler import mainhandler
+from jsb.lib.examples import examples
+from jsb.lib.exit import globalshutdown
 from jsb.lib.fleet import getfleet
 from jsb.lib.partyline import partyline
-from jsb.lib.exit import globalshutdown
-from jsb.lib.runner import defaultrunner, cmndrunner, longrunner
-from jsb.lib.errors import NoSuchPlugin
+from jsb.lib.persist import Persist
+from jsb.lib.plugins import plugs
+from jsb.lib.reboot import reboot, reboot_stateful
+from jsb.lib.runner import cmndrunner, defaultrunner, longrunner
+from jsb.utils.exception import handle_exception
+from jsb.utils.log import getloglevel, setloglevel
+from jsb.utils.statdict import StatDict
+from jsb.utils.timeutils import elapsedstring
 
-## basic imports
+# basic imports
 
-import time
-import threading
-import sys
-import re
-import os
-import copy
-import cgi
-import logging
-import functools
 
-## defines
+# defines
 
 cpy = copy.deepcopy
 
-## reboot command
+# reboot command
+
 
 def handle_reboot(bot, ievent):
-    """ no arguments - reboot the bot. """
+    """no arguments - reboot the bot."""
     if bot.isgae:
         ievent.reply("this command doesn't work on the GAE")
         return
     ievent.reply("rebooting")
-    #time.sleep(3)
-    if ievent.rest == "cold": stateful = False
-    else: stateful = True
+    # time.sleep(3)
+    if ievent.rest == "cold":
+        stateful = False
+    else:
+        stateful = True
     if stateful:
-        if bot.type == "tornado": 
-            callback = functools.partial(reboot_stateful, bot, ievent, getfleet(), partyline)
+        if bot.type == "tornado":
+            callback = functools.partial(
+                reboot_stateful, bot, ievent, getfleet(), partyline
+            )
             bot.server.io_loop.add_callback(callback)
-        else: mainhandler.put(0, reboot_stateful, bot, ievent, getfleet(), partyline)
+        else:
+            mainhandler.put(0, reboot_stateful, bot, ievent, getfleet(), partyline)
     else:
         getfleet().exit()
         mainhandler.put(0, reboot)
 
+
 cmnds.add("reboot", handle_reboot, "OPER")
 examples.add("reboot", "reboot the bot.", "reboot")
 
-## quit command
+# quit command
+
 
 def handle_quit(bot, ievent):
-    """ no arguments - disconnect from the server. """
+    """no arguments - disconnect from the server."""
     if bot.isgae:
         ievent.reply("this command doesnt work on the GAE")
         return
     ievent.reply("quiting")
     bot.exit()
 
+
 cmnds.add("quit", handle_quit, "OPER")
 examples.add("quit", "quit the bot.", "quit")
 
-## encoding command
+# encoding command
+
 
 def handle_encoding(bot, ievent):
-    """ not arguments - show default encoding. """
-    ievent.reply('default encoding is %s' % bot.encoding or sys.getdefaultencoding())
+    """not arguments - show default encoding."""
+    ievent.reply("default encoding is %s" % bot.encoding or sys.getdefaultencoding())
 
-cmnds.add('encoding', handle_encoding, ['USER', 'GUEST'])
-examples.add('encoding', 'show default encoding', 'encoding')
 
-## uptime command
+cmnds.add("encoding", handle_encoding, ["USER", "GUEST"])
+examples.add("encoding", "show default encoding", "encoding")
+
+# uptime command
+
 
 def handle_uptime(bot, ievent):
-    """ no arguments - show uptime. """
-    #from google.appengine.api import urlfetch
-    #logging.warn(dir(urlfetch))
-    ievent.reply("<b>uptime is %s</b>" % elapsedstring(time.time()-bot.starttime))
+    """no arguments - show uptime."""
+    # from google.appengine.api import urlfetch
+    # logging.warn(dir(urlfetch))
+    ievent.reply("<b>uptime is %s</b>" % elapsedstring(time.time() - bot.starttime))
 
-cmnds.add('uptime', handle_uptime, ['USER', 'GUEST'])
-examples.add('uptime', 'show uptime of the bot', 'uptime')
 
-## list command
+cmnds.add("uptime", handle_uptime, ["USER", "GUEST"])
+examples.add("uptime", "show uptime of the bot", "uptime")
+
+# list command
+
 
 def handle_available(bot, ievent):
-    """ no arguments - show available plugins .. to enable use !plug-enable. """
-    if ievent.rest: ievent.reply("%s plugin has the following commands: " % ievent.rest, whatcommands(ievent.rest))
-    else: ievent.reply("available plugins: ", getpluginlist(), raw=True) ; return
+    """no arguments - show available plugins .. to enable use !plug-enable."""
+    if ievent.rest:
+        ievent.reply(
+            "%s plugin has the following commands: " % ievent.rest,
+            whatcommands(ievent.rest),
+        )
+    else:
+        ievent.reply("available plugins: ", getpluginlist(), raw=True)
+        return
 
-cmnds.add('list', handle_available, ['USER', 'GUEST'])
-examples.add('list', 'list available plugins', 'list')
 
-## commands command
+cmnds.add("list", handle_available, ["USER", "GUEST"])
+examples.add("list", "list available plugins", "list")
+
+# commands command
+
 
 def handle_commands(bot, ievent):
-    """ arguments: [<plugname>] - show commands of plugin. """
-    try: plugin = ievent.args[0].lower()
-    except IndexError: plugin = ""
+    """arguments: [<plugname>] - show commands of plugin."""
+    try:
+        plugin = ievent.args[0].lower()
+    except IndexError:
+        plugin = ""
     result = []
     cmnds = getcmndtable()
-    for cmnd, plugname in cmnds.iteritems(): 
+    for cmnd, plugname in cmnds.items():
         if plugname:
-            if not plugin or plugin in plugname: result.append(cmnd)
+            if not plugin or plugin in plugname:
+                result.append(cmnd)
     if result:
         result.sort()
-        if not plugin: plugin = "JSONBOT"
-        ievent.reply('%s has the following commands: ' % plugin, result)
-    else: ievent.reply('no commands found for plugin %s' % plugin)
+        if not plugin:
+            plugin = "JSONBOT"
+        ievent.reply("%s has the following commands: " % plugin, result)
+    else:
+        ievent.reply("no commands found for plugin %s" % plugin)
 
-cmnds.add('commands', handle_commands, ['USER', 'GUEST'])
-examples.add('commands', 'show commands of <plugin>', '1) commands core')
 
-## perm command
+cmnds.add("commands", handle_commands, ["USER", "GUEST"])
+examples.add("commands", "show commands of <plugin>", "1) commands core")
+
+# perm command
+
 
 def handle_perm(bot, ievent):
-    """ arguments: <cmnd> - get permission of command. """
-    try:cmnd = ievent.args[0]
+    """arguments: <cmnd> - get permission of command."""
+    try:
+        cmnd = ievent.args[0]
     except IndexError:
         ievent.missing("<cmnd>")
         return
-    try: perms = cmnds.perms(cmnd)
+    try:
+        perms = cmnds.perms(cmnd)
     except KeyError:
         ievent.reply("no %sw command registered")
         return
-    if perms: ievent.reply("%s command needs %s permission" % (cmnd, perms))
-    else: ievent.reply("can't find perm for %s" % cmnd)
+    if perms:
+        ievent.reply("%s command needs %s permission" % (cmnd, perms))
+    else:
+        ievent.reply("can't find perm for %s" % cmnd)
 
-cmnds.add('perm', handle_perm, ['USER', 'GUEST'])
-examples.add('perm', 'show permission of command', 'perm quit')
 
-## version command
+cmnds.add("perm", handle_perm, ["USER", "GUEST"])
+examples.add("perm", "show permission of command", "perm quit")
+
+# version command
+
 
 def handle_version(bot, ievent):
-    """ no arguments - show bot's version. """
+    """no arguments - show bot's version."""
     from jsb.version import getversion
+
     version = getversion(bot.type.upper())
     cfg = getmainconfig()
-    if bot.isgae: version += " GAE"
-    elif cfg.dbenable: version += " " + cfg.dbtype.upper()
-    try: 
+    if bot.isgae:
+        version += " GAE"
+    elif cfg.dbenable:
+        version += " " + cfg.dbtype.upper()
+    try:
         from mercurial import context, hg, node, repo, ui
-        repository = hg.repository(ui.ui(), '.')
+
+        repository = hg.repository(ui.ui(), ".")
         ctx = context.changectx(repository)
         tip = str(ctx.rev())
-    except: tip = None
-    if tip: version2 = version + " HG " + tip
-    else: version2 = version
+    except:
+        tip = None
+    if tip:
+        version2 = version + " HG " + tip
+    else:
+        version2 = version
     ievent.reply(version2)
 
-cmnds.add('version', handle_version, ['USER', 'GUEST'])
-examples.add('version', 'show version of the bot', 'version')
-setalias('v', "version")
 
-## whereis command
+cmnds.add("version", handle_version, ["USER", "GUEST"])
+examples.add("version", "show version of the bot", "version")
+setalias("v", "version")
+
+# whereis command
+
 
 def handle_whereis(bot, ievent):
-    """ arguments: <cmnd> - locate a command. """
-    try: cmnd = ievent.args[0]
+    """arguments: <cmnd> - locate a command."""
+    try:
+        cmnd = ievent.args[0]
     except IndexError:
-        ievent.missing('<cmnd>')
+        ievent.missing("<cmnd>")
         return
     cmnds.reloadcheck(bot, ievent, cmnd)
     plugin = cmnds.whereis(cmnd)
-    if plugin: ievent.reply("%s command is in: %s" %  (cmnd, plugin))
-    else: ievent.reply("can't find " + cmnd)
+    if plugin:
+        ievent.reply("%s command is in: %s" % (cmnd, plugin))
+    else:
+        ievent.reply("can't find " + cmnd)
 
-cmnds.add('whereis', handle_whereis, ['USER', 'GUEST'])
-examples.add('whereis', 'whereis <cmnd> .. show in which plugins <what> is', 'whereis test')
 
-## help-plug command
+cmnds.add("whereis", handle_whereis, ["USER", "GUEST"])
+examples.add(
+    "whereis", "whereis <cmnd> .. show in which plugins <what> is", "whereis test"
+)
+
+# help-plug command
+
 
 def handle_helpplug(bot, ievent):
-    """ arguments: <plugname> - how help on plugin/command or show basic help msg. """
-    try: what = ievent.args[0]
+    """arguments: <plugname> - how help on plugin/command or show basic help msg."""
+    try:
+        what = ievent.args[0]
     except (IndexError, TypeError):
         ievent.reply("available plugins: ", getpluginlist())
         ievent.reply("see !help <plugin> to get help on a plugin.")
@@ -199,236 +250,338 @@ def handle_helpplug(bot, ievent):
     perms = []
     for package in plugin_packages:
         try:
-             modname = "%s.%s" % (package, what)
-             try:
-                 plugin = plugs.load_mod(modname)
-                 if plugin: break
-             except NoSuchPlugin: continue
-        except(KeyError, ImportError): pass
+            modname = "%s.%s" % (package, what)
+            try:
+                plugin = plugs.load_mod(modname)
+                if plugin:
+                    break
+            except NoSuchPlugin:
+                continue
+        except (KeyError, ImportError):
+            pass
     if not plugin:
         ievent.reply("no %s plugin loaded" % what)
         return
-    try: phelp = plugin.__doc__
+    try:
+        phelp = plugin.__doc__
     except (KeyError, AttributeError):
-        ievent.reply('no description of %s plugin available' % what)
+        ievent.reply("no description of %s plugin available" % what)
         return
     cmndresult = []
     if phelp:
         perms = ievent.user.data.perms
-        if not perms: perms = ['GUEST', ]
+        if not perms:
+            perms = [
+                "GUEST",
+            ]
         counter = 1
-        for i, j in cmnds.iteritems():
+        for i, j in cmnds.items():
             if what == j.plugname:
                 for perm in j.perms:
                     if perm in perms:
                         if True:
                             try:
                                 descr = j.func.__doc__
-                                if not descr: descr = "no description provided"
-                                try: cmndresult.append(u"    <b>!%s</b> - <i>%s</i>" % (i, descr))
-                                except KeyError: pass
-                            except AttributeError: pass
+                                if not descr:
+                                    descr = "no description provided"
+                                try:
+                                    cmndresult.append(
+                                        "    <b>!%s</b> - <i>%s</i>" % (i, descr)
+                                    )
+                                except KeyError:
+                                    pass
+                            except AttributeError:
+                                pass
                             counter += 1
                             break
     if cmndresult and phelp:
         res = []
         for r in cmndresult:
-            if bot.type in ['web', ]: res.append("%s<br>" % r)
-            if bot.type in ['irc', ]: res.append(r.strip())
-            else: res.append(r)
+            if bot.type in [
+                "web",
+            ]:
+                res.append("%s<br>" % r)
+            if bot.type in [
+                "irc",
+            ]:
+                res.append(r.strip())
+            else:
+                res.append(r)
         res.sort()
         what = what.upper()
-        ievent.reply('<b>help on plugin %s: </b>%s' % (what,phelp.strip()))
+        ievent.reply("<b>help on plugin %s: </b>%s" % (what, phelp.strip()))
         ievent.reply("commands: ", res, dot="\n")
     else:
-        if perms: ievent.reply('no commands available for permissions: %s' % ", ".join(perms))
-        else: ievent.reply("can't find help on %s" % what)
+        if perms:
+            ievent.reply("no commands available for permissions: %s" % ", ".join(perms))
+        else:
+            ievent.reply("can't find help on %s" % what)
 
-cmnds.add('help-plug', handle_helpplug, ['USER', 'GUEST'], how="msg")
-examples.add('help-plug', 'get help on <plugin>', '1) help-plug 2) help-plug misc')
 
-## help-site command
+cmnds.add("help-plug", handle_helpplug, ["USER", "GUEST"], how="msg")
+examples.add("help-plug", "get help on <plugin>", "1) help-plug 2) help-plug misc")
+
+# help-site command
+
 
 def handle_helpsite(bot, event):
-    """ arguments: <cmnd> - help commands that gives a url to the docs. """
+    """arguments: <cmnd> - help commands that gives a url to the docs."""
     if event.rest:
         target = cmnds.whereis(event.rest)
         target = target or event.rest
         where = bot.plugs.getmodule(target)
         if where:
             theplace = os.sep.join(where.split(".")[-2:])
-            event.reply("help for %s is at http://jsonbot.org/plugins/%s.html" % (event.rest.upper(), theplace))
-        else: event.reply("can't find a help url for %s" % event.rest)
+            event.reply(
+                "help for %s is at http://jsonbot.org/plugins/%s.html"
+                % (event.rest.upper(), theplace)
+            )
+        else:
+            event.reply("can't find a help url for %s" % event.rest)
     else:
-        event.reply("documentation for jsonbot can be found at http://jsonbot.org or http://jsonbot.appspot.com/docs")
-        event.reply('see !list for loaded plugins and "!help plugin" for a url to the plugin docs.')
+        event.reply(
+            "documentation for jsonbot can be found at http://jsonbot.org or http://jsonbot.appspot.com/docs"
+        )
+        event.reply(
+            'see !list for loaded plugins and "!help plugin" for a url to the plugin docs.'
+        )
     cmndhelp = cmnds.gethelp(event.rest)
-    if cmndhelp: event.reply("docstring: ", cmndhelp.split("\n"))
+    if cmndhelp:
+        event.reply("docstring: ", cmndhelp.split("\n"))
+
 
 cmnds.add("help-site", handle_helpsite, ["OPER", "USER", "GUEST"])
 examples.add("help-site", "show url pointing to the docs", "1) help 2) help rss")
 
-## help command
+# help command
+
 
 def handle_help(bot, event):
-    """ arguments: [<cmndname or plugname>] - show help. """
+    """arguments: [<cmndname or plugname>] - show help."""
     if not event.args:
         event.reply("documentation for jsonbot can be found at http://jsonbot.org")
-        event.reply('see !list for loaded plugins and "!help plugin" for help on the plugin.')
+        event.reply(
+            'see !list for loaded plugins and "!help plugin" for help on the plugin.'
+        )
         return
     t = event.args[0]
     logging.warn("help target is %s" % t)
     cmnds.reloadcheck(bot, event, t)
     where = cmnds.whereis(t)
-    #where = bot.plugs.getmodule(t)
+    # where = bot.plugs.getmodule(t)
     cmndhelp = cmnds.gethelp(t)
-    if cmndhelp: event.reply('help on %s: ' % event.rest, cmndhelp.split("\n"))
-    elif bot.plugs.get(t): handle_helpplug(bot, event) ; return
-    else: event.reply("can't find help on %s" % event.rest) ; return
-    try: ex = examples[t].example
-    except KeyError: ex = None
+    if cmndhelp:
+        event.reply("help on %s: " % event.rest, cmndhelp.split("\n"))
+    elif bot.plugs.get(t):
+        handle_helpplug(bot, event)
+        return
+    else:
+        event.reply("can't find help on %s" % event.rest)
+        return
+    try:
+        ex = examples[t].example
+    except KeyError:
+        ex = None
     p = cmnds.perms(t)
-    event.reply("permissions: %s - location: %s - examples: %s" % (", ".join(p), where, ex))
+    event.reply(
+        "permissions: %s - location: %s - examples: %s" % (", ".join(p), where, ex)
+    )
+
 
 cmnds.add("help", handle_help, ["OPER", "USER", "GUEST"])
 examples.add("help", "show help of a command", "help rss-list")
 
-## apro command
+# apro command
+
 
 def handle_apro(bot, ievent):
-    """ arguments: <searchtxt> - apropos (search) for commands. """
-    try: what = ievent.args[0]
+    """arguments: <searchtxt> - apropos (search) for commands."""
+    try:
+        what = ievent.args[0]
     except IndexError:
-        ievent.missing('<what>')
+        ievent.missing("<what>")
         return
     result = cmnds.apropos(what)
     result.sort()
     if result:
         ievent.reply("commands matching %s: " % what, result)
-    else: ievent.reply('no matching commands found for %s' % what)
-     
-cmnds.add('apro', handle_apro, ['USER', 'GUEST'])
-examples.add('apro', 'apro <what> .. search for commands that contain <what>', 'apro com')
+    else:
+        ievent.reply("no matching commands found for %s" % what)
 
-## whatcommands command
+
+cmnds.add("apro", handle_apro, ["USER", "GUEST"])
+examples.add(
+    "apro", "apro <what> .. search for commands that contain <what>", "apro com"
+)
+
+# whatcommands command
+
 
 def handle_whatcommands(bot, ievent):
-    """ arguments: <permission. - show all commands with permission. """
+    """arguments: <permission. - show all commands with permission."""
     if not ievent.rest:
-        ievent.missing('<perm>')
+        ievent.missing("<perm>")
         return
     result = cmnds
     res = []
-    for cmnd in result.values():
+    for cmnd in list(result.values()):
         if cmnd and cmnd.perms and ievent.rest in cmnd.perms:
             res.append(cmnd.cmnd)
     res.sort()
-    if not res: ievent.reply('no commands known for permission %s' % ievent.rest)
-    else: ievent.reply('commands known for permission %s: ' % ievent.rest, res)
+    if not res:
+        ievent.reply("no commands known for permission %s" % ievent.rest)
+    else:
+        ievent.reply("commands known for permission %s: " % ievent.rest, res)
 
-cmnds.add('whatcommands', handle_whatcommands, ['USER', 'GUEST'])
-examples.add('whatcommands', 'show commands with permission <perm>', 'whatcommands USER')
 
-## versions command
+cmnds.add("whatcommands", handle_whatcommands, ["USER", "GUEST"])
+examples.add(
+    "whatcommands", "show commands with permission <perm>", "whatcommands USER"
+)
+
+# versions command
+
 
 def handle_versions(bot, ievent):
-    """ no arguments - show versions of all loaded modules (if available). """
+    """no arguments - show versions of all loaded modules (if available)."""
     versions = {}
     for mod in copy.copy(sys.modules):
-        try: versions[mod] = sys.modules[mod].__version__
-        except AttributeError, ex: pass
-        try: versions['python'] = sys.version
-        except AttributeError, ex: pass
-    ievent.reply("versions ==> %s" % unicode(versions))
+        try:
+            versions[mod] = sys.modules[mod].__version__
+        except AttributeError as ex:
+            pass
+        try:
+            versions["python"] = sys.version
+        except AttributeError as ex:
+            pass
+    ievent.reply("versions ==> %s" % str(versions))
 
-cmnds.add('versions', handle_versions, ['USER', 'GUEST'])
-examples.add('versions', 'show versions of all loaded modules', 'versions')
 
-## loglevel command
+cmnds.add("versions", handle_versions, ["USER", "GUEST"])
+examples.add("versions", "show versions of all loaded modules", "versions")
+
+# loglevel command
+
 
 def handle_loglevel(bot, event):
-    """ arguments: <loglevel> - change loglevel of the bot. loglevel is on of debug, info, warn or error. """
-    if not event.rest: event.reply("loglevel is %s" % getloglevel()) ; return
+    """arguments: <loglevel> - change loglevel of the bot. loglevel is on of debug, info, warn or error."""
+    if not event.rest:
+        event.reply("loglevel is %s" % getloglevel())
+        return
     from jsb.lib.config import getmainconfig
+
     mainconfig = getmainconfig()
     mainconfig.loglevel = event.rest
     mainconfig.save()
-    #mainhandler.put(4, setloglevel, event.rest)
+    # mainhandler.put(4, setloglevel, event.rest)
     setloglevel(event.rest)
     event.done()
 
-cmnds.add("loglevel", handle_loglevel, "OPER")
-examples.add("loglevel", "set loglevel ot on of debug, info, warning or error", "loglevel warn")
 
-## threads command
+cmnds.add("loglevel", handle_loglevel, "OPER")
+examples.add(
+    "loglevel", "set loglevel ot on of debug, info, warning or error", "loglevel warn"
+)
+
+# threads command
+
 
 def handle_threads(bot, ievent):
-    """ no arguments - show running threads. """
-    try: import threading
+    """no arguments - show running threads."""
+    try:
+        import threading
     except ImportError:
-         ievent.reply("threading is not enabled.")
-         return
+        ievent.reply("threading is not enabled.")
+        return
     stats = StatDict()
     threadlist = threading.enumerate()
-    for thread in threadlist: stats.upitem(thread.getName())
+    for thread in threadlist:
+        stats.upitem(thread.getName())
     result = []
-    for item in stats.top(): result.append("%s = %s" % (item[0], item[1]))
+    for item in stats.top():
+        result.append("%s = %s" % (item[0], item[1]))
     result.sort()
     ievent.reply("threads running: ", result)
 
-cmnds.add('threads', handle_threads, ['USER', 'GUEST'])
-examples.add('threads', 'show running threads', 'threads')
 
-## loaded command
+cmnds.add("threads", handle_threads, ["USER", "GUEST"])
+examples.add("threads", "show running threads", "threads")
+
+# loaded command
+
 
 def handle_loaded(bot, event):
-    """ no arguments - show plugins in cache. """
-    event.reply("loaded plugins (cache): ", plugs.keys())
+    """no arguments - show plugins in cache."""
+    event.reply("loaded plugins (cache): ", list(plugs.keys()))
 
-cmnds.add('loaded', handle_loaded, ['USER', 'GUEST'])
-examples.add('loaded', 'show list of loaded plugins', 'loaded')
 
-## statusline command
+cmnds.add("loaded", handle_loaded, ["USER", "GUEST"])
+examples.add("loaded", "show list of loaded plugins", "loaded")
+
+# statusline command
+
 
 def handle_statusline(bot, event):
-    """ no arguments - show a status line. """
-    event.reply("<b>controlchars:</b> %s - <b>perms:</b> %s" % (event.chan.data.cc, ", ".join(event.user.data.perms)))
-	
-cmnds.add('statusline', handle_statusline, ['USER', 'GUEST'])
-examples.add('statusline', 'show status line', 'statusline')
+    """no arguments - show a status line."""
+    event.reply(
+        "<b>controlchars:</b> %s - <b>perms:</b> %s"
+        % (event.chan.data.cc, ", ".join(event.user.data.perms))
+    )
 
-## topper command
+
+cmnds.add("statusline", handle_statusline, ["USER", "GUEST"])
+examples.add("statusline", "show status line", "statusline")
+
+# topper command
+
 
 def handle_topper(bot, event):
-    """ no arguments - show a 'topper' startus line. """
-    event.reply("<b>forwards:</b> %s - <b>watched:</b> %s  - <b>feeds:</b> %s" % (", ".join(event.chan.data.forwards) or "none", ", ".join(event.chan.data.watched) or "none", ", ".join([unicode(x) for x in event.chan.data.feeds]) or "none"))
+    """no arguments - show a 'topper' startus line."""
+    event.reply(
+        "<b>forwards:</b> %s - <b>watched:</b> %s  - <b>feeds:</b> %s"
+        % (
+            ", ".join(event.chan.data.forwards) or "none",
+            ", ".join(event.chan.data.watched) or "none",
+            ", ".join([str(x) for x in event.chan.data.feeds]) or "none",
+        )
+    )
 
-cmnds.add('topper', handle_topper, ['USER', 'GUEST'])
-examples.add('topper', 'show topper line', 'topper')
 
-## running command
+cmnds.add("topper", handle_topper, ["USER", "GUEST"])
+examples.add("topper", "show topper line", "topper")
+
+# running command
+
 
 def handle_running(bot, event):
-    """ no arguments - show running tasks. """
-    event.reply("<b>callbacks:</b> %s - <b>commands:</b> %s - <b>longrunning:</b> %s" % (defaultrunner.running(), cmndrunner.running(), longrunner.running()))
+    """no arguments - show running tasks."""
+    event.reply(
+        "<b>callbacks:</b> %s - <b>commands:</b> %s - <b>longrunning:</b> %s"
+        % (defaultrunner.running(), cmndrunner.running(), longrunner.running())
+    )
 
-cmnds.add('running', handle_running, ['USER', 'GUEST'])
-examples.add('running', "show running tasks", "running")
 
-## descriptions command
+cmnds.add("running", handle_running, ["USER", "GUEST"])
+examples.add("running", "show running tasks", "running")
+
+# descriptions command
+
 
 def handle_descriptions(bot, event):
-    """ no arguments - show descriptions of all plugins. """
+    """no arguments - show descriptions of all plugins."""
     bot.plugs.loadall()
     result = []
-    target = bot.plugs.keys()
+    target = list(bot.plugs.keys())
     target.sort()
     for modname in target:
         plug = bot.plugs.get(modname)
-        if plug.__doc__: txt = plug.__doc__.replace("\n", "<br>")
-        else: txt = "no docstring available"
-        result.append("* %s plugin (%s) - %s" % (modname.split(".")[-1], modname, txt))        
+        if plug.__doc__:
+            txt = plug.__doc__.replace("\n", "<br>")
+        else:
+            txt = "no docstring available"
+        result.append("* %s plugin (%s) - %s" % (modname.split(".")[-1], modname, txt))
     event.reply("descriptions: <br>", result, dot="<br><br>")
 
-cmnds.add('descriptions', handle_descriptions, ['USER', 'GUEST'])
-examples.add('descriptions', "show descriptions of all plugins", "descriptions")
+
+cmnds.add("descriptions", handle_descriptions, ["USER", "GUEST"])
+examples.add("descriptions", "show descriptions of all plugins", "descriptions")

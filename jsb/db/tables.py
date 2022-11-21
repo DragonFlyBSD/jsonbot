@@ -4,7 +4,7 @@
 
 """ database table definitions (gozerbot compat). """
 
-tablestxt =  """
+tablestxt = """
 
 CREATE TABLE infoitems (
     indx INTEGER PRIMARY KEY,

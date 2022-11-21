@@ -15,22 +15,24 @@ google requirements on file names:
 
 """
 
-## jsb imports
+# jsb imports
 
-from jsb.utils.generic import toenc, fromenc
-from jsb.lib.errors import NameNotSet
-
-## basic imports
-
-import string
 import os
 import re
+import string
 
-## defines
+from jsb.lib.errors import NameNotSet
+from jsb.utils.generic import fromenc, toenc
 
-allowednamechars = string.ascii_letters + string.digits + '_+/$.-'
+# basic imports
 
-## slugify function taken from django (not used now)
+
+# defines
+
+allowednamechars = string.ascii_letters + string.digits + "_+/$.-"
+
+# slugify function taken from django (not used now)
+
 
 def slugify(value):
     """
@@ -38,42 +40,57 @@ def slugify(value):
     and converts spaces to hyphens.
     """
     import unicodedata
-    value = unicodedata.normalize('NFKD', value)
-    value = unicode(re.sub('[^\w\s-]', '', value).strip())
-    return re.sub('[-\s]+', '-', value)
 
-## stripname function
+    value = unicodedata.normalize("NFKD", value)
+    value = str(re.sub("[^\w\s-]", "", value).strip())
+    return re.sub("[-\s]+", "-", value)
+
+
+# stripname function
+
 
 def stripname(namein, allowed=""):
-    """ strip all not allowed chars from name. """
-    if not namein: raise NameNotSet(namein)
-    n = namein.replace(os.sep, '+')
-    n = n.replace("/", '+')
-    n = n.replace("@", '+')
-    n = n.replace("#", '-')
-    n = n.replace("!", '.')
+    """strip all not allowed chars from name."""
+    if not namein:
+        raise NameNotSet(namein)
+    n = namein.replace(os.sep, "+")
+    n = n.replace("/", "+")
+    n = n.replace("@", "+")
+    n = n.replace("#", "-")
+    n = n.replace("!", ".")
     res = []
     allow = allowednamechars + allowed
     for c in n:
-        if ord(c) < 31: continue
-        elif c in allow: res.append(c)
-        else: res.append("-" + str(ord(c)))
-    return ''.join(res)
+        if ord(c) < 31:
+            continue
+        elif c in allow:
+            res.append(c)
+        else:
+            res.append("-" + str(ord(c)))
+    return "".join(res)
 
-## testname function
+
+# testname function
+
 
 def testname(name):
-    """ test if name is correct. """
+    """test if name is correct."""
     for c in name:
-        if c not in allowednamechars or ord(c) < 31: return False
+        if c not in allowednamechars or ord(c) < 31:
+            return False
     return True
+
 
 def oldname(name):
     from jsb.lib.datadir import getdatadir
-    if name.startswith("-"): name[0] = "+"
+
+    if name.startswith("-"):
+        name[0] = "+"
     name = name.replace("@", "+")
-    if os.path.exists(getdatadir() + os.sep + name): return name
+    if os.path.exists(getdatadir() + os.sep + name):
+        return name
     name = name.replace("-", "#")
-    name  = prevchan.replace("+", "@")
-    if os.path.exists(getdatadir() + os.sep + name): return name
+    name = prevchan.replace("+", "@")
+    if os.path.exists(getdatadir() + os.sep + name):
+        return name
     return ""

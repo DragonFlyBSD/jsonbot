@@ -4,15 +4,17 @@
 
 """ JID related helpers. """
 
-## classes
+# classes
+
 
 class InvalidJID(BaseException):
 
     pass
 
+
 class JID(object):
 
-    """ class representing a JID. """
+    """class representing a JID."""
 
     def __init__(self, str):
         if not str:
@@ -25,18 +27,18 @@ class JID(object):
         if not self.validate(str):
             raise InvalidJID(str)
         self.full = str
-        self.userhost = self.full.split('/')[0]
+        self.userhost = self.full.split("/")[0]
         try:
-             self.host = self.userhost.split('@')[1]
+            self.host = self.userhost.split("@")[1]
         except (IndexError, ValueError):
             raise InvalidJID(str)
-            
+
         try:
-            self.resource = self.full.split('/')[1]
+            self.resource = self.full.split("/")[1]
         except (IndexError, ValueError):
-            self.resource = u""
+            self.resource = ""
 
     def validate(self, s):
-        """ validate a JID. """
-        if not '#' in s:
+        """validate a JID."""
+        if not "#" in s:
             return True

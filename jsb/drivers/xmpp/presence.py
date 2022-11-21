@@ -6,19 +6,19 @@
 
 # jsb imports
 
-from jsb.lib.eventbase import EventBase
-from jsb.utils.trace import whichmodule
-from jsb.lib.gozerevent import GozerEvent
-
-## basic imports
-
 import time
-import logging 
 
-## classes
+from jsb.lib.eventbase import EventBase
+from jsb.lib.gozerevent import GozerEvent
+from jsb.utils.trace import whichmodule
+
+# basic imports
+
+
+# classes
+
 
 class Presence(GozerEvent):
-
     def __init__(self, nodedict={}):
         GozerEvent.__init__(self, nodedict)
         self.element = "presence"
@@ -28,19 +28,23 @@ class Presence(GozerEvent):
         self.bottype = "xmpp"
 
     def parse(self):
-        """ set ircevent compatible attributes """
-        self.cmnd = 'PRESENCE'
-        try: self.nick = self.fromm.split('/')[1]
-        except (AttributeError, IndexError): self.nick = ""
+        """set ircevent compatible attributes"""
+        self.cmnd = "PRESENCE"
+        try:
+            self.nick = self.fromm.split("/")[1]
+        except (AttributeError, IndexError):
+            self.nick = ""
         self.jid = self.jid or self.fromm
         self.ruserhost = self.jid
         self.userhost = str(self.jid)
         self.resource = self.nick
-        self.stripped = self.jid.split('/')[0]
+        self.stripped = self.jid.split("/")[0]
         self.auth = self.stripped
-        self.channel = self.fromm.split('/')[0]
+        self.channel = self.fromm.split("/")[0]
         self.printto = self.channel
         self.origtxt = self.txt
         self.time = time.time()
-        if self.type == 'groupchat': self.groupchat = True
-        else: self.groupchat = False
+        if self.type == "groupchat":
+            self.groupchat = True
+        else:
+            self.groupchat = False

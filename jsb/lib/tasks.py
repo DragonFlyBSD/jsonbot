@@ -2,28 +2,30 @@
 #
 #
 
-## jsb imports 
-
-from jsb.utils.trace import calledfrom
-from jsb.lib.plugins import plugs
-
-## basic imports
+# jsb imports
 
 import logging
 import sys
 
-## TaskManager class
+from jsb.lib.plugins import plugs
+from jsb.utils.trace import calledfrom
+
+# basic imports
+
+
+# TaskManager class
+
 
 class TaskManager(object):
-
     def __init__(self):
         self.handlers = {}
         self.plugins = {}
 
-    def size(self): return len(self.handlers)
+    def size(self):
+        return len(self.handlers)
 
     def add(self, taskname, func):
-        """ add a task. """
+        """add a task."""
         logging.debug("tasks - added task %s - %s" % (taskname, func))
         self.handlers[taskname] = func
         plugin = self.plugins[taskname] = calledfrom(sys._getframe())
@@ -31,29 +33,33 @@ class TaskManager(object):
         return True
 
     def unload(self, taskname):
-        """ unload a task. """
+        """unload a task."""
         logging.debug("tasks - unloading task %s" % taskname)
         try:
             del self.handlers[taskname]
             del self.plugins[taskname]
             return True
-        except KeyError: return False
+        except KeyError:
+            return False
 
     def dispatch(self, taskname, *args, **kwargs):
-	""" dispatch a task. """
-        try: plugin = self.plugins[taskname]
+        """dispatch a task."""
+        try:
+            plugin = self.plugins[taskname]
         except KeyError:
-            logging.debug('tasks - no plugin for %s found' % taskname)
+            logging.debug("tasks - no plugin for %s found" % taskname)
             return
-        logging.debug('loading %s for taskmanager' % plugin)
-        #plugs.load(plugin)
-        try: handler = self.handlers[taskname]
+        logging.debug("loading %s for taskmanager" % plugin)
+        # plugs.load(plugin)
+        try:
+            handler = self.handlers[taskname]
         except KeyError:
-            logging.debug('tasks - no handler for %s found' % taskname)
+            logging.debug("tasks - no handler for %s found" % taskname)
             return
         logging.warn("dispatching task %s - %s" % (taskname, str(handler)))
         return handler(*args, **kwargs)
 
-## global task manager
+
+# global task manager
 
 taskmanager = TaskManager()

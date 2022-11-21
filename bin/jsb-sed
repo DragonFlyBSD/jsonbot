@@ -4,92 +4,105 @@
 
 """ rename the bot into another one. copy one dir above the bot dir. """
 
-## basic imports
+# basic imports
 
 import sys
 import os
 import shutil
 
-## arguments
+# arguments
 
 try:
     source = sys.argv[1]
     sedstring = sys.argv[2]
 except IndexError:
-    print "jsb-sed <dir> <sedstring>"
+    print("jsb-sed <dir> <sedstring>")
     os._exit(1)
 
-print "STARTING"
+print("STARTING")
 
-## gethighest function
+# gethighest function
+
 
 def gethighest(ddir, ffile):
-    """ determine new file extension. """
+    """determine new file extension."""
     highest = 0
     for i in os.listdir(ddir):
         if os.path.isdir(ddir + os.sep + i) and ffile in i:
-            try: seqnr = i.split('.')[2]
-            except IndexError: continue
             try:
-                if int(seqnr) > highest: highest = int(seqnr)  
-            except ValueError: pass
-    ffile += '.' + str(highest + 1)
-    return ffile   
+                seqnr = i.split(".")[2]
+            except IndexError:
+                continue
+            try:
+                if int(seqnr) > highest:
+                    highest = int(seqnr)
+            except ValueError:
+                pass
+    ffile += "." + str(highest + 1)
+    return ffile
 
-## dosed function
+
+# dosed function
+
 
 def dosed(filename, sedstring):
-    """ replace oldbot strings with the new one. """
-    f = open(filename, 'r')
-    tmp = filename + '.tmp'
-    fout = open(tmp, 'w')
-    seds = sedstring.split('/')
-    fr = seds[1].replace('\\', '')
-    to = seds[2].replace('\\', '')
+    """replace oldbot strings with the new one."""
+    f = open(filename, "r")
+    tmp = filename + ".tmp"
+    fout = open(tmp, "w")
+    seds = sedstring.split("/")
+    fr = seds[1].replace("\\", "")
+    to = seds[2].replace("\\", "")
     try:
         for line in f:
-            l = line.replace(fr,to)
+            l = line.replace(fr, to)
             fout.write(l)
     finally:
         fout.flush()
         fout.close()
-    try: os.rename(tmp, filename)
+    try:
+        os.rename(tmp, filename)
     except WindowsError:
         os.remove(filename)
         os.rename(tmp, filename)
 
 
-## bootstrap function
+# bootstrap function
+
 
 def doreplace(ddir, sedstring):
-    """ loop over the directories copying and sedding the files. """
-    print "dir: %s: sedstring: %s" % (ddir, sedstring)
+    """loop over the directories copying and sedding the files."""
+    print("dir: %s: sedstring: %s" % (ddir, sedstring))
     for f in os.listdir(ddir):
         try:
-            print "sedding %s" % f
+            print("sedding %s" % f)
             dosed(ddir + os.sep + f, sedstring)
-        except IOError, ex:
-            if 'Is a dir' in str(ex): doreplace(ddir + os.sep + f, sedstring)
-            else: print "ERROR %s - %s" % (ddir + os.sep + f, str(ex))
+        except IOError as ex:
+            if "Is a dir" in str(ex):
+                doreplace(ddir + os.sep + f, sedstring)
+            else:
+                print("ERROR %s - %s" % (ddir + os.sep + f, str(ex)))
 
-## backup the old dir
 
-#print "making backup"
+# backup the old dir
+
+# print "making backup"
 target = gethighest(os.getcwd(), source + ".sed")
-#if os.path.isdir(target): 
+# if os.path.isdir(target):
 #    print "MOVING %s TO %s" % (, backup)
 #    os.rename(target, backup)
 
-## copy the result to the target
+# copy the result to the target
 
-print "COPYING %s TO %s" % (source, target)
+print("COPYING %s TO %s" % (source, target))
 
-try: shutil.copytree(source, target)
+try:
+    shutil.copytree(source, target)
 except OSError:
-    print "can't copy %s to %s" % (source, target)
+    print("can't copy %s to %s" % (source, target))
     os._exit(1)
 
-## start the thing
+# start the thing
 
 doreplace(target, sedstring)
-print "DONE"
+print("DONE")

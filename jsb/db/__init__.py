@@ -4,36 +4,51 @@
 
 """ main db package """
 
-## jsb imports
-
-from jsb.utils.exception import handle_exception
-
-## basic imports
+# jsb imports
 
 import logging
 
-## gotsqlite function
+from jsb.utils.exception import handle_exception
+
+# basic imports
+
+
+# gotsqlite function
+
 
 def gotsqlite():
-    try: import sqlite3 ; return True
-    except ImportError:
-        try: import _sqlite3 ; return True
-        except ImportError: return False
+    try:
+        import sqlite3
 
-## getmaindb function
+        return True
+    except ImportError:
+        try:
+            import _sqlite3
+
+            return True
+        except ImportError:
+            return False
+
+
+# getmaindb function
 
 db = None
+
 
 def getmaindb():
     try:
         from jsb.lib.config import getmainconfig
+
         cfg = getmainconfig()
         if cfg.dbenable:
             if "sqlite" in cfg.dbtype and not gotsqlite():
                 logging.error("sqlite is not found.")
                 return
             global db
-            if db: return db
-            from direct import Db
+            if db:
+                return db
+            from .direct import Db
+
             return Db()
-    except Exception, ex: handle_exception()
+    except Exception as ex:
+        handle_exception()

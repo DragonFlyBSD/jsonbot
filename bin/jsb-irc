@@ -2,58 +2,61 @@
 #
 #
 
-## bootstrap
+# bootstrap
 
+import sys
+import os
+import logging
+import jsb
+import jsb.lib.users as users
+from jsb.lib.eventhandler import mainhandler
+from jsb.lib.threads import start_new_thread
+from jsb.utils.mainloop import mainloop
+from jsb.lib.fleet import getfleet
+from jsb.lib.errors import NoOwnerSet
+from jsb.utils.log import setloglevel
+from jsb.lib.boot import plugin_packages, boot
+from jsb.drivers.irc.bot import IRCBot
+from jsb.lib.partyline import partyline
+from jsb.utils.exception import handle_exception
+from jsb.version import getversion
+from jsb.lib.datadir import setdatadir, getdatadir
+from jsb.utils.opts import makeircconfig, makeircopts
 import warnings
+
 warnings.simplefilter("ignore")
 
-import os, sys
+
 sys.path.insert(0, os.getcwd())
 
-## options parser
+# options parser
 
-from jsb.utils.opts import makeircconfig, makeircopts
-from jsb.lib.datadir import setdatadir, getdatadir
 
 opts = makeircopts()
-if opts.datadir: setdatadir(opts.datadir)
+if opts.datadir:
+    setdatadir(opts.datadir)
 
-## print version
-
-from jsb.version import getversion
-print getversion('IRC')
+# print version
 
 
-## jsb imports
+print(getversion("IRC"))
 
-from jsb.utils.exception import handle_exception
-from jsb.lib.partyline import partyline
-from jsb.drivers.irc.bot import IRCBot
-from jsb.lib.boot import plugin_packages, boot
-from jsb.utils.log import setloglevel
-from jsb.lib.errors import NoOwnerSet
-from jsb.lib.fleet import getfleet
-from jsb.utils.mainloop import mainloop
-from jsb.lib.threads import start_new_thread
-from jsb.lib.eventhandler import mainhandler
-import jsb.lib.users as users
-import jsb
 
-## basic imports
+# jsb imports
 
-import logging
-import time
-import os
 
-## loglevel
+# basic imports
+
+
+# loglevel
 
 setloglevel(opts.loglevel or "warning", not opts.nocolors, opts.datadir)
 
-## boot
+# boot
 
 boot(opts.datadir)
 
-## runtime
+# runtime
 
 if opts.owner:
     u = users.users_boot()
@@ -61,11 +64,13 @@ if opts.owner:
 
 cfg = makeircconfig(opts)
 
-if opts.name: cfg.name = opts.name
-else: cfg.name = "default-irc"
+if opts.name:
+    cfg.name = opts.name
+else:
+    cfg.name = "default-irc"
 cfg.save()
 
-## resume or start the bot
+# resume or start the bot
 
 if opts.doresume and os.path.isfile(opts.doresume):
     logging.warn("irc - resuming from %s" % opts.doresume)
@@ -78,11 +83,11 @@ if opts.doresume and os.path.isfile(opts.doresume):
 else:
     try:
         bot = IRCBot(cfg)
-    except NoOwnerSet, ex:
-        print "owner is not set in %s - use the -o option" % str(ex)
+    except NoOwnerSet as ex:
+        print("owner is not set in %s - use the -o option" % str(ex))
         os._exit(1)
-    if opts.channel and not opts.channel in bot.state['joinedchannels']:
-        bot.state['joinedchannels'].append(opts.channel)
+    if opts.channel and not opts.channel in bot.state["joinedchannels"]:
+        bot.state["joinedchannels"].append(opts.channel)
         bot.state.save()
     start_new_thread(bot.boot, ())
 

@@ -1,5 +1,5 @@
 # jsb/socklib/irc/bot.py
-# 
+#
 #
 #
 
@@ -9,101 +9,107 @@
 
 """
 
-## jsb imports
+# jsb imports
 
-from jsb.utils.exception import handle_exception
-from jsb.utils.generic import waitforqueue, uniqlist, strippedtxt
-from jsb.lib.commands import cmnds
-from jsb.lib.callbacks import callbacks
-from jsb.lib.plugins import plugs as plugins
-from jsb.lib.threads import start_new_thread, threaded
-from jsb.utils.dol import Dol
-from jsb.utils.pdod import Pdod
-from jsb.lib.persiststate import PersistState
-from jsb.lib.errors import NoSuchCommand
-from jsb.lib.channelbase import ChannelBase
-from jsb.lib.exit import globalshutdown
-from jsb.lib.botbase import BotBase
-from jsb.lib.eventbase import EventBase
-from jsb.lib.partyline import partyline
-from jsb.lib.wait import waiter
-
-from channels import Channels
-from irc import Irc
-from ircevent import IrcEvent
-
-## basic imports
-
-from collections import deque
+import logging
+import queue
 import re
 import socket
 import struct
-import Queue
 import time
-import os
-import types
-import logging
 
-## defines
+from jsb.lib.botbase import BotBase
+from jsb.lib.callbacks import callbacks
+from jsb.lib.channelbase import ChannelBase
+from jsb.lib.commands import cmnds
+from jsb.lib.errors import NoSuchCommand
+from jsb.lib.eventbase import EventBase
+from jsb.lib.exit import globalshutdown
+from jsb.lib.partyline import partyline
+from jsb.lib.persiststate import PersistState
+from jsb.lib.plugins import plugs as plugins
+from jsb.lib.threads import start_new_thread, threaded
+from jsb.lib.wait import waiter
+from jsb.utils.dol import Dol
+from jsb.utils.exception import handle_exception
+from jsb.utils.generic import strippedtxt, uniqlist, waitforqueue
+from jsb.utils.pdod import Pdod
 
-dccchatre = re.compile('\001DCC CHAT CHAT (\S+) (\d+)\001', re.I)
+from .channels import Channels
+from .irc import Irc
+from .ircevent import IrcEvent
 
-## classes
+# basic imports
+
+
+# defines
+
+dccchatre = re.compile("\001DCC CHAT CHAT (\S+) (\d+)\001", re.I)
+
+# classes
+
 
 class IRCBot(Irc):
 
-    """ class that dispatches commands and checks for callbacks to fire. """ 
+    """class that dispatches commands and checks for callbacks to fire."""
 
     def __init__(self, cfg={}, users=None, plugs=None, *args, **kwargs):
         Irc.__init__(self, cfg, users, plugs, *args, **kwargs)
         if self.state:
-            if not self.state.has_key('opchan'): self.state['opchan'] = []
-        if not self.state.has_key('joinedchannels'): self.state['joinedchannels'] = []
+            if "opchan" not in self.state:
+                self.state["opchan"] = []
+        if "joinedchannels" not in self.state:
+            self.state["joinedchannels"] = []
 
     def _resume(self, data, botname, reto=None):
-        """ resume the bot. """
-        if not Irc._resume(self, data, botname, reto): return 0
-        for channel in self.state['joinedchannels']: self.who(channel)
+        """resume the bot."""
+        if not Irc._resume(self, data, botname, reto):
+            return 0
+        for channel in self.state["joinedchannels"]:
+            self.who(channel)
         return 1
 
     def _dccresume(self, sock, nick, userhost, channel=None):
-        """ resume dcc loop. """
-        if not nick or not userhost: return
+        """resume dcc loop."""
+        if not nick or not userhost:
+            return
         start_new_thread(self._dccloop, (sock, nick, userhost, channel))
 
     def _dcclisten(self, nick, userhost, channel):
-        """ accept dcc chat requests. """
+        """accept dcc chat requests."""
         try:
             listenip = socket.gethostbyname(socket.gethostname())
             (port, listensock) = getlistensocket(listenip)
             ipip2 = socket.inet_aton(listenip)
-            ipip = struct.unpack('>L', ipip2)[0]
-            chatmsg = 'DCC CHAT CHAT %s %s' % (ipip, port)
+            ipip = struct.unpack(">L", ipip2)[0]
+            chatmsg = "DCC CHAT CHAT %s %s" % (ipip, port)
             self.ctcp(nick, chatmsg)
             self.sock = sock = listensock.accept()[0]
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
-            logging.error('%s - dcc error: %s' % (self.cfg.name, str(ex)))
+            logging.error("%s - dcc error: %s" % (self.cfg.name, str(ex)))
             return
         self._dodcc(sock, nick, userhost, channel)
 
     def _dodcc(self, sock, nick, userhost, channel=None):
-        """ send welcome message and loop for dcc commands. """
-        if not nick or not userhost: return
+        """send welcome message and loop for dcc commands."""
+        if not nick or not userhost:
+            return
         try:
-            sock.send('Welcome to the JSONBOT partyline ' + nick + " ;]\n")
+            sock.send("Welcome to the JSONBOT partyline " + nick + " ;]\n")
             partylist = partyline.list_nicks()
-            if partylist: sock.send("people on the partyline: %s\n" % ' .. '.join(partylist))
+            if partylist:
+                sock.send("people on the partyline: %s\n" % " .. ".join(partylist))
             sock.send("control character is ! .. bot broadcast is @\n")
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
-            logging.error('%s - dcc error: %s' % (self.cfg.name, str(ex)))
+            logging.error("%s - dcc error: %s" % (self.cfg.name, str(ex)))
             return
         start_new_thread(self._dccloop, (sock, nick, userhost, channel))
 
     def _dccloop(self, sock, nick, userhost, channel=None):
-        """ loop for dcc commands. """
-        sockfile = sock.makefile('r')
+        """loop for dcc commands."""
+        sockfile = sock.makefile("r")
         sock.setblocking(True)
         res = ""
         partyline.add_party(self, sock, nick, userhost, channel)
@@ -111,14 +117,14 @@ class IRCBot(Irc):
             time.sleep(0.01)
             try:
                 res = sockfile.readline()
-                logging.warn("%s got %s (%s)" % ( userhost, res, self.cfg.name))
+                logging.warn("%s got %s (%s)" % (userhost, res, self.cfg.name))
                 if self.stopped or not res:
-                    logging.warn('closing dcc with %s (%s)' % (nick, self.cfg.name))
+                    logging.warn("closing dcc with %s (%s)" % (nick, self.cfg.name))
                     partyline.del_party(nick)
                     return
             except socket.timeout:
                 continue
-            except socket.error, ex:
+            except socket.error as ex:
                 try:
                     (errno, errstr) = ex
                 except:
@@ -128,9 +134,9 @@ class IRCBot(Irc):
                     continue
                 else:
                     raise
-            except Exception, ex:
+            except Exception as ex:
                 handle_exception()
-                logging.warn('closing dcc with %s' % (nick, self.cfg.name))
+                logging.warn("closing dcc with %s" % (nick, self.cfg.name))
                 partyline.del_party(nick)
                 return
             try:
@@ -144,8 +150,8 @@ class IRCBot(Irc):
                 ievent.channel = channel or ievent.userhost
                 ievent.origtxt = res
                 ievent.txt = res
-                ievent.cmnd = 'DCC'
-                ievent.cbtype = 'DCC'
+                ievent.cmnd = "DCC"
+                ievent.cbtype = "DCC"
                 ievent.bot = self
                 ievent.sock = sock
                 ievent.speed = 1
@@ -161,8 +167,10 @@ class IRCBot(Irc):
                     self.put(ievent)
                     continue
                 elif ievent.txt[0] == "@":
-                    partyline.say_broadcast_notself(ievent.nick, "[%s] %s" % (ievent.nick, ievent.txt))
-                    q = Queue.Queue()
+                    partyline.say_broadcast_notself(
+                        ievent.nick, "[%s] %s" % (ievent.nick, ievent.txt)
+                    )
+                    q = queue.Queue()
                     ievent.queues = [q]
                     ievent.txt = ievent.txt[1:]
                     self.doevent(ievent)
@@ -172,8 +180,10 @@ class IRCBot(Irc):
                             partyline.say_broadcast("[bot] %s" % i)
                     continue
                 else:
-                    partyline.say_broadcast_notself(ievent.nick, "[%s] %s" % (ievent.nick, ievent.txt))
-            except socket.error, ex:
+                    partyline.say_broadcast_notself(
+                        ievent.nick, "[%s] %s" % (ievent.nick, ievent.txt)
+                    )
+            except socket.error as ex:
                 try:
                     (errno, errstr) = ex
                 except:
@@ -181,39 +191,43 @@ class IRCBot(Irc):
                     errstr = str(ex)
                 if errno == 35 or errno == 11:
                     continue
-            except Exception, ex:
+            except Exception as ex:
                 handle_exception()
         sockfile.close()
-        logging.warn('closing dcc with %s (%s)' %  (nick, self.cfg.name))
+        logging.warn("closing dcc with %s (%s)" % (nick, self.cfg.name))
 
     def _dccconnect(self, nick, userhost, addr, port):
-        """ connect to dcc request from nick. """
+        """connect to dcc request from nick."""
         try:
             port = int(port)
-            logging.warn("connecting to %s:%s -=- %s (%s)" % (addr, port, userhost, self.cfg.name))
-            if re.search(':', addr):
+            logging.warn(
+                "connecting to %s:%s -=- %s (%s)"
+                % (addr, port, userhost, self.cfg.name)
+            )
+            if re.search(":", addr):
                 sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
                 sock.connect((addr, port))
             else:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 sock.connect((addr, port))
-        except Exception, ex:
-            logging.error('%s - dcc error: %s' % (self.cfg.name, str(ex)))
+        except Exception as ex:
+            logging.error("%s - dcc error: %s" % (self.cfg.name, str(ex)))
             return
         self._dodcc(sock, nick, userhost, userhost)
 
     def broadcast(self, txt):
-        """ broadcast txt to all joined channels. """
-        for i in self.state['joinedchannels']: self.say(i, txt)
+        """broadcast txt to all joined channels."""
+        for i in self.state["joinedchannels"]:
+            self.say(i, txt)
 
     def getchannelmode(self, channel):
-        """ send MODE request for channel. """
+        """send MODE request for channel."""
         if not channel:
             return
-        self.putonqueue(9, None, 'MODE %s' % channel)
+        self.putonqueue(9, None, "MODE %s" % channel)
 
     def join(self, channel, password=None):
-        """ join a channel .. use optional password. """
+        """join a channel .. use optional password."""
         chan = ChannelBase(channel, self.cfg.name)
         if password:
             chan.data.key = password.strip()
@@ -223,7 +237,7 @@ class IRCBot(Irc):
             return result
         got = False
         if not chan.data.cc:
-            chan.data.cc = self.cfg.globalcc or ''
+            chan.data.cc = self.cfg.globalcc or ""
             got = True
         if not chan.data.perms:
             chan.data.perms = []
@@ -237,18 +251,22 @@ class IRCBot(Irc):
         return 1
 
     def handle_privmsg(self, ievent):
-        """ check if PRIVMSG is command, if so dispatch. """
+        """check if PRIVMSG is command, if so dispatch."""
         if ievent.nick in self.nicks401:
-            logging.debug("%s - %s is available again" % (self.cfg,name, ievent.nick))
+            logging.debug("%s - %s is available again" % (self.cfg, name, ievent.nick))
             self.nicks401.remove(ievent.nick)
-        if not ievent.txt: return
+        if not ievent.txt:
+            return
         ievent.nodispatch = False
         chat = re.search(dccchatre, ievent.txt)
         if chat:
-            if self.users.allowed(ievent.userhost, 'USER'):
-                start_new_thread(self._dccconnect, (ievent.nick, ievent.userhost, chat.group(1), chat.group(2))) 
+            if self.users.allowed(ievent.userhost, "USER"):
+                start_new_thread(
+                    self._dccconnect,
+                    (ievent.nick, ievent.userhost, chat.group(1), chat.group(2)),
+                )
                 return
-        if '\001' in ievent.txt:
+        if "\001" in ievent.txt:
             Irc.handle_privmsg(self, ievent)
             return
         ievent.bot = self
@@ -257,10 +275,10 @@ class IRCBot(Irc):
         self.put(ievent)
 
     def handle_join(self, ievent):
-        """ handle joins. """
+        """handle joins."""
         if ievent.nick in self.nicks401:
-             logging.debug("%s - %s is available again" % (self.cfg.name, ievent.nick))
-             self.nicks401.remove(ievent.nick)
+            logging.debug("%s - %s is available again" % (self.cfg.name, ievent.nick))
+            self.nicks401.remove(ievent.nick)
         chan = ievent.channel
         nick = ievent.nick
         if nick == self.cfg.nick:
@@ -272,40 +290,41 @@ class IRCBot(Irc):
         self.userhosts[nick] = ievent.userhost
 
     def handle_kick(self, ievent):
-        """ handle kick event. """
+        """handle kick event."""
         try:
             who = ievent.arguments[1]
         except IndexError:
             return
         chan = ievent.channel
         if who == self.cfg.nick:
-            if chan in self.state['joinedchannels']:
-                self.state['joinedchannels'].remove(chan)
+            if chan in self.state["joinedchannels"]:
+                self.state["joinedchannels"].remove(chan)
                 self.state.save()
 
     def handle_nick(self, ievent):
-        """ update userhost cache on nick change. """
+        """update userhost cache on nick change."""
         nick = ievent.txt
         self.userhosts[nick] = ievent.userhost
         if ievent.nick == self.cfg.nick or ievent.nick == self.cfg.orignick:
-            self.cfg['nick'] = nick
+            self.cfg["nick"] = nick
             self.cfg.save()
 
     def handle_part(self, ievent):
-        """ handle parts. """
+        """handle parts."""
         chan = ievent.channel
         if ievent.nick == self.cfg.nick:
-            logging.warn('parted channel %s (%s)' % (chan, self.cfg.name))
-            if chan in self.state['joinedchannels']:
-                self.state['joinedchannels'].remove(chan)
+            logging.warn("parted channel %s (%s)" % (chan, self.cfg.name))
+            if chan in self.state["joinedchannels"]:
+                self.state["joinedchannels"].remove(chan)
                 self.state.save()
 
     def handle_ievent(self, ievent):
-        """ check for callbacks, call Irc method. """
+        """check for callbacks, call Irc method."""
         try:
             Irc.handle_ievent(self, ievent)
-            if ievent.cmnd == 'JOIN' or ievent.msg:
-                if ievent.nick in self.nicks401: self.nicks401.remove(ievent.nick)
+            if ievent.cmnd == "JOIN" or ievent.msg:
+                if ievent.nick in self.nicks401:
+                    self.nicks401.remove(ievent.nick)
             if ievent.cmnd != "PRIVMSG":
                 i = IrcEvent()
                 i.copyin(ievent)
@@ -315,83 +334,100 @@ class IRCBot(Irc):
                 self.doevent(i)
         except:
             handle_exception()
- 
+
     def handle_quit(self, ievent):
-        """ check if quit is because of a split. """
-        if '*.' in ievent.txt or self.cfg.server in ievent.txt: self.splitted.append(ievent.nick)
-        
+        """check if quit is because of a split."""
+        if "*." in ievent.txt or self.cfg.server in ievent.txt:
+            self.splitted.append(ievent.nick)
+
     def handle_mode(self, ievent):
-        """ check if mode is about channel if so request channel mode. """
+        """check if mode is about channel if so request channel mode."""
         logging.warn("mode change %s (%s)" % (str(ievent.arguments), self.cfg.name))
         try:
             dummy = ievent.arguments[2]
         except IndexError:
             chan = ievent.channel
             self.getchannelmode(chan)
-            if not ievent.chan: ievent.bind(self)
+            if not ievent.chan:
+                ievent.bind(self)
             if ievent.chan:
                 ievent.chan.data.mode = ievent.arguments[1]
                 ievent.chan.save()
 
     def handle_311(self, ievent):
-        """ handle 311 response .. sync with userhosts cache. """
+        """handle 311 response .. sync with userhosts cache."""
         target, nick, user, host, dummy = ievent.arguments
         nick = nick
         userhost = "%s@%s" % (user, host)
-        logging.debug('%s - adding %s to userhosts: %s' % (self.cfg.name, nick, userhost))
+        logging.debug(
+            "%s - adding %s to userhosts: %s" % (self.cfg.name, nick, userhost)
+        )
         self.userhosts[nick] = userhost
 
     def handle_352(self, ievent):
-        """ handle 352 response .. sync with userhosts cache. """
+        """handle 352 response .. sync with userhosts cache."""
         args = ievent.arguments
-        channel = args[1]  
+        channel = args[1]
         nick = args[5]
         user = args[2]
         host = args[3]
         userhost = "%s@%s" % (user, host)
-        logging.debug('%s - adding %s to userhosts: %s' % (self.cfg.name, nick, userhost))
+        logging.debug(
+            "%s - adding %s to userhosts: %s" % (self.cfg.name, nick, userhost)
+        )
         self.userhosts[nick.lower()] = userhost.lower()
         self.nicks[userhost.lower()] = nick.lower()
-        
+
     def handle_353(self, ievent):
-        """ handle 353 .. check if we are op. """
+        """handle 353 .. check if we are op."""
         userlist = ievent.txt.split()
         chan = ievent.channel
         for i in userlist:
-            if i[0] == '@' and i[1:] == self.cfg.nick:
-                if chan not in self.state['opchan']:
-                    self.state['opchan'].append(chan)
+            if i[0] == "@" and i[1:] == self.cfg.nick:
+                if chan not in self.state["opchan"]:
+                    self.state["opchan"].append(chan)
 
     def handle_324(self, ievent):
-        """ handle mode request responses. """
-        if not ievent.chan: ievent.bind(self, force=True)
+        """handle mode request responses."""
+        if not ievent.chan:
+            ievent.bind(self, force=True)
         ievent.chan.data.mode = ievent.arguments[2]
         ievent.chan.save()
 
     def handle_invite(self, ievent):
-        """ join channel if invited by OPER. """
-        if self.users and self.users.allowed(ievent.userhost, ['OPER', ]): self.join(ievent.txt)
+        """join channel if invited by OPER."""
+        if self.users and self.users.allowed(
+            ievent.userhost,
+            [
+                "OPER",
+            ],
+        ):
+            self.join(ievent.txt)
 
     def settopic(self, channel, txt):
-        """ set topic of channel to txt. """
-        self.putonqueue(7, None, 'TOPIC %s :%s' % (channel, txt))
+        """set topic of channel to txt."""
+        self.putonqueue(7, None, "TOPIC %s :%s" % (channel, txt))
 
     def gettopic(self, channel, event=None):
-        """ get topic data. """
-        q = Queue.Queue()
+        """get topic data."""
+        q = queue.Queue()
         i332 = waiter.register("332", queue=q)
         i333 = waiter.register("333", queue=q)
-        self.putonqueue(7, None, 'TOPIC %s' % channel)
+        self.putonqueue(7, None, "TOPIC %s" % channel)
         res = waitforqueue(q, 5000)
         who = what = when = None
         for r in res:
-            if not r.postfix: continue
+            if not r.postfix:
+                continue
             try:
-                if r.cmnd == "332": what = r.txt ; waiter.ready(i332) ; continue
+                if r.cmnd == "332":
+                    what = r.txt
+                    waiter.ready(i332)
+                    continue
                 waiter.ready(i333)
                 splitted = r.postfix.split()
                 who = splitted[2]
                 when = float(splitted[3])
-            except (IndexError, ValueError): continue
+            except (IndexError, ValueError):
+                continue
             return (what, who, when)
-

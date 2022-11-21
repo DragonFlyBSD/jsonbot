@@ -4,41 +4,53 @@
 
 """ stop a running bot """
 
-## jsb imports
+# jsb imports
 
-import os, sys
-sys.path.insert(0, os.getcwd())
-sys.path.insert(0, os.getcwd() + os.sep + "..")
-
-os.environ['PATH'] = os.getcwd() + os.sep + 'bin:' + os.environ['PATH']
-
-from jsb.utils.popen import gozerpopen
-from jsb.lib.datadir import getdatadir
+from optparse import OptionParser
+import sys
+import os
+from subprocess import Popen
 from jsb.version import getversion
-
-print getversion("STOP")
-
-## basic imports
-
-from subprocess import Popen, PIPE
+from jsb.lib.datadir import getdatadir
+from jsb.utils.popen import gozerpopen
 import os
 import sys
 
+sys.path.insert(0, os.getcwd())
+sys.path.insert(0, os.getcwd() + os.sep + "..")
 
-## options parser
+os.environ["PATH"] = os.getcwd() + os.sep + "bin:" + os.environ["PATH"]
 
-from optparse import OptionParser
-parser = OptionParser(usage='usage: %prog [options] [list of appids]', version='%prog ' + getversion())
-parser.add_option('-d', '--datadir', type='string', default=False, dest='datadir', help="datadir to use")
+
+print(getversion("STOP"))
+
+# basic imports
+
+
+# options parser
+
+
+parser = OptionParser(
+    usage="usage: %prog [options] [list of appids]", version="%prog " + getversion()
+)
+parser.add_option(
+    "-d",
+    "--datadir",
+    type="string",
+    default=False,
+    dest="datadir",
+    help="datadir to use",
+)
 opts, args = parser.parse_args()
 opts.args = args
 
-if opts.datadir and not os.path.isdir(opts.datadir): os.mkdir(opts.datadir)
+if opts.datadir and not os.path.isdir(opts.datadir):
+    os.mkdir(opts.datadir)
 
 ddir = opts.datadir or getdatadir()
-PID = open("%s/run/jsb.pid" % ddir, 'r').read()
-print "PID is %s" % PID
+PID = open("%s/run/jsb.pid" % ddir, "r").read()
+print("PID is %s" % PID)
 execstring = "kill -s TERM %s" % PID
-print execstring
+print(execstring)
 proc = Popen(execstring.split())
 proc.wait()

@@ -20,36 +20,44 @@ unless you set up an alias in your channel:
 
 """
 
-## jsb imports
-
-from jsb.lib.threads import start_new_thread
-from jsb.lib.persist import PlugPersist
-from jsb.lib.fleet import getfleet
-from jsb.lib.commands import cmnds
-from jsb.lib.examples import examples
-from jsb.lib.callbacks import callbacks
-
-## basic imports
+# jsb imports
 
 import logging
+import socketserver
 import time
+import traceback
+from socketserver import StreamRequestHandler, ThreadingMixIn
 
-## defines
+from jsb.lib.callbacks import callbacks
+from jsb.lib.commands import cmnds
+from jsb.lib.examples import examples
+from jsb.lib.fleet import getfleet
+from jsb.lib.persist import PlugPersist
+from jsb.lib.threads import start_new_thread
 
-cfg = PlugPersist("irccat", {
-    "botnames": ["default-sxmpp",],
-    "host": "localhost",
-    "port": "54321",
-    "aliases": {},
-    "enable": False,
-    })
+# basic imports
 
-import SocketServer
-from SocketServer import ThreadingMixIn, StreamRequestHandler
+
+# defines
+
+cfg = PlugPersist(
+    "irccat",
+    {
+        "botnames": [
+            "default-sxmpp",
+        ],
+        "host": "localhost",
+        "dbport": "54321",
+        "aliases": {},
+        "enable": False,
+    },
+)
+
 
 shared_data = {}
 
 server = None
+
 
 class IrcCatListener(ThreadingMixIn, StreamRequestHandler):
     def handle(self):
@@ -62,47 +70,67 @@ class IrcCatListener(ThreadingMixIn, StreamRequestHandler):
             for botname in fleet.list():
                 bot = fleet.byname(botname)
                 if bot:
-                    if chan[0] == "#" and chan not in bot.state['joinedchannels']:
-                        logging.warn("someone tried to make me say something in a channel i'm not in!")
+                    if chan[0] == "#" and chan not in bot.state["joinedchannels"]:
+                        logging.warn(
+                            "someone tried to make me say something in a channel i'm not in!"
+                        )
                     else:
                         bot.say(chan, msg)
-                else: logging.error("can't find %s bot in fleet" % botname)
+                else:
+                    logging.error("can't find %s bot in fleet" % botname)
 
     def splitMsg(self, message):
-        if message[0] not in ('#', '@'): return [], message
+        if message[0] not in ("#", "@"):
+            return [], message
         dest, message = message.split(" ", 1)
         dest = [x.strip().strip("@") for x in dest.split(",")]
         finalDest = []
         for d in dest:
             finalDest.append(d)
-            if d in cfg.data["aliases"].keys():
+            if d in list(cfg.data["aliases"].keys()):
                 for alias in cfg.data["aliases"][d]:
                     finalDest.append(alias)
         return finalDest, message
 
-def dummycb(bot, event): pass
+
+def dummycb(bot, event):
+    pass
+
 
 callbacks.add("START", dummycb)
 
 
-
 def init_threaded():
     global server
-    if server: logging.warn("irccat server is already running.") ; return
-    if not cfg.data.enable: logging.warn("irccat is not enabled.") ; return 
+    if server:
+        logging.warn("irccat server is already running.")
+        return
+    if not cfg.data.enable:
+        logging.warn("irccat is not enabled.")
+        return
     time.sleep(3)
-    if "host" not in cfg.data or "port" not in cfg.data:
+    if "host" not in cfg.data or "dbport" not in cfg.data:
         cfg.data["host"] = "localhost"
-        cfg.data["port"] = 54321
-        cfg.data["botnames"] = ["default-sxmpp",]
+        cfg.data["dbport"] = 54321
+        cfg.data["botnames"] = [
+            "default-sxmpp",
+        ]
         cfg.data["aliases"] = {}
-    if not cfg.data.aliases: cfg.data.aliases = {}
+    if not cfg.data.aliases:
+        cfg.data.aliases = {}
     cfg.save()
     try:
-        server = SocketServer.TCPServer((cfg.data["host"], int(cfg.data["port"])), IrcCatListener)
-    except Exception, ex: logging.error(str(ex)) ; return
-    logging.warn("starting irccat server on %s:%s" % (cfg.data["host"], cfg.data["port"]))
+        server = socketserver.TCPServer(
+            (cfg.data["host"], int(cfg.data["dbport"])), IrcCatListener
+        )
+    except Exception as ex:
+        logging.error(traceback.format_exception(ex))
+        return
+    logging.warn(
+        "starting irccat server on %s:%s" % (cfg.data["host"], cfg.data["dbport"])
+    )
     start_new_thread(server.serve_forever, ())
+
 
 def shutdown():
     global server
@@ -110,54 +138,103 @@ def shutdown():
         logging.warn("shutting down the irccat server")
         server.shutdown()
 
+
 def handle_irccat_add_alias(bot, ievent):
     if len(ievent.args) != 1:
-        ievent.reply("syntax: irccat_add_alias <alias> (where <alias> is the channel you want notifications for)")
+        ievent.reply(
+            "syntax: irccat_add_alias <alias> (where <alias> is the channel you want notifications for)"
+        )
         return
     dest = ievent.args[0]
-    if not cfg.data.aliases: cfg.data.aliases = {}
+    if not cfg.data.aliases:
+        cfg.data.aliases = {}
     if dest not in cfg.data["aliases"]:
         cfg.data["aliases"][dest] = []
     if ievent.channel not in cfg.data["aliases"][dest]:
         cfg.data["aliases"][dest].append(ievent.channel)
     cfg.save()
-    ievent.reply("%s will now receive irccat messages directed at %s" % (ievent.channel, dest))
-cmnds.add("irccat_add_alias", handle_irccat_add_alias, ['OPER'])
-examples.add("irccat_add_alias", "add an alias to the current channel from the specified one", "irccat_add_alias #firebreath")
+    ievent.reply(
+        "%s will now receive irccat messages directed at %s" % (ievent.channel, dest)
+    )
+
+
+cmnds.add("irccat_add_alias", handle_irccat_add_alias, ["OPER"])
+examples.add(
+    "irccat_add_alias",
+    "add an alias to the current channel from the specified one",
+    "irccat_add_alias #firebreath",
+)
+
 
 def handle_irccat_list_aliases(bot, ievent):
-    """ List all aliases defined for the current channel """
-    aliases = [dest for dest, chanlist in cfg.data["aliases"].iteritems() if ievent.channel in chanlist]
+    """List all aliases defined for the current channel"""
+    aliases = [
+        dest
+        for dest, chanlist in cfg.data["aliases"].items()
+        if ievent.channel in chanlist
+    ]
 
-    ievent.reply("%s is receiving irccat messages directed at: %s" % (ievent.channel, ", ".join(aliases)))
-cmnds.add("irccat_list_aliases", handle_irccat_list_aliases, ['OPER'])
-examples.add("irccat_list_aliases", "lists the aliases for the current channel", "irccat_list_aliases")
+    ievent.reply(
+        "%s is receiving irccat messages directed at: %s"
+        % (ievent.channel, ", ".join(aliases))
+    )
+
+
+cmnds.add("irccat_list_aliases", handle_irccat_list_aliases, ["OPER"])
+examples.add(
+    "irccat_list_aliases",
+    "lists the aliases for the current channel",
+    "irccat_list_aliases",
+)
+
 
 def handle_irccat_del_alias(bot, ievent):
     if len(ievent.args) != 1:
-        ievent.reply("syntax: irccat_del_alias <alias> (where <alias> is the channel you no longer want notifications for)")
+        ievent.reply(
+            "syntax: irccat_del_alias <alias> (where <alias> is the channel you no longer want notifications for)"
+        )
         return
     dest = ievent.args[0]
-    if dest not in cfg.data["aliases"]or ievent.channel not in cfg.data["aliases"][dest]:
+    if (
+        dest not in cfg.data["aliases"]
+        or ievent.channel not in cfg.data["aliases"][dest]
+    ):
         ievent.reply("%s is not an alias for %s" % (ievent.channel, dest))
         return
 
     cfg.data["aliases"][dest].remove(ievent.channel)
-    ievent.reply("%s will no longer receive irccat messages directed at %s" % (ievent.channel, dest))
+    ievent.reply(
+        "%s will no longer receive irccat messages directed at %s"
+        % (ievent.channel, dest)
+    )
     cfg.save()
-cmnds.add("irccat_del_alias", handle_irccat_del_alias, ['OPER'])
-examples.add("irccat_del_alias", "add an alias to the current channel from the specified one", "irccat_del_alias #firebreath")
+
+
+cmnds.add("irccat_del_alias", handle_irccat_del_alias, ["OPER"])
+examples.add(
+    "irccat_del_alias",
+    "add an alias to the current channel from the specified one",
+    "irccat_del_alias #firebreath",
+)
+
 
 def handle_irccat_enable(bot, event):
-    cfg.data.enable = True ; cfg.save() ; event.done()
+    cfg.data.enable = True
+    cfg.save()
+    event.done()
     init_threaded()
-    
+
+
 cmnds.add("irccat-enable", handle_irccat_enable, "OPER")
 examples.add("irccat-enable", "enable irccat server", "irccat-enable")
 
+
 def handle_irccat_disable(bot, event):
-    cfg.data.enable = False ; cfg.save() ; event.done()
+    cfg.data.enable = False
+    cfg.save()
+    event.done()
     shutdown()
-    
+
+
 cmnds.add("irccat-disable", handle_irccat_disable, "OPER")
 examples.add("irccat-disable", "disable irccat server", "irccat-disable")

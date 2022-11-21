@@ -4,32 +4,33 @@
 
 """ own threading wrapper. """
 
-## jsb imports
+# jsb imports
+
+import _thread
+import logging
+import re
+import threading
+import time
 
 from jsb.utils.exception import handle_exception
 
-## basic imports
+# basic imports
 
-import threading
-import re
-import time
-import thread
-import logging
-import uuid
 
-## defines
+# defines
 
 # RE to determine thread name
 
-methodre = re.compile('method\s+(\S+)', re.I)
-funcre = re.compile('function\s+(\S+)', re.I)
-objectre = re.compile('<(\S+)\s+object at (\S+)>', re.I)
+methodre = re.compile("method\s+(\S+)", re.I)
+funcre = re.compile("function\s+(\S+)", re.I)
+objectre = re.compile("<(\S+)\s+object at (\S+)>", re.I)
 
-## Botcommand class
+# Botcommand class
+
 
 class Botcommand(threading.Thread):
 
-    """ thread for running bot commands. """
+    """thread for running bot commands."""
 
     def __init__(self, group, target, name, args, kwargs):
         threading.Thread.__init__(self, None, target, name, args, kwargs)
@@ -39,20 +40,22 @@ class Botcommand(threading.Thread):
         self.setDaemon(True)
 
     def run(self):
-        """ run the bot command. """
+        """run the bot command."""
         try:
             self.bot.benice()
             result = threading.Thread.run(self)
             self.ievent.ready()
-        except Exception, ex:
+        except Exception as ex:
             handle_exception(self.ievent)
             time.sleep(1)
 
-## Thr class
+
+# Thr class
+
 
 class Thr(threading.Thread):
 
-    """ thread wrapper. """
+    """thread wrapper."""
 
     def __init__(self, group, target, name, args, kwargs):
         threading.Thread.__init__(self, None, target, name, args, kwargs)
@@ -60,57 +63,77 @@ class Thr(threading.Thread):
         self.name = name
 
     def run(self):
-        """ run the thread. """
+        """run the thread."""
         try:
-            logging.debug('threads - running thread %s' % self.name) 
+            logging.debug("threads - running thread %s" % self.name)
             threading.Thread.run(self)
-        except Exception, ex:
+        except Exception as ex:
             handle_exception()
             time.sleep(1)
 
-## getname function
+
+# getname function
+
 
 def getname(func):
-    """ get name of function/method. """
+    """get name of function/method."""
     name = str(func)
     method = re.search(methodre, name)
-    if method: name = method.group(1)
-    else: 
+    if method:
+        name = method.group(1)
+    else:
         function = re.search(funcre, name)
-        if function: name = function.group(1)
+        if function:
+            name = function.group(1)
         else:
             object = re.search(objectre, name)
-            if object: name = "%s-%s" % (object.group(1), object.group(2))
-            else: name = str(func)
+            if object:
+                name = "%s-%s" % (object.group(1), object.group(2))
+            else:
+                name = str(func)
     return name
 
-## start_new_thread function
+
+# start_new_thread function
+
 
 def start_new_thread(func, arglist, kwargs={}):
-    """ start a new thread .. set name to function/method name."""
-    if not kwargs: kwargs = {}
-    if not 'name' in kwargs:
+    """start a new thread .. set name to function/method name."""
+    if not kwargs:
+        kwargs = {}
+    if not "name" in kwargs:
         name = getname(func)
-        if not name: name = str(func)
-    else: name = kwargs['name']
+        if not name:
+            name = str(func)
+    else:
+        name = kwargs["name"]
     try:
         thread = Thr(None, target=func, name=name, args=arglist, kwargs=kwargs)
         thread.start()
         return thread
-    except Exception, ex:
-        if "can't start" in str(ex): logging.error("threads - thread space is exhausted - can't start thread %s" % name)
+    except Exception as ex:
+        if "can't start" in str(ex):
+            logging.error(
+                "threads - thread space is exhausted - can't start thread %s" % name
+            )
         handle_exception()
         time.sleep(3)
 
-## start_bot_cpmmand function
+
+# start_bot_cpmmand function
+
 
 def start_bot_command(func, arglist, kwargs={}):
-    """ start a new thread .. set name to function/method name. """
-    if not kwargs: kwargs = {}
+    """start a new thread .. set name to function/method name."""
+    if not kwargs:
+        kwargs = {}
     try:
         name = getname(func)
-        if not name: name = 'noname'
-        thread = Botcommand(group=None, target=func, name=name, args=arglist, kwargs=kwargs)
+        if not name:
+            name = "noname"
+        thread = Botcommand(
+            group=None, target=func, name=name, args=arglist, kwargs=kwargs
+        )
         thread.start()
         return thread
     except:
@@ -119,7 +142,9 @@ def start_bot_command(func, arglist, kwargs={}):
 
 
 def threaded(func):
-    """ threading decorator. """
+    """threading decorator."""
+
     def threadedfunc(*args, **kwargs):
         start_new_thread(func, args, kwargs)
+
     return threadedfunc

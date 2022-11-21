@@ -4,31 +4,33 @@
 
 """ convore event. """
 
-## jsb imports
+# jsb imports
 
-from jsb.utils.locking import lockdec
+import _thread
+import logging
+
+from jsb.imports import getjson
 from jsb.lib.eventbase import EventBase
 from jsb.utils.lazydict import LazyDict
-from jsb.imports import getjson
+from jsb.utils.locking import lockdec
 
-## basic imports
+# basic imports
 
-import logging
-import thread
 
-## defines
+# defines
 
 json = getjson()
 
-## locks
+# locks
 
-parselock = thread.allocate_lock()
+parselock = _thread.allocate_lock()
 locked = lockdec(parselock)
 
-## ConvoreEvent
+# ConvoreEvent
+
 
 class ConvoreEvent(EventBase):
-    """ Convore Event."""
+    """Convore Event."""
 
     def parse(self, bot, message, root):
         m = LazyDict(message)
@@ -37,12 +39,16 @@ class ConvoreEvent(EventBase):
         self.type = type
         self.cbtype = "CONVORE"
         self.bottype = bot.type
-        self.username = m.user['username']
-        self.userhost = "%s_%s" % ("CONVORE_USER", self.username) 
+        self.username = m.user["username"]
+        self.userhost = "%s_%s" % ("CONVORE_USER", self.username)
         self._id = m._id
-        self.userid = m.user['id']
-        try: self.channel = m.topic['id'] ; self.groupchat = True
-        except: self.channel = self.userid ; self.msg = True
+        self.userid = m.user["id"]
+        try:
+            self.channel = m.topic["id"]
+            self.groupchat = True
+        except:
+            self.channel = self.userid
+            self.msg = True
         self.auth = self.userhost
         self.txt = m.message
         self.nick = self.username

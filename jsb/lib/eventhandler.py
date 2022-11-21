@@ -4,44 +4,49 @@
 
 """ event handler. use to dispatch function in main loop. """
 
-## jsb imports
+# jsb imports
+
+import _thread
+import logging
+import queue
+import time
 
 from jsb.utils.exception import handle_exception
 from jsb.utils.locking import lockdec
-from threads import start_new_thread
 
-## basic imports
+from .threads import start_new_thread
 
-import Queue
-import thread
-import logging
-import time
+# basic imports
 
-## locks
 
-handlerlock = thread.allocate_lock()
+# locks
+
+handlerlock = _thread.allocate_lock()
 locked = lockdec(handlerlock)
 
-## classes
+# classes
+
 
 class EventHandler(object):
 
     """
-        events are handled in 11 queues with different priorities:
-        queue0 is tried first queue10 last.
+    events are handled in 11 queues with different priorities:
+    queue0 is tried first queue10 last.
 
     """
 
     def __init__(self):
         self.sortedlist = []
-        try: self.queue = Queue.PriorityQueue()
-        except AttributeError: self.queue = Queue.Queue()
+        try:
+            self.queue = queue.PriorityQueue()
+        except AttributeError:
+            self.queue = queue.Queue()
         self.stopped = False
         self.running = False
         self.nooutput = False
 
     def start(self):
-        """ start the eventhandler thread. """
+        """start the eventhandler thread."""
         self.stopped = False
         if not self.running:
             start_new_thread(self.handleloop, ())
@@ -51,34 +56,37 @@ class EventHandler(object):
         try:
             speed, todo = self.queue.get_nowait()
             self.dispatch(todo)
-        except Queue.Empty: pass
+        except queue.Empty:
+            pass
 
     def stop(self):
-        """ stop the eventhandler thread. """
+        """stop the eventhandler thread."""
         self.running = False
         self.stopped = True
-        self.go.put('Yihaaa')
+        self.go.put("Yihaaa")
 
     def put(self, speed, func, *args, **kwargs):
-        """ put item on the queue. """
+        """put item on the queue."""
         self.queue.put_nowait((speed, (func, args, kwargs)))
 
     def handleloop(self):
-        """ thread that polls the queues for items to dispatch. """
-        logging.warn('starting - %s ' % str(self))
+        """thread that polls the queues for items to dispatch."""
+        logging.warn("starting - %s " % str(self))
         while not self.stopped:
             try:
                 (speed, todo) = self.queue.get()
                 logging.warn("running at speed %s - %s" % (speed, str(todo)))
                 self.dispatch(todo)
-            except Queue.Empty: time.sleep(0.1)
-            except Exception, ex: handle_exception()
-        logging.warn('stopping - %s' % str(self))
+            except queue.Empty:
+                time.sleep(0.1)
+            except Exception as ex:
+                handle_exception()
+        logging.warn("stopping - %s" % str(self))
 
     runforever = handleloop
 
     def dispatch(self, todo):
-        """ dispatch functions from provided queue. """
+        """dispatch functions from provided queue."""
         try:
             (func, args, kwargs) = todo
             func(*args, **kwargs)
@@ -87,11 +95,12 @@ class EventHandler(object):
                 (func, args) = todo
                 func(*args)
             except ValueError:
-                (func, ) = todo
+                (func,) = todo
                 func()
-        except: handle_exception()
+        except:
+            handle_exception()
 
 
-## handler to use in main prog
+# handler to use in main prog
 
 mainhandler = EventHandler()
