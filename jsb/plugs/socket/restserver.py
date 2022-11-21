@@ -30,13 +30,13 @@ try:
     cfg.define("enable", 0)
     cfg.define("host", socket.gethostbyname(socket.getfqdn()))
     cfg.define("name", socket.getfqdn())
-    cfg.define("port", 11111)
+    cfg.define("restport", 11111)
     cfg.define("disable", [])
-    hp = "%s:%s" % (cfg.get("host"), cfg.get("port"))
+    hp = "%s:%s" % (cfg.get("host"), cfg.get("restport"))
     url = "http://%s" % hp
     if cfg.enable:
         enable = True
-except AttributeError:
+except AttributeError as ex:
     enable = False  # we are on GAE
 except Exception as ex:
     logging.warn("error binding socket: %s" % str(ex))
@@ -59,18 +59,20 @@ def startserver(force=False):
         logging.debug("REST server is already running. ")
         return server
     try:
-        server = RestServer((cfg.get("host"), cfg.get("port")), RestRequestHandler)
+        server = RestServer(
+            (cfg.get("host"), int(cfg.get("restport"))), RestRequestHandler
+        )
         if server:
             server.start()
             logging.warn(
-                "restserver - running at %s:%s" % (cfg.get("host"), cfg.get("port"))
+                "restserver - running at %s:%s" % (cfg.get("host"), cfg.get("restport"))
             )
             for mount in cfg.get("disable"):
                 server.disable(mount)
         else:
             logging.error(
                 "restserver - failed to start server at %s:%s"
-                % (cfg.get("host"), cfg.get("port"))
+                % (cfg.get("host"), cfg.get("restport"))
             )
     except socket.error as ex:
         logging.warn("restserver - start - socket error: %s" % str(ex))

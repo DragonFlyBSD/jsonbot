@@ -47,7 +47,7 @@ cfg = PlugPersist(
             "default-sxmpp",
         ],
         "host": "localhost",
-        "port": "54321",
+        "dbport": "54321",
         "aliases": {},
         "enable": False,
     },
@@ -109,9 +109,9 @@ def init_threaded():
         logging.warn("irccat is not enabled.")
         return
     time.sleep(3)
-    if "host" not in cfg.data or "port" not in cfg.data:
+    if "host" not in cfg.data or "dbport" not in cfg.data:
         cfg.data["host"] = "localhost"
-        cfg.data["port"] = 54321
+        cfg.data["dbport"] = 54321
         cfg.data["botnames"] = [
             "default-sxmpp",
         ]
@@ -121,13 +121,13 @@ def init_threaded():
     cfg.save()
     try:
         server = socketserver.TCPServer(
-            (cfg.data["host"], int(cfg.data["port"])), IrcCatListener
+            (cfg.data["host"], int(cfg.data["dbport"])), IrcCatListener
         )
     except Exception as ex:
         logging.error(traceback.format_exception(ex))
         return
     logging.warn(
-        "starting irccat server on %s:%s" % (cfg.data["host"], cfg.data["port"])
+        "starting irccat server on %s:%s" % (cfg.data["host"], cfg.data["dbport"])
     )
     start_new_thread(server.serve_forever, ())
 

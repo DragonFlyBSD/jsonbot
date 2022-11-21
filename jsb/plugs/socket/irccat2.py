@@ -42,22 +42,15 @@ from jsb.lib.threads import start_new_thread
 from jsb.utils.exception import handle_exception
 from jsb.utils.generic import fromenc, toenc
 
-# basic imports
-
-
-# defines
-
 cfg = PersistConfig()
 cfg.define("botnames", ["default-sxmpp", "default-irc"])
 cfg.define("host", "localhost")
-cfg.define("port", "54321")
+cfg.define("iccatport", "54321")
 cfg.define("aliases", {})
 cfg.define("enable", False)
 
 # SocketServer imports
 
-
-# defines
 
 shared_data = {}
 
@@ -125,7 +118,7 @@ def init_threaded():
     time.sleep(2)
     if "host" not in cfg or "port" not in cfg:
         cfg["host"] = "localhost"
-        cfg["port"] = 54321
+        cfg["irccatport"] = 54321
         cfg["botnames"] = [
             "default-sxmpp",
         ]
@@ -134,11 +127,13 @@ def init_threaded():
         cfg.aliases = {}
     cfg.save()
     try:
-        server = socketserver.TCPServer((cfg["host"], int(cfg["port"])), IrcCatListener)
+        server = socketserver.TCPServer(
+            (cfg["host"], int(cfg["iccatport"])), IrcCatListener
+        )
     except Exception as ex:
         logging.error(traceback.format_exception(ex))
         return
-    logging.warn("starting irccat2 server on %s:%s" % (cfg["host"], cfg["port"]))
+    logging.warn("starting irccat2 server on %s:%s" % (cfg["host"], cfg["iccatport"]))
     thr = start_new_thread(server.serve_forever, ())
     thr.join(3)
 
