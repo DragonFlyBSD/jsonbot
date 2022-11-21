@@ -39,7 +39,7 @@ class StatDict(LazyDict):
         for item, value in self.items():
             if value >= start:
                 result.append((item, value))
-        result.sort(lambda b, a: cmp(a[1], b[1]))
+        result.sort(key=lambda a: a[1])
         if limit:
             result = result[:limit]
         return result
@@ -50,7 +50,7 @@ class StatDict(LazyDict):
         for item, value in self.items():
             if value <= end:
                 result.append((item, value))
-        result.sort(lambda a, b: cmp(a[1], b[1]))
+        result.sort(key=lambda a: a[1])
         if limit:
             return result[:limit]
         else:

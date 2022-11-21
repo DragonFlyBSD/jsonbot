@@ -101,7 +101,7 @@ def get_tinyurl(url):
         ("url", url),
     ]
     postdata = urllib.parse.urlencode(postarray)
-    req = urllib.request.Request(url=plugcfg.url, data=postdata)
+    req = urllib.request.Request(url=plugcfg.url, data=postdata.encode())
     req.add_header("User-agent", useragent())
     try:
         res = urllib.request.urlopen(req).readlines()
@@ -119,6 +119,7 @@ def get_tinyurl(url):
         return
     urls = []
     for line in res:
+        line = line.decode("utf-8")
         if line.startswith("<blockquote><b>"):
             urls.append(striphtml(line.strip()).split("[Open")[0])
     if len(urls) == 3:

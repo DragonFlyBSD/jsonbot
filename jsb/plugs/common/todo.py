@@ -412,7 +412,7 @@ def saytodo(bot, ievent, todoos, target=""):
     result = []
     now = time.time()
     counter = 1
-    todoos.sort(lambda a, b: cmp(b.priority, a.priority))
+    todoos.sort(key=lambda a: a.priority)
     for i in todoos:
         res = ""
         res += "%s) " % counter

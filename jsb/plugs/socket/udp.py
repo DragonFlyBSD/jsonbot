@@ -43,7 +43,7 @@ from jsb.lib.threads import start_new_thread
 from jsb.utils.exception import handle_exception
 from jsb.utils.generic import strippedtxt
 from jsb.utils.locking import lockdec
-from rijndael import rijndael
+from py3rijndael import rijndael
 
 # basic imports
 
@@ -191,7 +191,7 @@ class Udplistener(object):
         """handle an incoming udp packet."""
         if cfg["udpseed"]:
             data = ""
-            for i in range(len(input) / 16):
+            for i in range(len(input) // 16):
                 try:
                     data += crypt.decrypt(input[i * 16 : i * 16 + 16])
                 except Exception as ex:
@@ -212,7 +212,7 @@ class Udplistener(object):
                     printto = header.group(2)  # is the nick/channel
                     # check if printto is in allowednicks
 
-                    if cfg["udpalloednicks"] and not printto in cfg["udpallowednicks"]:
+                    if cfg["udpalloednicks"] and printto not in cfg["udpallowednicks"]:
                         logging.warn("udp - udp denied %s" % printto)
                         return
                     logging.debug("udp - " + str(addr[0]) + " - udp allowed")

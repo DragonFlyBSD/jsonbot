@@ -9,7 +9,6 @@
 import time
 
 import jsb.lib.threads as thr
-import sets
 from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
 from jsb.lib.examples import examples
@@ -196,7 +195,7 @@ def handle_voice(bot, ievent):
         ievent.missing("<nickname>")
         return
     ievent.reply("setting voice on %s" % str(ievent.args))
-    for nick in sets.Set(ievent.args):
+    for nick in set(ievent.args):
         bot.voice(ievent.channel, nick)
     ievent.done()
 

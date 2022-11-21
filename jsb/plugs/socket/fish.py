@@ -423,7 +423,7 @@ def bytes2int(b):
 # FIXME! Only usable for really small a with b near 16^x.
 def randint(a, b):
     """Random integer in [a,b]."""
-    bits = int(log(b, 2) + 1) / 8
+    bits = int(log(b, 2) + 1) // 8
     candidate = 0
     while True:
         candidate = bytes2int(urandom(bits))
@@ -461,7 +461,7 @@ def cbc_encrypt(func, data, blocksize):
     assert len(IV) == blocksize
 
     ciphertext = IV
-    for block_index in range(len(data) / blocksize):
+    for block_index in range(len(data) // blocksize):
         xored = xorstring(data, IV, blocksize)
         enc = func(xored)
 
@@ -481,7 +481,7 @@ def cbc_decrypt(func, data, blocksize):
     data = data[blocksize:]
 
     plaintext = ""
-    for block_index in range(len(data) / blocksize):
+    for block_index in range(len(data) // blocksize):
         temp = func(data[0:blocksize])
         temp2 = xorstring(temp, IV, blocksize)
         plaintext += temp2
@@ -643,7 +643,7 @@ p_dh1080 = int(
     "AE299EFA7BA66DEAFEFBEFBF0B7D8B",
     16,
 )
-q_dh1080 = (p_dh1080 - 1) / 2
+q_dh1080 = (p_dh1080 - 1) // 2
 
 
 # XXX: It is probably possible to implement dh1080 base64 using Pythons own, by
@@ -762,7 +762,7 @@ class DH1080Ctx:
 
         bits = 1080
         while True:
-            self.private = bytes2int(urandom(bits / 8))
+            self.private = bytes2int(urandom(bits // 8))
             self.public = pow(g_dh1080, self.private, p_dh1080)
             if (
                 2 <= self.public <= p_dh1080 - 1

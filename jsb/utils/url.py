@@ -27,7 +27,6 @@ from .lazydict import LazyDict
 # basic imports
 
 
-
 # defines
 
 re_url_match = re.compile("((?:http|https)://\S+)")
@@ -182,7 +181,7 @@ def geturl(url, version=None):
     urllib.request._urlopener = CBURLopener(version)
     logging.warn("fetching %s" % url)
     result = urllib.request.urlopen(url)
-    tmp = result.read()
+    tmp = result.read().decode("utf-8")
     result.close()
     return tmp
 
