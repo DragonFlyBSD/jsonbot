@@ -9,8 +9,12 @@
 import copy
 import logging
 
-from jsb.lib.callbacks import (callbacks, first_callbacks, last_callbacks,
-                               remote_callbacks)
+from jsb.lib.callbacks import (
+    callbacks,
+    first_callbacks,
+    last_callbacks,
+    remote_callbacks,
+)
 from jsb.lib.commands import cmnds
 from jsb.lib.container import Container
 from jsb.lib.errors import NoProperDigest
@@ -23,7 +27,6 @@ from jsb.utils.exception import handle_exception
 from jsb.utils.generic import stripcolor, strippedtxt
 from jsb.utils.lazydict import LazyDict
 from jsb.utils.locking import locked
-from xmlstream import NodeBuilder, XMLescape, XMLunescape
 
 # twitter plugin imports
 

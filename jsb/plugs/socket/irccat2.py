@@ -26,11 +26,10 @@ BHJTW - 28-02-2012 .. move to irccat2.py to use the normal irccat-cfg functions
 
 """
 
-# jsb imports
-
 import logging
 import socketserver
 import time
+import traceback
 from socketserver import StreamRequestHandler, ThreadingMixIn
 
 from jsb.lib.callbacks import callbacks
@@ -137,7 +136,7 @@ def init_threaded():
     try:
         server = socketserver.TCPServer((cfg["host"], int(cfg["port"])), IrcCatListener)
     except Exception as ex:
-        logging.error(str(ex))
+        logging.error(traceback.format_exception(ex))
         return
     logging.warn("starting irccat2 server on %s:%s" % (cfg["host"], cfg["port"]))
     thr = start_new_thread(server.serve_forever, ())

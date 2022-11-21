@@ -69,7 +69,7 @@ class Job(object):
         """try the callback."""
         try:
             self.func(*self.args, **self.kw)
-        except Exception as ex:
+        except Exception:
             handle_exception()
 
 
@@ -102,7 +102,7 @@ class JobAt(Job):
     def __repr__(self):
         """return a string representation of the JobAt object."""
         return "<JobAt instance next=%s, interval=%s, repeat=%d, function=%s>" % (
-            str(self.__next__),
+            str(self.next),
             str(self.delta),
             self.repeat,
             str(self.func),
@@ -110,7 +110,7 @@ class JobAt(Job):
 
     def check(self):
         """run check to see if job needs to be scheduled."""
-        if self.__next__ <= time.time():
+        if self.next <= time.time():
             logging.info("running %s - %s" % (str(self.func), self.description))
             self.func(*self.args, **self.kw)
             self.next += self.delta
@@ -143,7 +143,7 @@ class JobInterval(Job):
         return (
             "<JobInterval instance next=%s, interval=%s, repeat=%d, group=%s, function=%s>"
             % (
-                str(self.__next__),
+                str(self.next),
                 str(self.interval),
                 self.repeat,
                 self.group,
@@ -153,7 +153,7 @@ class JobInterval(Job):
 
     def check(self):
         """run check to see if job needs to be scheduled."""
-        if self.__next__ <= time.time():
+        if self.next <= time.time():
             logging.info("running %s - %s" % (str(self.func), self.description))
             self.next = time.time() + self.interval
             thr.start_new_thread(self.do, ())
@@ -193,7 +193,7 @@ class Periodical(object):
     def looponce(self, bot, event):
         """loop over the jobs."""
         for job in self.jobs:
-            if job.__next__ <= time.time():
+            if job.next <= time.time():
                 self.runjob(job)
 
     def runjob(self, job):

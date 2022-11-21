@@ -283,7 +283,7 @@ def markovlearnurl(url):
             markovtalk_learn(line)
             lines += 1
     except Exception as e:
-        logging.error(str(e))
+        logging.error(traceback.format_exception(e))
     logging.warn("learning %s done" % url)
     return lines
 

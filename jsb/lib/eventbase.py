@@ -11,6 +11,7 @@ import copy
 import logging
 import threading
 import time
+import traceback
 import uuid
 from collections import deque
 
@@ -157,12 +158,12 @@ class EventBase(LazyDict):
             try:
                 res = cmnds.dispatch(self.bot, self, direct=direct, *args, **kwargs)
             except RequireError as ex:
-                logging.error(str(ex))
+                logging.error(traceback.format_exception(ex))
             except NoSuchCommand as ex:
                 logging.error("we don't have a %s command" % str(ex))
             except NoSuchUser as ex:
                 logging.error("we don't have user for %s" % str(ex))
-            except Exception as ex:
+            except Exception:
                 handle_exception()
         return res
 

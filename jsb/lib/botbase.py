@@ -9,8 +9,15 @@ import traceback
 from jsb.lib.threads import threaded
 from jsb.lib.users import getusers
 from jsb.utils.exception import handle_exception
-from jsb.utils.generic import (fromenc, splittxt, stripcolor, strippedtxt,
-                               toenc, waitevents, waitforqueue)
+from jsb.utils.generic import (
+    fromenc,
+    splittxt,
+    stripcolor,
+    strippedtxt,
+    toenc,
+    waitevents,
+    waitforqueue,
+)
 from jsb.utils.lazydict import LazyDict
 from jsb.utils.locking import lock_object, lockdec, release_object
 from jsb.utils.name import stripname
@@ -20,13 +27,17 @@ from jsb.utils.url import decode_html_entities
 
 from .aliases import getaliases
 from .boot import boot, default_plugins, getcmndperms
-from .callbacks import (callbacks, first_callbacks, last_callbacks,
-                        remote_callbacks)
+from .callbacks import callbacks, first_callbacks, last_callbacks, remote_callbacks
 from .channelbase import ChannelBase
 from .commands import Commands, cmnds
 from .config import Config, getmainconfig
-from .errors import (NameNotSet, NoEventProvided, NoOwnerSet, NoSuchCommand,
-                     PlugsNotConnected)
+from .errors import (
+    NameNotSet,
+    NoEventProvided,
+    NoOwnerSet,
+    NoSuchCommand,
+    PlugsNotConnected,
+)
 from .eventbase import EventBase
 from .eventhandler import mainhandler
 from .exit import globalshutdown
@@ -298,7 +309,7 @@ class BotBase(LazyDict):
                     self.reconnect()
                     break
             except Exception as ex:
-                logging.error(str(ex))
+                logging.error(traceback.format_exception(ex))
                 self.reconnect()
                 break
             time.sleep(self.cfg.pingsleep or 60)
@@ -692,7 +703,7 @@ class BotBase(LazyDict):
                 if self.doreconnect():
                     break
             except Exception as ex:
-                logging.error(str(ex))
+                logging.error(traceback.format_exception(ex))
 
     def doreconnect(self, start=False):
         self.started = False

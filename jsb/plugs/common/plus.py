@@ -8,6 +8,7 @@
 
 import logging
 import os
+import traceback
 import uuid
 
 from jsb.imports import getjson
@@ -92,7 +93,7 @@ def plusscan(skip=False):
                 else:
                     logging.warn("no %s bot in fleet" % botname)
             except AttributeError as ex:
-                logging.error(str(ex))
+                logging.error(traceback.format_exception(ex))
             except Exception as ex:
                 handle_exception()
     state.save()

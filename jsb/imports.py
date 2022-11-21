@@ -26,10 +26,7 @@ def getdns():
 
 
 def getwebapp2():
-    try:
-        mod = _import("webapp2")
-    except:
-        mod = _import("webapp2")
+    mod = _import("webapp2")
     logging.debug("webapp2 module is %s" % str(mod))
     return mod
 
@@ -39,18 +36,9 @@ def getwebapp2():
 
 def getjson():
     try:
-        pass
-
-        # mod = _import("simplejson")
         mod = _import("json")
     except ImportError:
-        try:
-            mod = _import("json")
-        except:
-            try:
-                mod = _import("simplejson")
-            except:
-                mod = _import("simplejson")
+        mod = _import("simplejson")
     logging.debug("json module is %s" % str(mod))
     return mod
 
@@ -59,19 +47,13 @@ def getjson():
 
 
 def getfeedparser():
-    try:
-        mod = _import("feedparser")
-    except:
-        mod = _import("feedparser")
+    mod = _import("feedparser")
     logging.info("feedparser module is %s" % str(mod))
     return mod
 
 
 def getoauth():
-    try:
-        mod = _import("oauth")
-    except:
-        mod = _import("oauth")
+    mod = _import("oauth")
     logging.info("oauth module is %s" % str(mod))
     return mod
 
@@ -86,27 +68,18 @@ def getrequests():
 
 
 def gettornado():
-    try:
-        mod = _import("tornado")
-    except:
-        mod = _import("tornado")
+    mod = _import("tornado")
     logging.info("tornado module is %s" % str(mod))
     return mod
 
 
 def getBeautifulSoup():
-    try:
-        mod = _import("BeautifulSoup")
-    except:
-        mod = _import("BeautifulSoup")
+    mod = _import("bs4")
     logging.info("BeautifulSoup module is %s" % str(mod))
     return mod
 
 
 def getsleek():
-    try:
-        mod = _import("sleekxmpp")
-    except:
-        mod = _import("sleekxmpp")
+    mod = _import("sleekxmpp")
     logging.info("sleek module is %s" % str(mod))
     return mod
