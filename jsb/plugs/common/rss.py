@@ -19,6 +19,7 @@ from jsb.imports import getfeedparser, getjson
 from jsb.lib.boot import ongae
 from jsb.lib.callbacks import callbacks
 from jsb.lib.channelbase import ChannelBase
+
 # jsb imports
 from jsb.lib.commands import cmnds
 from jsb.lib.datadir import getdatadir
@@ -224,7 +225,8 @@ class Feed(Persist):
                 d[item] = data[item]
             except (KeyError, TypeError):
                 continue
-        digest = hashlib.md5(str(d)).hexdigest()
+        # TODO: add FORMD normalization
+        digest = hashlib.md5(str(d).encode()).hexdigest()
         return digest in self.data.seen
 
     def setseen(self, data, itemslist=["title", "link"], length=200):
@@ -232,7 +234,8 @@ class Feed(Persist):
         got = False
         for item in itemslist:
             d[item] = data[item]
-        digest = hashlib.md5(str(d)).hexdigest()
+        # TODO: add formD normalization
+        digest = hashlib.md5(str(d).encode()).hexdigest()
         if digest not in self.data.seen:
             self.data.seen.insert(0, digest)
             got = True

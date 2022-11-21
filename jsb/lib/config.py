@@ -450,7 +450,7 @@ class Config(LazyDict):
         self._comments["password"] = "# - password to use in authing the bot."
         self._comments["port"] = "# - port to connect to (IRC)."
         self._comments["ssl"] = "# - whether to enable ssl (set to 1 to enable)."
-        self._comments["ipv6"] = "# - whether to enable ssl (set to 1 to enable)."
+        self._comments["ipv6"] = "# - whether to enable ipv6 (set to 1 to enable)."
         self._comments["name"] = "# - the name of the bot."
         self._comments["disable"] = "# - set this to 0 to enable the bot."
         self._comments[
