@@ -82,14 +82,14 @@ class EventBase(LazyDict):
         self.ok.set()
 
     def startout(self):
-        if not self.nodispatch and not self.token in self.busy:
+        if not self.nodispatch and self.token not in self.busy:
             self.busy.append(self.token)
 
     def ready(self, what=None, force=False):
         """signal the event as ready - push None to all queues."""
         if self.nodispatch:
             return
-        if not "TICK" in self.cbtype:
+        if "TICK" not in self.cbtype:
             logging.info(self.busy)
         try:
             self.busy.remove(self.token)
@@ -102,7 +102,7 @@ class EventBase(LazyDict):
         self.finished.acquire()
         self.finished.notifyAll()
         self.finished.release()
-        if not "TICK" in self.cbtype:
+        if "TICK" not in self.cbtype:
             logging.info("notified %s" % str(self))
 
     def execwait(self, direct=False):
@@ -118,7 +118,6 @@ class EventBase(LazyDict):
 
     def wait(self, nr=1000):
         nr = int(nr)
-        result = []
         # if self.nodispatch: return
         if not self.busy:
             self.startout()
@@ -129,8 +128,8 @@ class EventBase(LazyDict):
         self.finished.release()
         if self.wait and self.thread:
             logging.warn("joining thread %s" % self.thread)
-            self.thread.join(nr / 1000)
-        if not "TICK" in self.cbtype:
+            self.thread.join(nr // 1000)
+        if "TICK" not in self.cbtype:
             logging.info(self.busy)
         if not self.resqueue:
             res = waitforqueue(self.resqueue, nr)
@@ -171,7 +170,6 @@ class EventBase(LazyDict):
         """split cmnds, create events for them, chain the queues and dispatch."""
         direct = True
         logging.warn("starting pipeline")
-        origout = self.outqueue
         events = []
         self.pipelined = True
         splitted = self.txt.split(" ! ")
@@ -190,7 +188,6 @@ class EventBase(LazyDict):
             if not e.woulddispatch():
                 raise NoSuchCommand(e.txt)
             events.append(e)
-        prev = None
         for i in range(len(events)):
             if i > 0:
                 events[i].inqueue = events[i - 1].outqueue
@@ -364,7 +361,7 @@ class EventBase(LazyDict):
     def done(self):
         """tell the user we are done."""
         self.reply(
-            "<b>done</b> - %s" % (self.usercmnd or self.alias or selt.txt), event=self
+            "<b>done</b> - %s" % (self.usercmnd or self.alias or self.txt), event=self
         )
         return self
 
@@ -448,11 +445,11 @@ class EventBase(LazyDict):
             cc = ""
         if not cc:
             cfg = getmainconfig()
-            if cfg.globalcc and not cfg.globalcc in cc:
+            if cfg.globalcc and cfg.globalcc not in cc:
                 cc += cfg.globalcc
         if not cc:
             cc = "!;"
-        if not ";" in cc:
+        if ";" not in cc:
             cc += ";"
         logging.info("cc is %s" % cc)
         return cc

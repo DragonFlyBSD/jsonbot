@@ -174,7 +174,7 @@ class PersistConfig(Config):
                 self.set(key, value)
                 self.save()
                 ievent.reply("%s set" % key)
-            elif type(value) == int and type(option.value) == int:
+            elif type(value) == int and type(optionvalue) == int:
                 self.set(key, value)
                 self.save()
                 ievent.reply("%s set" % key)
@@ -212,7 +212,7 @@ class PersistConfig(Config):
             except KeyError:
                 ievent.reply("%s not found" % key)
                 return
-            if not isinstance(option, Option):
+            if not isinstance(optionvalue, Option):
                 logging.warn("persistconfig - option %s is not a valid option" % key)
                 return
             if ievent.args:
