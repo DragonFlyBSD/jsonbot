@@ -18,6 +18,8 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from bs4 import BeautifulSoup
+
 
 from jsb.lib.errors import URLNotEnabled
 
@@ -458,6 +460,6 @@ class Stripper:
 
 def striphtml(txt):
     """strip html from txt."""
-    stripper = Stripper()
-    txt = stripper.strip(txt)
+    soup = BeautifulSoup(txt)
+    txt = soup.get_text()
     return txt
