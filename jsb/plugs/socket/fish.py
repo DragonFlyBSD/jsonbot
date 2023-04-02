@@ -53,6 +53,9 @@ raise ImportError(
     "You need to rewrite this module to use a maintained cryptography library."
 )
 
+#
+# Requires cryptodome python module
+#
 try:
     import Crypto.Cipher.AES
     import Crypto.Cipher.Blowfish
