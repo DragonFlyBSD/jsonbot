@@ -276,7 +276,7 @@ class Fleet(Persist):
                     continue
                 threads.append(start_new_thread(bot.exit, ()))
             for thread in threads:
-                _thread.join()
+                thread.join()
             return
         for bot in self.bots:
             if bot.cfg.name == name:
