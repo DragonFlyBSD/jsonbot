@@ -265,25 +265,6 @@ class Irc(BotBase):
                     doreconnect = 1
                     break
                 continue
-            except socket.sslerror as ex:
-                self.error = str(ex)
-                if self.stopped or self.stopreadloop:
-                    break
-                if not "timed out" in str(ex):
-                    handle_exception()
-                    doreconnect = 1
-                    break
-                timeout += 1
-                if timeout > 2:
-                    doreconnect = 1
-                    logging.warn("no pong received (%s)" % self.cfg.name)
-                    break
-                logging.warn("socket timeout (%s)" % self.cfg.name)
-                pingsend = self.ping()
-                if not pingsend:
-                    doreconnect = 1
-                    break
-                continue
             except IOError as ex:
                 self.error = str(ex)
                 if self.blocking and "temporarily" in str(ex):
