@@ -25,6 +25,7 @@ unless you set up an alias in your channel:
 import logging
 import socketserver
 import time
+import sys
 import traceback
 from socketserver import StreamRequestHandler, ThreadingMixIn
 
@@ -124,7 +125,8 @@ def init_threaded():
             (cfg.data["host"], int(cfg.data["dbport"])), IrcCatListener
         )
     except Exception as ex:
-        logging.error(traceback.format_exception(ex))
+        exc_type, exc_value, exc_tb = sys.exc_info()
+        logging.error(traceback.format_exception(exc_type, exc_value, exc_tb))
         return
     logging.warn(
         "starting irccat server on %s:%s" % (cfg.data["host"], cfg.data["dbport"])
