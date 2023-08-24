@@ -16,6 +16,7 @@ import os
 import random
 import select
 import socket
+import ssl
 import time
 import traceback
 
@@ -26,8 +27,15 @@ from jsb.lib.exit import globalshutdown
 from jsb.lib.morphs import inputmorphs, outputmorphs
 from jsb.lib.threads import start_new_thread, threaded
 from jsb.utils.exception import handle_exception
-from jsb.utils.generic import (fix_format, fromenc, getrandomnick, splittxt,
-                               strippedtxt, toenc, uniqlist)
+from jsb.utils.generic import (
+    fix_format,
+    fromenc,
+    getrandomnick,
+    splittxt,
+    strippedtxt,
+    toenc,
+    uniqlist,
+)
 from jsb.utils.locking import lock_object, lockdec, release_object
 from jsb.utils.pdod import Pdod
 
@@ -122,6 +130,7 @@ class Irc(BotBase):
         )
         self.oldsock.settimeout(30)
         self.oldsock.connect((server, int(str(self.cfg.port))))
+        self.oldsock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 90)
         self.blocking = 1
         self.oldsock.setblocking(self.blocking)
         logging.warn("connected! (%s)" % self.cfg.name)
@@ -130,11 +139,9 @@ class Irc(BotBase):
         os.set_blocking(self.fsock.fileno(), self.blocking)
         if self.blocking:
             socktimeout = self.cfg["socktimeout"]
-            if not socktimeout:
-                socktimeout = 301.0
-            else:
+            if socktimeout:
                 socktimeout = float(socktimeout)
-            self.oldsock.settimeout(socktimeout)
+                self.oldsock.settimeout(socktimeout)
         if "ssl" in self.cfg and self.cfg["ssl"]:
             logging.warn("ssl enabled (%s)" % self.cfg.name)
             self.sock = socket.ssl(self.oldsock)
@@ -267,7 +274,7 @@ class Irc(BotBase):
                 continue
             except IOError as ex:
                 self.error = str(ex)
-                if self.blocking and "temporarily" in str(ex):
+                if self.blocking and "temporarily" in str(ex) or "timed out" in str(ex):
                     logging.warn("iorror: %s (%s)" % (self.error, self.cfg.name))
                     time.sleep(1)
                     continue
