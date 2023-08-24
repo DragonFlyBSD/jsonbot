@@ -8,9 +8,9 @@ import os
 
 (f, tail) = os.path.split(__file__)
 __all__ = []
-
+blocklist = ["twitter.py"]
 for i in os.listdir(f):
-    if i.endswith(".py"):
+    if i.endswith(".py") and i not in blocklist:
         __all__.append(i[:-3])
     elif os.path.isdir(f + os.sep + i) and not i.startswith("."):
         __all__.append(i)
