@@ -24,8 +24,8 @@ unless you set up an alias in your channel:
 
 import logging
 import socketserver
-import time
 import sys
+import time
 import traceback
 from socketserver import StreamRequestHandler, ThreadingMixIn
 
