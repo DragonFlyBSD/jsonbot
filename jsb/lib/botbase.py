@@ -308,8 +308,10 @@ class BotBase(LazyDict):
                 if self.status != "start" and not self.pingcheck():
                     self.reconnect()
                     break
-            except Exception as ex:
-                logging.error(traceback.format_exception(ex))
+            except Exception as exc:
+                logging.error(
+                    traceback.format_exception(type(exc), exc, exc.__traceback__)
+                )
                 self.reconnect()
                 break
             time.sleep(self.cfg.pingsleep or 60)
@@ -702,8 +704,10 @@ class BotBase(LazyDict):
                     self.exit(close=close)
                 if self.doreconnect():
                     break
-            except Exception as ex:
-                logging.error(traceback.format_exception(ex))
+            except Exception as exc:
+                logging.error(
+                    traceback.format_exception(type(exc), exc, exc.__traceback__)
+                )
 
     def doreconnect(self, start=False):
         self.started = False

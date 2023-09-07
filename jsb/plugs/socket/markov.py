@@ -28,6 +28,7 @@ import os
 import random
 import re
 import time
+import traceback
 
 from jsb.lib.callbacks import callbacks
 from jsb.lib.commands import cmnds
@@ -282,8 +283,8 @@ def markovlearnurl(url):
                 continue
             markovtalk_learn(line)
             lines += 1
-    except Exception as e:
-        logging.error(traceback.format_exception(e))
+    except Exception as exc:
+        logging.error(traceback.format_exception(type(exc), exc, exc.__traceback__))
     logging.warn("learning %s done" % url)
     return lines
 

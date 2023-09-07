@@ -92,8 +92,10 @@ def plusscan(skip=False):
                         bot.say(chan, "new plus update: ", todo)
                 else:
                     logging.warn("no %s bot in fleet" % botname)
-            except AttributeError as ex:
-                logging.error(traceback.format_exception(ex))
+            except AttributeError as exc:
+                logging.error(
+                    traceback.format_exception(type(exc), exc, exc.__traceback__)
+                )
             except Exception as ex:
                 handle_exception()
     state.save()

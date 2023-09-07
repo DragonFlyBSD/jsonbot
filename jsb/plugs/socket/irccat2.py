@@ -130,8 +130,8 @@ def init_threaded():
         server = socketserver.TCPServer(
             (cfg["host"], int(cfg["iccatport"])), IrcCatListener
         )
-    except Exception as ex:
-        logging.error(traceback.format_exception(ex))
+    except Exception as exc:
+        logging.error(traceback.format_exception(type(exc), exc, exc.__traceback__))
         return
     logging.warn("starting irccat2 server on %s:%s" % (cfg["host"], cfg["iccatport"]))
     thr = start_new_thread(server.serve_forever, ())

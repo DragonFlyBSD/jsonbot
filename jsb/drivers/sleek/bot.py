@@ -73,14 +73,14 @@ class SleekBot(SXMPPBot):
         self.xmpp.send_presence()
         start_new_thread(self.joinchannels, ())
 
-    def exception(self, ex):
-        logging.error(traceback.format_exception(ex))
+    def exception(self, exc):
+        logging.error(traceback.format_exception(type(exc), exc, exc.__traceback__))
 
     def handle_failedauth(self, error, *args):
         logging.error(error)
 
-    def handle_failure(self, ex, *args, **kwargs):
-        logging.error(traceback.format_exception(ex))
+    def handle_failure(self, exc, *args, **kwargs):
+        logging.error(traceback.format_exception(type(exc), exc, exc.__traceback__))
 
     def handle_disconnected(self, *args, **kwargs):
         logging.error("server disconnected")
@@ -94,8 +94,8 @@ class SleekBot(SXMPPBot):
             if connect:
                 self.xmpp.connect()
             self.xmpp.process(block=True)
-        except Exception as ex:
-            logging.error(traceback.format_exception(ex))
+        except Exception as exc:
+            logging.error(traceback.format_exception(type(exc), exc, exc.__traceback__))
 
     def send(self, event):
         try:
@@ -219,5 +219,5 @@ class SleekBot(SXMPPBot):
                 except KeyError:
                     pass
             self.put(p)
-        except Exception as ex:
-            logging.error(traceback.format_exception(ex))
+        except Exception as exc:
+            logging.error(traceback.format_exception(type(exc), exc, exc.__traceback__))
