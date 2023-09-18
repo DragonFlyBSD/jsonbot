@@ -156,8 +156,10 @@ class EventBase(LazyDict):
         else:
             try:
                 res = cmnds.dispatch(self.bot, self, direct=direct, *args, **kwargs)
-            except RequireError as ex:
-                logging.error(traceback.format_exception(ex))
+            except RequireError as exc:
+                logging.error(
+                    traceback.format_exception(type(exc), exc, exc.__traceback__)
+                )
             except NoSuchCommand as ex:
                 logging.error("we don't have a %s command" % str(ex))
             except NoSuchUser as ex:
