@@ -1,0 +1,14 @@
+beautifulsoup4==4.12.2
+chardet==4.0.0
+github2==0.6.2
+mercurial==6.3.2
+MySQL-python==1.2.5
+psycopg2==2.9.5
+py3rijndael==0.3.3
+pycryptodome==3.19.0
+pyOpenSSL==23.2.0
+python_memcached==1.59
+setuptools==63.1.0
+simplejson==3.19.1
+tweepy==4.14.0
+zc==0.1.1
