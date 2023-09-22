@@ -12,7 +12,7 @@ __all__ = []
 for i in os.listdir(f):
     if i.endswith(".py"):
         __all__.append(i[:-3])
-    elif os.path.isdir(f + os.sep + i) and not i.startswith("."):
+    elif os.path.isdir(f + os.sep + i) and not i.startswith(".") and i != "__pycache__":
         __all__.append(i)
 
 try:
